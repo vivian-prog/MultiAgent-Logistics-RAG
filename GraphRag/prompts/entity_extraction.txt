@@ -1,0 +1,199 @@
+
+-Goal-
+Given a text document that is potentially relevant to this activity, first identify all entities needed from the text in order to capture the information and ideas in the text.
+Next, report all relationships among the identified entities.
+
+-Steps-
+1. Identify all entities. For each identified entity, extract the following information:
+- entity_name: Name of the entity, capitalized
+- entity_type: Suggest several labels or categories for the entity. The categories should not be specific, but should be as general as possible.
+- entity_description: Comprehensive description of the entity's attributes and activities
+Format each entity as ("entity"{tuple_delimiter}<entity_name>{tuple_delimiter}<entity_type>{tuple_delimiter}<entity_description>)
+
+2. From the entities identified in step 1, identify all pairs of (source_entity, target_entity) that are *clearly related* to each other.
+For each pair of related entities, extract the following information:
+- source_entity: name of the source entity, as identified in step 1
+- target_entity: name of the target entity, as identified in step 1
+- relationship_description: explanation as to why you think the source entity and the target entity are related to each other
+- relationship_strength: a numeric score indicating strength of the relationship between the source entity and target entity
+Format each relationship as ("relationship"{tuple_delimiter}<source_entity>{tuple_delimiter}<target_entity>{tuple_delimiter}<relationship_description>{tuple_delimiter}<relationship_strength>)
+
+3. Return output in Chinese as a single list of all the entities and relationships identified in steps 1 and 2. Use **{record_delimiter}** as the list delimiter.
+
+4. If you have to translate into Chinese, just translate the descriptions, nothing else!
+
+5. When finished, output {completion_delimiter}.
+
+-Examples-
+######################
+
+Example 1:
+
+text:
+agent_id是GROUND-001,task_id是LOG-20250520-002,slam_x是121.48,slam_y是31.23,speed是1.00,obstacle_dist是2.80,goods_status是1,battery_remaining是82,collect_time是2025-12-06 00:00:47。
+第8个数据：sensor_id是8,agent_id是GROUND-002,task_id是LOG-20250520-005,slam_x是104.07,slam_y是30.66,speed是0.70,obstacle_dist是2.40,goods_status是1,battery_remaining是69,collect_time是2025-12-09 00:00:47。
+第9个数据：sensor_id是9,agent_id是GROUND-001,task_id是LOG-20250520-002,slam_x是121.48,slam_y是31.
+------------------------
+output:
+<think>
+Okay, let's tackle this step by step. The user provided a text with some data entries about agents, tasks, and sensors. My goal is to identify entities and their relationships based on the given examples.
+
+First, I need to parse the text. The text mentions agent_id, task_id, sensor_id, and various attributes like slam_x, slam_y, speed, obstacle_dist, goods_status, battery_remaining, and collect_time. 
+
+For entities, I should list each unique entity mentioned. The main entities here are agents, tasks, sensors, and possibly the goods or warehouses since goods_status is mentioned. Let me check the data again. The text has entries with agent_id, task_id, sensor_id, and some attributes. The goods_status might relate to goods, but the text doesn't explicitly mention warehouses. However, the example in the user's previous interaction included warehouses, so maybe I should consider that. Wait, the current text doesn't mention warehouses, so maybe not. Let me focus on what's present.
+
+So, the entities would be:
+- Agent (GROUND-001, GROUND-002)
+- Task (LOG-20250520-002, LOG-20250520-005)
+- Sensor (8, 9)
+- Goods (since goods_status is mentioned, but the text doesn't specify if they are in a warehouse or not. Maybe just goods as an entity)
+- Battery (since battery_remaining is mentioned, but that's an attribute of the agent, not a separate entity)
+- Time (collect_time, but again, an attribute, not an entity)
+
+Wait, the user's examples included entities like "CENTRAL INSTITUTION" as an organization, "TECHGLOBAL" as an organization, etc. So in this case, the agents and tasks are entities. The sensors are also entities. Goods might be an entity if they are part of the system. Let me check the data again. The goods_status is 1, which might indicate the status of goods being collected or stored. So maybe "Goods" is an entity here. 
+
+Now, for each entity, I need to extract entity_name, entity_type, and entity_description. 
+
+For example:
+- Agent: entity_name is GROUND-001, type could be "AGENT" or "ROBOT", description includes attributes like slam_x, slam_y, speed, etc.
+- Task: entity_name is LOG-20250520-002, type "TASK", description includes task ID and related attributes.
+- Sensor: entity_name is 8, type "SENSOR", description includes sensor ID and related data.
+- Goods: entity_name is GOODS, type "GOODS", description includes status and possibly other attributes.
+
+Wait, but the text doesn't mention goods being stored in a warehouse, so maybe "Goods" is an entity here. However, the example in the user's previous interaction included "warehouse_goods" as a table, but in this text, it's not mentioned. So maybe "Goods" is an entity here. 
+
+Next, relationships. The agents are associated with tasks (agent_id and task_id are linked). Sensors are associated with agents (sensor_id and agent_id). Agents have battery_remaining and goods_status, which are attributes. Tasks might be related to goods if goods_status is part of the task. 
+
+So relationships would be:
+- Agent to Task (agent_id and task_id are linked)
+- Sensor to Agent (sensor_id and agent_id are linked)
+- Agent to Goods (goods_status is an attribute of the agent)
+- Task to Goods (goods_status might be part of the task, but not sure. Alternatively, the task could be related to goods if the task involves collecting goods.)
+
+Wait, the goods_status is part of the agent's data, so the agent has a goods status. So the relationship is Agent -> Goods. 
+
+Also, the collect_time is an attribute of the agent, so that's part of the agent's description. 
+
+Now, translating all this into the required format. Each entity as a tuple, then relationships. 
+
+I need to make sure the entity_types are general. For example, "AGENT" is a type, "TASK" is another, "SENSOR" as well. Goods could be "GOODS" or "ITEM". 
+
+Let me structure each entity with their descriptions. Then, the relationships between them. 
+
+For example, the first data entry has agent_id GROUND-001, task_id LOG-20250520-002. So the relationship between Agent and Task is that the agent is performing the task. 
+
+Similarly, sensor_id 8 is linked to agent_id GROUND-002, so Sensor is associated with Agent. 
+
+Goods_status is an attribute of the agent, so Agent has Goods status. 
+
+So the relationships would be:
+- Agent -> Task (agent is assigned to task)
+- Sensor -> Agent (sensor is part of agent)
+- Agent -> Goods (agent has goods status)
+
+Now, translating all this into the required format in Chinese, making sure the descriptions are translated but the structure remains the same. 
+
+I need to check if there are any other entities. The text mentions "slam_x", "slam_y", "speed", "obstacle_dist", "battery_remaining", "collect_time" as attributes, but these are properties of the entities, not separate entities. 
+
+So the final output should list all entities and their relationships in the specified format.
+</think>
+
+("entity"{tuple_delimiter}AGENT{tuple_delimiter}ENTITY{tuple_delimiter}Agent is a robotic entity with attributes like slam_x, slam_y, speed, obstacle_dist, battery_remaining, and goods_status, responsible for task execution)
+{record_delimiter}
+("entity"{tuple_delimiter}TASK{tuple_delimiter}ENTITY{tuple_delimiter}Task is a specific operation with an ID, associated with an agent, involving goods collection or delivery)
+{record_delimiter}
+("entity"{tuple_delimiter}SENSOR{tuple_delimiter}ENTITY{tuple_delimiter}Sensor is a device with an ID, linked to an agent, used to monitor environmental data like obstacle distance and position)
+{record_delimiter}
+("entity"{tuple_delimiter}GOODS{tuple_delimiter}ENTITY{tuple_delimiter}Goods is an item with a status (e.g., collected or pending), tracked by agents during task execution)
+{record_delimiter}
+("relationship"{tuple_delimiter}AGENT{tuple_delimiter}TASK{tuple_delimiter}Agent is assigned to perform a specific task, with task_id linking the two entities{tuple_delimiter}9)
+{record_delimiter}
+("relationship"{tuple_delimiter}SENSOR{tuple_delimiter}AGENT{tuple_delimiter}Sensor is associated with an agent, providing real-time data about the agent's environment{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}AGENT{tuple_delimiter}GOODS{tuple_delimiter}Agent tracks the status of goods during task execution, indicating collection or delivery progress{tuple_delimiter}7)
+{completion_delimiter}
+#############################
+
+
+Example 2:
+
+text:
+====================================================================================================
+表名：task_agent_rel
+备注：任务-Agent关联表：存储任务与Agent的绑定关系，如任务ID、Agent ID、分配时间等
+生成时间：2025-12-16 21:59:07
+数据记录数：10
+====================================================================================================
+
+【表结构】
+表结构中，有以下字段名，它们的属性如下：
+1. 字段名：rel_id，类型为bigint，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为auto_increment。
+2. 字段名：task_id，类型为varchar(30)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+3. 字段名：agent_id，类型为varchar(20)，是否可以为空为否，是否是主键为否，默认值为NULL，
+------------------------
+output:
+<think>
+Okay, let's tackle this step by step. The user provided a text about a database table called "task_agent_rel" and wants me to identify entities and their relationships. 
+
+First, I need to parse the text. The table is related to tasks and agents, with fields like rel_id, task_id, agent_id, and others. The main entities here are likely the tables themselves and the data they contain. 
+
+For entities, I should list each table and their attributes. The "task_agent_rel" table is the main one, connecting tasks and agents. Then there are other tables mentioned, like warehouse_base, warehouse_goods, and agent_base. Each of these has their own fields. 
+
+Next, I need to categorize each entity. The tables are all database entities, so their types could be "DATABASE_TABLE" or "DATA_STRUCTURE". The fields like task_id, agent_id, etc., are attributes of these tables. 
+
+Now, relationships. The "task_agent_rel" table links tasks and agents, so there's a relationship between task_agent_rel and task_base, agent_base. Also, warehouse_base might be related to warehouse_goods. The agent_base could have a relationship with warehouse_base if agents are assigned to warehouses. 
+
+I need to make sure each relationship is clear. For example, task_agent_rel connects to task_base via task_id and to agent_base via agent_id. Warehouse_base might have a relationship with warehouse_goods through warehouse_id. 
+
+I should check if there are any other relationships, like between warehouse_goods and agent_base if agents handle goods. But the text doesn't mention that explicitly, so maybe not. 
+
+Each relationship needs a description and strength. The strength is a number, so the more direct the relationship, the higher the score. For example, task_agent_rel directly links to task_base and agent_base, so those relationships would have higher strength. 
+
+I need to format all this into the required tuples, making sure to use the correct delimiters and translate descriptions into Chinese as per the instructions. Also, ensure that the output is a single list with {record_delimiter} between entries and ends with {completion_delimiter}.
+</think>
+
+("entity"{tuple_delimiter}TASK_AGENT_REL{tuple_delimiter}DATABASE_TABLE{tuple_delimiter}任务-Agent关联表，存储任务与Agent的绑定关系，包含rel_id、task_id、agent_id、分配时间等字段}
+{record_delimiter}
+("entity"{tuple_delimiter}WAREHOUSE_BASE{tuple_delimiter}DATABASE_TABLE{tuple_delimiter}仓库基础信息表，存储仓库的物理位置、容量、状态等属性}
+{record_delimiter}
+("entity"{tuple_delimiter}WAREHOUSE_GOODS{tuple_delimiter}DATABASE_TABLE{tuple_delimiter}仓库货物信息表，记录仓库中存储的货物种类、数量、状态等数据}
+{record_delimiter}
+("entity"{tuple_delimiter}AGENT_BASE{tuple_delimiter}DATABASE_TABLE{tuple_delimiter}Agent基础信息表，包含Agent的ID、坐标、电池电量、任务状态等属性}
+{record_delimiter}
+("entity"{tuple_delimiter}TASK_ID{tuple_delimiter}DATA_ATTRIBUTE{tuple_delimiter}任务唯一标识符，用于关联任务与Agent的执行关系}
+{record_delimiter}
+("entity"{tuple_delimiter}AGENT_ID{tuple_delimiter}DATA_ATTRIBUTE{tuple_delimiter}Agent唯一标识符，用于标识不同执行任务的智能体}
+{record_delimiter}
+("entity"{tuple_delimiter}REL_ID{tuple_delimiter}DATA_ATTRIBUTE{tuple_delimiter}任务-Agent关联关系的唯一标识符，用于记录绑定关系}
+{record_delimiter}
+("entity"{tuple_delimiter}COORDINATE{tuple_delimiter}DATA_ATTRIBUTE{tuple_delimiter}Agent的坐标信息，用于定位和路径规划}
+{record_delimiter}
+("entity"{tuple_delimiter}BATTERY_LEVEL{tuple_delimiter}DATA_ATTRIBUTE{tuple_delimiter}Agent的电池电量，反映执行任务的续航能力}
+{record_delimiter}
+("entity"{tuple_delimiter}TIMESTAMP{tuple_delimiter}DATA_ATTRIBUTE{tuple_delimiter}任务分配或执行的时间戳，记录操作时间}
+{record_delimiter}
+("entity"{tuple_delimiter}GOODS_STATUS{tuple_delimiter}DATA_ATTRIBUTE{tuple_delimiter}货物的状态信息，如待存储、已交付、损坏等}
+{record_delimiter}
+("relationship"{tuple_delimiter}TASK_AGENT_REL{tuple_delimiter}TASK_BASE{tuple_delimiter}任务-Agent关联表通过task_id字段与任务基础信息表建立关联{tuple_delimiter}9}
+{record_delimiter}
+("relationship"{tuple_delimiter}TASK_AGENT_REL{tuple_delimiter}AGENT_BASE{tuple_delimiter}任务-Agent关联表通过agent_id字段与Agent基础信息表建立关联{tuple_delimiter}9}
+{record_delimiter}
+("relationship"{tuple_delimiter}WAREHOUSE_BASE{tuple_delimiter}WAREHOUSE_GOODS{tuple_delimiter}仓库基础信息表通过warehouse_id字段与仓库货物信息表建立关联{tuple_delimiter}8}
+{record_delimiter}
+("relationship"{tuple_delimiter}AGENT_BASE{tuple_delimiter}WAREHOUSE_BASE{tuple_delimiter}Agent基础信息表通过坐标信息与仓库基础信息表建立空间关联{tuple_delimiter}7}
+{record_delimiter}
+("relationship"{tuple_delimiter}TASK_AGENT_REL{tuple_delimiter}TIMESTAMP{tuple_delimiter}任务-Agent关联表通过时间戳字段记录任务分配时间{tuple_delimiter}6}
+{record_delimiter}
+("relationship"{tuple_delimiter}AGENT_BASE{tuple_delimiter}BATTERY_LEVEL{tuple_delimiter}Agent基础信息表通过电池电量字段反映执行能力{tuple_delimiter}7}
+{record_delimiter}
+("relationship"{tuple_delimiter}WAREHOUSE_GOODS{tuple_delimiter}GOODS_STATUS{tuple_delimiter}仓库货物信息表通过状态字段记录货物当前状态{tuple_delimiter}8}
+{completion_delimiter}
+#############################
+
+
+
+-Real Data-
+######################
+text: {input_text}
+######################
+output:

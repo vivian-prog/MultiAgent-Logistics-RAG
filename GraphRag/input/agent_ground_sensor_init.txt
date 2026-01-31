@@ -1,0 +1,34 @@
+====================================================================================================
+表名：agent_ground_sensor
+备注：地面运输机器人传感器表：存储地面机器人传感器数据
+生成时间：2025-12-16 21:59:07
+数据记录数：10
+====================================================================================================
+
+【表结构】
+表结构中，有以下字段名，它们的属性如下：
+1. 字段名：sensor_id，类型为bigint，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为auto_increment。
+2. 字段名：agent_id，类型为varchar(20)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+3. 字段名：task_id，类型为varchar(30)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+4. 字段名：slam_x，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+5. 字段名：slam_y，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+6. 字段名：speed，类型为decimal(6,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+7. 字段名：obstacle_dist，类型为decimal(8,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+8. 字段名：goods_status，类型为tinyint，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+9. 字段名：battery_remaining，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+10. 字段名：collect_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED。
+
+----------------------------------------------------------------------------------------------------
+
+【表数据】
+表数据记录为：
+第1个数据：sensor_id是1,agent_id是GROUND-001,task_id是LOG-20250520-002,slam_x是121.48,slam_y是31.23,speed是1.20,obstacle_dist是2.50,goods_status是1,battery_remaining是88,collect_time是2025-12-05 22:00:47。
+第2个数据：sensor_id是2,agent_id是GROUND-001,task_id是LOG-20250520-002,slam_x是121.48,slam_y是31.23,speed是1.10,obstacle_dist是3.20,goods_status是1,battery_remaining是85,collect_time是2025-12-05 23:00:47。
+第3个数据：sensor_id是3,agent_id是GROUND-002,task_id是LOG-20250520-005,slam_x是104.07,slam_y是30.66,speed是0.80,obstacle_dist是1.80,goods_status是1,battery_remaining是75,collect_time是2025-12-08 22:00:47。
+第4个数据：sensor_id是4,agent_id是GROUND-002,task_id是LOG-20250520-005,slam_x是104.07,slam_y是30.66,speed是0.90,obstacle_dist是2.10,goods_status是1,battery_remaining是72,collect_time是2025-12-08 23:00:47。
+第5个数据：sensor_id是5,agent_id是GROUND-003,task_id是LOG-20250520-008,slam_x是108.95,slam_y是34.26,speed是0.00,obstacle_dist是0.00,goods_status是0,battery_remaining是50,collect_time是2025-12-11 22:00:47。
+第6个数据：sensor_id是6,agent_id是GROUND-003,task_id是LOG-20250520-008,slam_x是108.95,slam_y是34.26,speed是0.00,obstacle_dist是0.00,goods_status是0,battery_remaining是48,collect_time是2025-12-11 23:00:47。
+第7个数据：sensor_id是7,agent_id是GROUND-001,task_id是LOG-20250520-002,slam_x是121.48,slam_y是31.23,speed是1.00,obstacle_dist是2.80,goods_status是1,battery_remaining是82,collect_time是2025-12-06 00:00:47。
+第8个数据：sensor_id是8,agent_id是GROUND-002,task_id是LOG-20250520-005,slam_x是104.07,slam_y是30.66,speed是0.70,obstacle_dist是2.40,goods_status是1,battery_remaining是69,collect_time是2025-12-09 00:00:47。
+第9个数据：sensor_id是9,agent_id是GROUND-001,task_id是LOG-20250520-002,slam_x是121.48,slam_y是31.23,speed是1.10,obstacle_dist是3.00,goods_status是1,battery_remaining是79,collect_time是2025-12-06 01:00:47。
+第10个数据：sensor_id是10,agent_id是GROUND-002,task_id是LOG-20250520-005,slam_x是104.07,slam_y是30.66,speed是0.80,obstacle_dist是2.20,goods_status是1,battery_remaining是66,collect_time是2025-12-09 01:00:47。

@@ -1,0 +1,29 @@
+====================================================================================================
+GraphRAG初始化TXT文件汇总
+生成时间：2025-12-16 21:59:07
+数据库：hma_llm
+生成表数量：8
+====================================================================================================
+
+【文件列表】
+1. warehouse_base → warehouse_base_init.txt
+   备注：仓储基础信息表：存储仓库的基础属性，如仓库名称、位置、容量等
+2. warehouse_goods → warehouse_goods_init.txt
+   备注：货架与物品表：存储仓库内货架、物品的关联信息，如物品名称、货架编号、数量等
+3. agent_base → agent_base_init.txt
+   备注：Agent基础信息表：存储各类Agent的基础属性，如Agent名称、类型、状态等
+4. task_main → task_main_init.txt
+   备注：任务主表：存储任务的核心信息，如任务名称、描述、创建时间、状态等
+5. task_agent_rel → task_agent_rel_init.txt
+   备注：任务-Agent关联表：存储任务与Agent的绑定关系，如任务ID、Agent ID、分配时间等
+6. agent_uav_sensor → agent_uav_sensor_init.txt
+   备注：无人机传感器表：存储无人机传感器数据，如传感器类型、采集值、采集时间等
+7. agent_ground_sensor → agent_ground_sensor_init.txt
+   备注：地面运输机器人传感器表：存储地面机器人传感器数据
+8. agent_warehouse_sensor → agent_warehouse_sensor_init.txt
+   备注：仓储机器人传感器表：存储仓储机器人传感器数据
+
+【使用说明】
+1. 所有TXT文件采用自然语言描述格式，可直接作为GraphRAG的输入数据源
+2. 执行GraphRAG索引构建命令时，可指定输入目录为：./graphrag_init_txt
+3. 建议保留此汇总文件，便于后续维护

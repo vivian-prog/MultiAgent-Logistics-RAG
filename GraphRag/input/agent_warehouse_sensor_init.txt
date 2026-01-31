@@ -1,0 +1,34 @@
+====================================================================================================
+表名：agent_warehouse_sensor
+备注：仓储机器人传感器表：存储仓储机器人传感器数据
+生成时间：2025-12-16 21:59:07
+数据记录数：10
+====================================================================================================
+
+【表结构】
+表结构中，有以下字段名，它们的属性如下：
+1. 字段名：sensor_id，类型为bigint，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为auto_increment。
+2. 字段名：agent_id，类型为varchar(20)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+3. 字段名：task_id，类型为varchar(30)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+4. 字段名：shelf_nav_x，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+5. 字段名：shelf_nav_y，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+6. 字段名：grip_force，类型为decimal(6,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+7. 字段名：goods_weight，类型为decimal(8,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+8. 字段名：warehouse_temp，类型为decimal(4,1)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+9. 字段名：battery_remaining，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+10. 字段名：collect_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED。
+
+----------------------------------------------------------------------------------------------------
+
+【表数据】
+表数据记录为：
+第1个数据：sensor_id是1,agent_id是WARE-001,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是50.50,goods_weight是1.80,warehouse_temp是25.5,battery_remaining是80,collect_time是2025-12-06 22:00:47。
+第2个数据：sensor_id是2,agent_id是WARE-001,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是48.20,goods_weight是1.80,warehouse_temp是25.6,battery_remaining是78,collect_time是2025-12-06 23:00:47。
+第3个数据：sensor_id是3,agent_id是WARE-002,task_id是LOG-20250520-006,shelf_nav_x是120.15,shelf_nav_y是30.29,grip_force是60.30,goods_weight是3.80,warehouse_temp是26.2,battery_remaining是90,collect_time是2025-12-09 22:00:47。
+第4个数据：sensor_id是4,agent_id是WARE-002,task_id是LOG-20250520-006,shelf_nav_x是120.16,shelf_nav_y是30.29,grip_force是58.70,goods_weight是3.80,warehouse_temp是26.3,battery_remaining是88,collect_time是2025-12-09 23:00:47。
+第5个数据：sensor_id是5,agent_id是WARE-003,task_id是LOG-20250520-009,shelf_nav_x是106.55,shelf_nav_y是29.57,grip_force是45.80,goods_weight是1.20,warehouse_temp是24.8,battery_remaining是85,collect_time是2025-12-12 22:00:47。
+第6个数据：sensor_id是6,agent_id是WARE-003,task_id是LOG-20250520-009,shelf_nav_x是106.55,shelf_nav_y是29.57,grip_force是47.20,goods_weight是1.20,warehouse_temp是24.9,battery_remaining是83,collect_time是2025-12-12 23:00:47。
+第7个数据：sensor_id是7,agent_id是WARE-001,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是49.10,goods_weight是1.80,warehouse_temp是25.7,battery_remaining是76,collect_time是2025-12-07 00:00:47。
+第8个数据：sensor_id是8,agent_id是WARE-002,task_id是LOG-20250520-006,shelf_nav_x是120.16,shelf_nav_y是30.29,grip_force是59.50,goods_weight是3.80,warehouse_temp是26.4,battery_remaining是86,collect_time是2025-12-10 00:00:47。
+第9个数据：sensor_id是9,agent_id是WARE-003,task_id是LOG-20250520-009,shelf_nav_x是106.55,shelf_nav_y是29.57,grip_force是46.50,goods_weight是1.20,warehouse_temp是25.0,battery_remaining是81,collect_time是2025-12-13 00:00:47。
+第10个数据：sensor_id是10,agent_id是WARE-001,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是47.80,goods_weight是1.80,warehouse_temp是25.8,battery_remaining是74,collect_time是2025-12-07 01:00:47。

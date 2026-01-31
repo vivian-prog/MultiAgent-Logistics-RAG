@@ -1,0 +1,146 @@
+
+<think>
+Okay, let's see. The user wants me to generate a 3-4 sentence description of an expert who can help solve the problem mentioned in the task. The task is to identify the relations and structure of the community of interest within the text. 
+
+First, I need to understand what the text is about. The sample text includes tables like "task_agent_rel," "warehouse_base," "warehouse_goods," and "agent_base." These tables have fields related to agents, tasks, warehouses, goods, and their statuses. There are entries with agent IDs, task IDs, coordinates, battery levels, timestamps, and information about goods being stored or delivered. 
+
+The main goal here is to figure out the domain of the text. The user provided examples of domains like "Social studies," "Algorithmic analysis," and "Medical science." The text seems to involve tracking agents (like robots) performing tasks in a warehouse, managing goods, and monitoring environmental conditions. This points towards a logistics or automation context. 
+
+Looking at the example domains, "Algorithmic analysis" might fit because the data involves tracking and managing tasks with agents, which could be part of an algorithmic system. However, the text also mentions warehouses, goods, and operational details, which could relate to logistics or supply chain management. But since the user's examples don't include logistics, "Algorithmic analysis" is the closest match. 
+
+Now, the user wants an expert description. The expert should be skilled in analyzing such data structures, understanding relationships between agents, tasks, warehouses, and goods. They should be adept at tasks like mapping out community structures, identifying dependencies, and optimizing workflows. 
+
+So, the expert role would be something like a "Logistics Systems Analyst" or "Robotics Systems Engineer." But since the examples use "Algorithmic analysis," maybe the role is an "Algorithmic Systems Analyst." They would need skills in data modeling, task optimization, and understanding robotic systems. 
+
+Putting it all together, the expert should be skilled in analyzing complex data structures, understanding operational workflows, and optimizing task-agent relationships in automated systems. They should be adept at identifying community structures within the system, such as how agents interact with tasks and warehouses, and how goods are managed. 
+
+I need to make sure the description is concise, 3-4 sentences, and uses the format provided. The key points are the role, relevant skills, and specific task. The example given uses "Algorithmic analysis" as the domain, so I'll follow that structure.
+</think>
+
+You are an expert in Algorithmic Systems Analysis. You are skilled at interpreting complex data structures, mapping relationships between entities, and optimizing task-agent interactions in automated environments. You are adept at helping people with identifying operational workflows, dependencies, and community structures within robotic and warehouse management systems.
+
+# Goal
+Write a comprehensive assessment report of a community taking on the role of a <think>
+Okay, let's see. The user wants me to generate a 3-4 sentence description of an expert who can help solve the problem mentioned in the task. The task is to identify the relations and structure of the community of interest within the text. 
+
+First, I need to understand what the text is about. The sample text includes tables like "task_agent_rel," "warehouse_base," "warehouse_goods," and "agent_base." These tables have fields related to agents, tasks, warehouses, goods, and their statuses. There are entries with agent IDs, task IDs, coordinates, battery levels, timestamps, and information about goods being stored or delivered. 
+
+The main goal here is to figure out the domain of the text. The user provided examples of domains like "Social studies," "Algorithmic analysis," and "Medical science." The text seems to involve tracking agents (like robots) performing tasks in a warehouse, managing goods, and monitoring environmental conditions. This points towards a logistics or automation context. 
+
+Looking at the example domains, "Algorithmic analysis" might fit because the data involves tracking and managing tasks with agents, which could be part of an algorithmic system. However, the text also mentions warehouses, goods, and operational details, which could relate to logistics or supply chain management. But since the user's examples don't include logistics, "Algorithmic analysis" is the closest match. 
+
+Now, the user wants an expert description. The expert should be skilled in analyzing such data structures, understanding relationships between agents, tasks, warehouses, and goods. They should be adept at tasks like mapping out community structures, identifying dependencies, and optimizing workflows. 
+
+So, the expert role would be something like a "Logistics Systems Analyst" or "Robotics Systems Engineer." But since the user's examples use "Algorithmic analysis," maybe the role is an "Algorithmic Systems Analyst." They would need skills in data modeling, task optimization, and understanding robotic systems. 
+
+Putting it all together, the expert should be skilled in analyzing complex data structures, understanding operational workflows, and optimizing task-agent relationships in automated systems. They should be adept at identifying community structures within the system, such as how agents interact with tasks and warehouses, and how goods are managed. 
+
+I need to make sure the description is concise, 3-4 sentences, and uses the format provided. The key points are the role, relevant skills, and specific task. The example given uses "Algorithmic analysis" as the domain, so I'll follow that structure.
+</think>
+
+You are an expert in Algorithmic Systems Analysis. You are skilled at interpreting complex data structures, mapping relationships between entities, and optimizing task-agent interactions in automated environments. You are adept at helping people with identifying operational workflows, dependencies, and community structures within robotic and warehouse management systems.. The content of this report includes an overview of the community's key entities and relationships.
+
+# Report Structure
+The report should include the following sections:
+- TITLE: community's name that represents its key entities - title should be short but specific. When possible, include representative named entities in the title.
+- SUMMARY: An executive summary of the community's overall structure, how its entities are related to each other, and significant points associated with its entities.
+- REPORT RATING: <think>
+Okay, let's tackle this query. The user provided a text document with various data entries and table structures. My task is to determine the descriptive domain that summarizes what the text is about.
+
+First, I'll look through the text to understand the content. There are mentions of tables like "task_agent_rel," "warehouse_base," "warehouse_goods," and "agent_base." Each table has fields related to agents, tasks, warehouses, goods, and their statuses. For example, there are entries with agent IDs, task IDs, coordinates (slam_x, slam_y), battery levels, and timestamps. There's also information about goods, their locations, weights, and warehouse details.
+
+The tables seem to track the movement and status of agents (like ground and aerial robots) in a warehouse environment. They mention tasks with specific targets, start and end times, and statuses. The presence of fields like "warehouse_temp" and "shelf_nav_x" suggests monitoring of environmental conditions and navigation within warehouses. Additionally, there are records about goods being stored, their quantities, and target locations for delivery.
+
+Considering the domains provided in the example, "Social studies" doesn't fit here. "Algorithmic analysis" might be a stretch, but the data seems more about operational tracking rather than algorithms. "Medical science" is unrelated. The key elements here are logistics, warehouse management, and robotic agents performing tasks. 
+
+Another possible domain could be "Logistics and supply chain management," but the user's examples don't include that. Looking back, the example domains include "Medical science," "Algorithmic analysis," and "Social studies." Since the text involves tracking agents, tasks, warehouses, and goods, the closest fit from the given examples might be "Algorithmic analysis" if it's about the algorithms managing these systems. However, the primary focus seems more on the operational aspects of warehouse automation and logistics. 
+
+Wait, the user's example domains might not include logistics, but the closest one might be "Algorithmic analysis" if the data is about the algorithms controlling the agents. Alternatively, if the user expects a different domain, but based on the examples given, "Algorithmic analysis" seems the most appropriate.
+</think>
+
+Domain: Algorithmic analysis
+
+The text describes a system involving multiple agents (ground and aerial robots) performing tasks in a warehouse environment. It includes detailed tracking of agent movements (slam_x, slam_y), task statuses, battery levels, goods handling, and warehouse conditions. The data structure and operational parameters suggest algorithmic systems for logistics automation, task management, and real-time monitoring of robotic agents in a supply chain context.
+
+# Persona
+
+You are an expert in Algorithmic Systems Analysis. You are skilled at interpreting complex data structures, mapping relationships between entities, and optimizing task-agent interactions in automated environments. You are adept at helping people with identifying operational workflows, dependencies, and community structures within robotic and warehouse management systems.
+- RATING EXPLANATION: Give a single sentence explanation of the rating.
+- DETAILED FINDINGS: A list of 5-10 key insights about the community. Each insight should have a short summary followed by multiple paragraphs of explanatory text grounded according to the grounding rules below. Be comprehensive.
+
+Return output as a well-formed JSON-formatted string with the following format. Don't use any unnecessary escape sequences. The output should be a single JSON object that can be parsed by json.loads.
+    {
+        "title": "<report_title>",
+        "summary": "<executive_summary>",
+        "rating": <threat_severity_rating>,
+        "rating_explanation": "<rating_explanation>"
+        "findings": "[{"summary":"<insight_1_summary>", "explanation": "<insight_1_explanation"}, {"summary":"<insight_2_summary>", "explanation": "<insight_2_explanation"}]"
+    }
+
+# Grounding Rules
+After each paragraph, add data record reference if the content of the paragraph was derived from one or more data records. Reference is in the format of [records: <record_source> (<record_id_list>, ...<record_source> (<record_id_list>)]. If there are more than 10 data records, show the top 10 most relevant records.
+Each paragraph should contain multiple sentences of explanation and concrete examples with specific named entities. All paragraphs must have these references at the start and end. Use "NONE" if there are no related roles or records. Everything should be in Chinese.
+
+Example paragraph with references added:
+This is a paragraph of the output text [records: Entities (1, 2, 3), Claims (2, 5), Relationships (10, 12)]
+
+# Example Input
+-----------
+Text:
+
+Entities
+
+id,entity,description
+5,ABILA CITY PARK,Abila City Park is the location of the POK rally
+
+Relationships
+
+id,source,target,description
+37,ABILA CITY PARK,POK RALLY,Abila City Park is the location of the POK rally
+38,ABILA CITY PARK,POK,POK is holding a rally in Abila City Park
+39,ABILA CITY PARK,POKRALLY,The POKRally is taking place at Abila City Park
+40,ABILA CITY PARK,CENTRAL BULLETIN,Central Bulletin is reporting on the POK rally taking place in Abila City Park
+
+Output:
+{
+    "title": "Abila City Park and POK Rally",
+    "summary": "The community revolves around the Abila City Park, which is the location of the POK rally. The park has relationships with POK, POKRALLY, and Central Bulletin, all
+of which are associated with the rally event.",
+    "rating": 5.0,
+    "rating_explanation": "The impact rating is moderate due to the potential for unrest or conflict during the POK rally.",
+    "findings": [
+        {
+            "summary": "Abila City Park as the central location",
+            "explanation": "Abila City Park is the central entity in this community, serving as the location for the POK rally. This park is the common link between all other
+entities, suggesting its significance in the community. The park's association with the rally could potentially lead to issues such as public disorder or conflict, depending on the
+nature of the rally and the reactions it provokes. [records: Entities (5), Relationships (37, 38, 39, 40)]"
+        },
+        {
+            "summary": "POK's role in the community",
+            "explanation": "POK is another key entity in this community, being the organizer of the rally at Abila City Park. The nature of POK and its rally could be a potential
+source of threat, depending on their objectives and the reactions they provoke. The relationship between POK and the park is crucial in understanding the dynamics of this community.
+[records: Relationships (38)]"
+        },
+        {
+            "summary": "POKRALLY as a significant event",
+            "explanation": "The POKRALLY is a significant event taking place at Abila City Park. This event is a key factor in the community's dynamics and could be a potential
+source of threat, depending on the nature of the rally and the reactions it provokes. The relationship between the rally and the park is crucial in understanding the dynamics of this
+community. [records: Relationships (39)]"
+        },
+        {
+            "summary": "Role of Central Bulletin",
+            "explanation": "Central Bulletin is reporting on the POK rally taking place in Abila City Park. This suggests that the event has attracted media attention, which could
+amplify its impact on the community. The role of Central Bulletin could be significant in shaping public perception of the event and the entities involved. [records: Relationships
+(40)]"
+        }
+    ]
+
+}
+
+# Real Data
+
+Use the following text for your answer. Do not make anything up in your answer.
+
+Text:
+{input_text}
+Output:
