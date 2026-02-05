@@ -284,7 +284,7 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
                     submit_data = resp1.json()
                     task_id = submit_data["task_id"]
                     task_ids["agentuav"] = task_id
-                    print(f"Agent1 仿真任务已提交，task_id: {task_id}")
+                    print(f"agentuav 仿真任务已提交，task_id: {task_id}")
 
                     # 2. 轮询查询结果（直到任务完成）
                     max_retries = 60  # 最多轮询 60 次（按实际任务时长调整）
@@ -300,25 +300,25 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
                             # print(f"Agent1 任务执行完成，完整结果：{agentuav_result}")
                             break
                         elif result_data["status"] == "failed":
-                            print(f"Agent1 任务执行失败：{result_data['error']}")
+                            print(f"agentuav 任务执行失败：{result_data['error']}")
                             agentuav_result = None
                             break
                         else:
                             # 任务仍在运行，继续轮询
                             progress = result_data["progress"]
-                            print(f"Agent1 任务运行中，进度：{progress}%")
+                            print(f"agentuav 任务运行中，进度：{progress}%")
                             await asyncio.sleep(retry_interval)
                     else:
                         # 轮询超时
-                        print(f"Agent1 任务查询超时（{max_retries*retry_interval} 秒）")
+                        print(f"agentuav 任务查询超时（{max_retries*retry_interval} 秒）")
                         agentuav_result = None
 
             except httpx.HTTPError as e:
-                print(f"调用 Agent1 接口失败：{e}")
+                print(f"调用 agentuav 接口失败：{e}")
                 task_ids["agentuav"] = None
                 agentuav_result = None
         else:
-            print("未提取到 Agent1 的指令参数")
+            print("未提取到 agentuav 的指令参数")
             task_ids["agentuav"] = None
             agentuav_result = None
 
@@ -336,12 +336,12 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
                 resp2 = await client.post(AGENT_API_MAP["agenttruck"], json=agenttruck_params)
                 resp2.raise_for_status()
                 task_ids["agenttruck"] = resp2.json()["task_id"]
-                print(f"Agent2 仿真任务已提交，task_id: {task_ids['agenttruck']}")
+                print(f"agenttruck 仿真任务已提交，task_id: {task_ids['agenttruck']}")
             except httpx.HTTPError as e:
-                print(f"调用 Agent2 接口失败：{e}")
+                print(f"调用 agenttruck 接口失败：{e}")
                 task_ids["agenttruck"] = None
         else:
-            print("未提取到 Agent2 的指令参数")
+            print("未提取到 agenttruck 的指令参数")
             task_ids["agenttruck"] = None
         
         # 调用 Agent3 接口
@@ -352,12 +352,12 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
                 resp3 = await client.post(AGENT_API_MAP["agentrobot"], json=agentrobot_params)
                 resp3.raise_for_status()
                 task_ids["agentrobot"] = resp3.json()["task_id"]
-                print(f"Agent3 仿真任务已提交，task_id: {task_ids['agentrobot']}")
+                print(f"agentrobot 仿真任务已提交，task_id: {task_ids['agentrobot']}")
             except httpx.HTTPError as e:
-                print(f"调用 Agent3 接口失败：{e}")
+                print(f"调用 agentrobot 接口失败：{e}")
                 task_ids["agentrobot"] = None
         else:
-            print("未提取到 Agent3 的指令参数")
+            print("未提取到 agentrobot 的指令参数")
             task_ids["agentrobot"] = None
     
     return task_ids
