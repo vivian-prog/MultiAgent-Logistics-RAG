@@ -222,6 +222,47 @@ def extract_and_parse_last_json(final_answer: str) -> dict:
         raise ValueError(f"顶层JSON解析失败：{e}\n原始JSON字符串：\n{top_level_json_str[:1000]}")
 
 
+def get_osm_coordinates(location_name: str) -> Optional[tuple]:
+    """
+    使用 OpenStreetMap Nominatim API 将地点名称转换为经纬度
+    :param location_name: 地点名称（如 "中山大学深圳校区"）
+    :return: (lat, lng) 元组或 None
+    """
+    if not location_name:
+        return None
+
+    try:
+        url = "https://nominatim.openstreetmap.org/search"
+        params = {
+            "q": location_name,
+            "format": "json",
+            "limit": 1
+        }
+        # OSM 要求必须带 User-Agent
+        headers = {
+            "User-Agent": "AgentSimulation/1.0 (contact@example.com)"
+        }
+
+        print(f"正在通过 OSM 查询地点坐标: {location_name} ...")
+        response = requests.get(url, params=params, headers=headers, timeout=10)
+
+        if response.status_code == 200:
+            data = response.json()
+            if data:
+                lat = float(data[0]['lat'])
+                lon = float(data[0]['lon'])
+                print(f"OSM 查询成功: {location_name} -> ({lat}, {lon})")
+                return lat, lon
+            else:
+                print(f"OSM 未找到地点: {location_name}")
+        else:
+            print(f"OSM API 请求失败: {response.status_code}")
+
+    except Exception as e:
+        print(f"OSM 地理编码出错: {e}")
+
+    return None
+
 async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str]:
     """
     1. 调用 RAG+LLM 获取包含三类 Agent 指令的 JSON 结果
@@ -252,66 +293,49 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
     agentuav_params = answer_dict.get("agentuav", {})
     agenttruck_params = answer_dict.get("agenttruck", {})
     agentrobot_params = answer_dict.get("agentrobot", {})
-    
+
     # 第四步：异步调用各 Agent 的接口（使用 httpx.AsyncClient 提升效率）
     async with httpx.AsyncClient(timeout=30.0) as client:
         # 存储各 Agent 的 task_id
         task_ids = {}
-        
-        # 调用 Agent1 接口
-        # if agent1_params:
-        #     try:
-        #         resp1 = await client.post(AGENT_API_MAP["agent1"], json=agent1_params)
-        #         resp1.raise_for_status()  # 抛出 HTTP 错误（如 400/500）
-        #         task_ids["agent1"] = resp1.json()["task_id"]
-        #         print(f"Agent1 仿真任务已提交，task_id: {task_ids['agent1']}")
-        #     except httpx.HTTPError as e:
-        #         print(f"调用 Agent1 接口失败：{e}")
-        #         task_ids["agent1"] = None
-        # else:
-        #     print("未提取到 Agent1 的指令参数")
-        #     task_ids["agent1"] = None
 
-
-        
         if agentuav_params:
             logging.info("分类成功 → 识别到UAV")
             try:
-                # 1. 提交任务
-                async with httpx.AsyncClient(timeout=30) as client:
-                    resp1 = await client.post(AGENT_API_MAP["agentuav_submit"], json=agentuav_params)
-                    resp1.raise_for_status()
-                    submit_data = resp1.json()
-                    task_id = submit_data["task_id"]
-                    task_ids["agentuav"] = task_id
-                    print(f"agentuav 仿真任务已提交，task_id: {task_id}")
+                # 1. 提交任务 (注意：直接复用外层client，不要重复 async with)
+                resp1 = await client.post(AGENT_API_MAP["agentuav_submit"], json=agentuav_params)
+                resp1.raise_for_status()
+                submit_data = resp1.json()
+                task_id = submit_data["task_id"]
+                task_ids["agentuav"] = task_id
+                print(f"agentuav 仿真任务已提交，task_id: {task_id}")
 
-                    # 2. 轮询查询结果（直到任务完成）
-                    max_retries = 60  # 最多轮询 60 次（按实际任务时长调整）
-                    retry_interval = 2  # 每 2 秒查询一次
-                    for _ in range(max_retries):
-                        result_resp = await client.get(AGENT_API_MAP["agentuav_result"].format(task_id))
-                        result_resp.raise_for_status()
-                        result_data = result_resp.json()
+                # 2. 轮询查询结果（直到任务完成）
+                max_retries = 60  # 最多轮询 60 次（按实际任务时长调整）
+                retry_interval = 2  # 每 2 秒查询一次
+                for _ in range(max_retries):
+                    result_resp = await client.get(AGENT_API_MAP["agentuav_result"].format(task_id))
+                    result_resp.raise_for_status()
+                    result_data = result_resp.json()
 
-                        if result_data["status"] == "success":
-                            # 3. 获取完整的 result
-                            agentuav_result = result_data["result"]
-                            print(f"Agent1 任务执行完成.")
-                            break
-                        elif result_data["status"] == "failed":
-                            print(f"agentuav 任务执行失败：{result_data['error']}")
-                            agentuav_result = None
-                            break
-                        else:
-                            # 任务仍在运行，继续轮询
-                            progress = result_data["progress"]
-                            print(f"agentuav 任务运行中，进度：{progress}%")
-                            await asyncio.sleep(retry_interval)
-                    else:
-                        # 轮询超时
-                        print(f"agentuav 任务查询超时（{max_retries*retry_interval} 秒）")
+                    if result_data["status"] == "success":
+                        # 3. 获取完整的 result
+                        agentuav_result = result_data["result"]
+                        print(f"Agent1 任务执行完成.")
+                        break
+                    elif result_data["status"] == "failed":
+                        print(f"agentuav 任务执行失败：{result_data['error']}")
                         agentuav_result = None
+                        break
+                    else:
+                        # 任务仍在运行，继续轮询
+                        progress = result_data["progress"]
+                        print(f"agentuav 任务运行中，进度：{progress}%")
+                        await asyncio.sleep(retry_interval)
+                else:
+                    # 轮询超时
+                    print(f"agentuav 任务查询超时（{max_retries*retry_interval} 秒）")
+                    agentuav_result = None
 
             except httpx.HTTPError as e:
                 print(f"调用 agentuav 接口失败：{e}")
@@ -322,11 +346,65 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
             task_ids["agentuav"] = None
             agentuav_result = None
 
-        
-        
+
+
         # 调用 Agent2 接口
         if agenttruck_params:
             logging.info("分类成功 → 识别到TRUCK")
+
+            # ----------------- GPS 参数兜底逻辑 -----------------
+            # 如果缺少经纬度参数，尝试从 tasks 描述或字段中解析地点并查询 OSM
+            if "start_lat" not in agenttruck_params or "end_lat" not in agenttruck_params:
+                print("检测到 agenttruck 缺少 GPS 参数，启动自动地理编码兜底...")
+
+                start_name = agenttruck_params.get("start_location")
+                end_name = agenttruck_params.get("end_location")
+
+                # 如果参数中没有明确的 location 字段，尝试从 tasks 列表中简单的正则提取（简单示例）
+                # 假设任务描述是 "从北京运输到上海"
+                if not start_name or not end_name:
+                    tasks = agenttruck_params.get("tasks", [])
+                    if tasks:
+                        task_str = tasks[0]
+                        # 简单的启发式规则，或者直接使用默认值
+                        # 这里为了演示，我们假设如果找不到就尝试提取 user_prompt 中的地点
+                        # 实际项目中可能需要更复杂的 NLP 提取
+                        pass
+
+                # 如果仍未找到，这里可以硬编码一些测试点，或者尝试查询 user_prompt 里的关键词
+                # 示例：如果 user_prompt 包含 "中山大学"，则将其设为终点
+                if not end_name and "中山大学" in user_prompt:
+                    end_name = "中山大学深圳校区"
+                if not start_name:
+                    start_name = "深圳北站" # 示例默认起点
+
+                # 调用 OSM API
+                if start_name and "start_lat" not in agenttruck_params:
+                    start_coords = get_osm_coordinates(start_name)
+                    if start_coords:
+                        agenttruck_params["start_lat"] = start_coords[0]
+                        agenttruck_params["start_lng"] = start_coords[1]
+
+                if end_name and "end_lat" not in agenttruck_params:
+                    end_coords = get_osm_coordinates(end_name)
+                    if end_coords:
+                        agenttruck_params["end_lat"] = end_coords[0]
+                        agenttruck_params["end_lng"] = end_coords[1]
+
+                # 如果依然缺失，给一个默认值防止报错（仅用于演示/调试）
+                if "start_lat" not in agenttruck_params:
+                     # 默认：深圳市民中心
+                    agenttruck_params["start_lat"] = 22.543099
+                    agenttruck_params["start_lng"] = 114.057868
+                    print(f"警告：无法获取起点坐标，使用默认值：深圳市民中心")
+
+                if "end_lat" not in agenttruck_params:
+                    # 默认：中山大学深圳校区
+                    agenttruck_params["end_lat"] = 22.7933
+                    agenttruck_params["end_lng"] = 113.9142
+                    print(f"警告：无法获取终点坐标，使用默认值：中山大学深圳校区")
+
+            # ----------------- 兜底逻辑结束 -----------------
 
             try:
                 resp2 = await client.post(AGENT_API_MAP["agenttruck"], json=agenttruck_params)
@@ -339,7 +417,7 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
         else:
             print("未提取到 agenttruck 的指令参数")
             task_ids["agenttruck"] = None
-        
+
         # 调用 Agent3 接口
         if agentrobot_params:
             logging.info("分类成功 → 识别到ROBOT")
