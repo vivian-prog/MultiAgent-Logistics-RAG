@@ -297,7 +297,7 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
                         if result_data["status"] == "success":
                             # 3. 获取完整的 result
                             agentuav_result = result_data["result"]
-                            # print(f"Agent1 任务执行完成，完整结果：{agentuav_result}")
+                            print(f"Agent1 任务执行完成.")
                             break
                         elif result_data["status"] == "failed":
                             print(f"agentuav 任务执行失败：{result_data['error']}")
@@ -322,11 +322,7 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
             task_ids["agentuav"] = None
             agentuav_result = None
 
-        # 返回 task_id + 完整结果
-        return {
-            "task_id": task_ids["agentuav"],
-            "full_result": agentuav_result
-        }
+        
         
         # 调用 Agent2 接口
         if agenttruck_params:
@@ -374,6 +370,6 @@ if __name__ == "__main__":
     
     # 异步执行
     task_ids = asyncio.run(extract_agent_commands_and_call_api(test_prompt))
-    # print("\n所有 Agent 任务提交结果：")
-    # for agent, task_id in task_ids.items():
-    #     print(f"{agent}: {task_id}")
+    print("\n所有 Agent 任务提交结果：")
+    for agent, task_id in task_ids.items():
+        print(f"{agent}: {task_id}")
