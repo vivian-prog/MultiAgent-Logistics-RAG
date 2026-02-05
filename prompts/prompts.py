@@ -12,15 +12,15 @@ class MultiAgentLogisticRAGPrompt:
 1. 输出仅允许包含标准JSON格式字符串，**禁止任何额外文字、注释、说明、换行或符号**；
 2. JSON结构必须包含以下固定字段，字段名不可修改：
    {{
-     "agent1": {{
+     "agenttruck": {{
        "type": "TRUCK",
        "tasks": ["任务1", "任务2", ...]  // 多个TRUCK Agent的任务，每个任务为字符串，描述具体指令
      }},
-     "agent2": {{
+     "agentuav": {{
        "type": "UAV",
        "tasks": ["任务1", "任务2", ...]  // 多个UAV Agent的任务
      }},
-     "agent3": {{
+     "agentrobot": {{
        "type": "ROBOTS",
        "tasks": ["任务1", "任务2", ...]  // 多个ROBOTS Agent的任务
      }},

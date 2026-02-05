@@ -5,7 +5,7 @@ from prompts.prompts import MultiAgentLogisticRAGPrompt
 from typing import Dict, List, Optional, Any
 import httpx 
 import time
-
+import logging
 # ===================== 配置项 =====================
 # RAG服务配置
 RAG_URL = "http://localhost:8015/v1/chat/completions"
@@ -275,10 +275,11 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
 
         
         if agentuav_params:
+            logging.info("分类成功 → 识别到UAV")
             try:
                 # 1. 提交任务
                 async with httpx.AsyncClient(timeout=30) as client:
-                    resp1 = await client.post(AGENT_API_MAP["agentuav_submit"], json=agent1_params)
+                    resp1 = await client.post(AGENT_API_MAP["agentuav_submit"], json=agentuav_params)
                     resp1.raise_for_status()
                     submit_data = resp1.json()
                     task_id = submit_data["task_id"]
@@ -296,7 +297,7 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
                         if result_data["status"] == "success":
                             # 3. 获取完整的 result
                             agentuav_result = result_data["result"]
-                            print(f"Agent1 任务执行完成，完整结果：{agentuav_result}")
+                            # print(f"Agent1 任务执行完成，完整结果：{agentuav_result}")
                             break
                         elif result_data["status"] == "failed":
                             print(f"Agent1 任务执行失败：{result_data['error']}")
@@ -329,6 +330,8 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
         
         # 调用 Agent2 接口
         if agenttruck_params:
+            logging.info("分类成功 → 识别到TRUCK")
+
             try:
                 resp2 = await client.post(AGENT_API_MAP["agenttruck"], json=agenttruck_params)
                 resp2.raise_for_status()
@@ -343,6 +346,8 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
         
         # 调用 Agent3 接口
         if agentrobot_params:
+            logging.info("分类成功 → 识别到ROBOT")
+
             try:
                 resp3 = await client.post(AGENT_API_MAP["agentrobot"], json=agentrobot_params)
                 resp3.raise_for_status()
@@ -360,32 +365,15 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
 # 
 # ===================== 测试示例 =====================
 if __name__ == "__main__":
-    # 示例1：测试仓储相关问题
-    # user_prompt1 = "仓储基础信息是怎样的？"
-    # print("=== 示例1 ===")
-    # answer1 = rag_plus_llm(user_prompt1, RAG_MODEL_GLOBAL)
-    # print(f"最终回答:\n{answer1}\n")
-    
-    # # 示例2：测试GPS模块相关问题
-    # user_prompt2 = "高精度GPS模块在哪里？和他同一个仓库的还有什么？"
-    # print("=== 示例2 ===")
-    # answer2 = rag_plus_llm(user_prompt2, RAG_MODEL_LOCAL)
-    # print(f"最终回答:\n{answer2}\n")
-    
-    # # 示例3：使用full模型测试
-    # user_prompt3 = "精度GPS模块在哪里？和他同一个仓库的还有什么？"
-    # print("=== 示例3 ===")
-    # answer3 = rag_plus_llm(user_prompt3, RAG_MODEL_FULL)
-    # print(f"最终回答:\n{answer3}\n")
 
 
     import asyncio
     
     # 示例用户问题（会触发 RAG+LLM 生成包含三类 Agent 指令的 JSON）
-    test_prompt = "请指令 agentuav 执行路径规划仿真，agenttruck 执行资源调度仿真，agentrobot 执行任务分配仿真"
+    test_prompt = "请指挥各个agent把无人机锂电池运到深圳市中山大学深圳校区"
     
     # 异步执行
     task_ids = asyncio.run(extract_agent_commands_and_call_api(test_prompt))
-    print("\n所有 Agent 任务提交结果：")
-    for agent, task_id in task_ids.items():
-        print(f"{agent}: {task_id}")
+    # print("\n所有 Agent 任务提交结果：")
+    # for agent, task_id in task_ids.items():
+    #     print(f"{agent}: {task_id}")
