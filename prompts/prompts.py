@@ -27,7 +27,11 @@ class MultiAgentLogisticRAGPrompt:
            "type": "UAV",
            "tasks": ["任务描述1"],
            "Map_name": "Map1",  // 必填：Map1(50架无人机) 或 Map2(32架无人机)
-           "max_steps": 1000     // 必填：最大仿真步数
+           "max_steps": 1000,     // 必填：最大仿真步数
+           "start_lat": 22.123,   // 可选：动态任务起点纬度
+           "start_lng": 113.123,  // 可选：动态任务起点经度
+           "end_lat": 22.456,     // 可选：动态任务终点纬度
+           "end_lng": 113.456     // 可选：动态任务终点经度
          }},
          "agentrobot": {{
            "type": "ROBOTS",

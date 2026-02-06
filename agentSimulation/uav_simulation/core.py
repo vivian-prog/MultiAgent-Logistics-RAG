@@ -84,7 +84,14 @@ class SetConfig:
             self.match_pairs = match_pairs_zhuanyi
             self.Init_state = uav_init_state_zhuanyi
         else:
-            raise ValueError(f"无效的地图名称：{self.name}，仅支持 Map1/Map2")
+            # 默认兜底
+            print(f"Warning: Unknown Map_name '{self.name}', defaulting to Map1 config.")
+            self.uav_num = 50
+            self.map_w, self.map_h, self.map_z = 50, 50, 5
+            self.buildings_location = buildings_location_WH
+            self.buildings = buildings_WH
+            self.match_pairs = match_pairs_WH
+            self.Init_state = uav_init_pos_WH
 
         return self.uav_num, self.map_w, self.map_h, self.map_z, self.buildings_location, self.buildings, self.match_pairs, self.uav_r, self.Init_state
 
@@ -168,6 +175,60 @@ def run_uav_simulation_core(params: dict, task_context):
     task_context.update_state(state="STARTED", meta={"progress": 10})
     MAP = SetConfig(map_name)
     uav_num, map_w, map_h, map_z, buildings_location, buildings, match_pairs, uav_r, Init_state = MAP.Setting()
+
+    # ================= 核心修改：支持动态单机任务（深圳坐标系映射） =================
+    # 检查是否传入了特定的起终点坐标 (GPS 经纬度)
+    # 兼容 LLM 可能生成的 start_lat/lng 格式
+    raw_start_lng = params.get("start_lng") or params.get("start_x")
+    raw_start_lat = params.get("start_lat") or params.get("start_y")
+    raw_end_lng = params.get("end_lng") or params.get("end_x")
+    raw_end_lat = params.get("end_lat") or params.get("end_y")
+
+    if all(v is not None for v in [raw_start_lng, raw_start_lat, raw_end_lng, raw_end_lat]):
+        # 1. 定义深圳区域的参考原点 (左下角近似值：宝安机场西南侧)
+        # 这样可以将 GPS (113.x, 22.x) 映射为相对较小的正数
+        ORIGIN_LNG = 113.70
+        ORIGIN_LAT = 22.40
+
+        # 2. 定义缩放比例 (将经纬度差值放大为 Grid 坐标)
+        # 假设 0.01 度 (约1km) 对应 10 个 Grid 单位 -> 1 Grid ≈ 100米
+        SCALE_FACTOR = 1000.0
+
+        def gps_to_grid(lng, lat):
+            grid_x = (float(lng) - ORIGIN_LNG) * SCALE_FACTOR
+            grid_y = (float(lat) - ORIGIN_LAT) * SCALE_FACTOR
+            return grid_x, grid_y
+
+        # 3. 转换坐标
+        start_x, start_y = gps_to_grid(raw_start_lng, raw_start_lat)
+        end_x, end_y = gps_to_grid(raw_end_lng, raw_end_lat)
+
+        print(f"检测到动态单机任务。GPS映射: 起点({raw_start_lng},{raw_start_lat})->({start_x:.2f},{start_y:.2f})")
+
+        # 4. 强制设为单机
+        uav_num = 1
+
+        # 5. 覆盖初始状态
+        Init_state = np.zeros((1, 7), dtype=np.float32)
+        Init_state[0] = [start_x, start_y, 0, 0, 0, 0, 0]
+
+        # 6. 覆盖目标配对
+        target_z = min(5.0, map_z)
+        match_pairs = [[0, [0,0,0], [end_x, end_y, target_z]]]
+
+        # 7. 动态调整地图边界 (确保转换后的坐标在地图内)
+        # 找出最大 Grid 坐标，并留出缓冲
+        max_grid_x = max(start_x, end_x, map_w)
+        max_grid_y = max(start_y, end_y, map_h)
+
+        if max_grid_x >= map_w or max_grid_y >= map_h:
+            map_w = math.ceil(max_grid_x + 20)
+            map_h = math.ceil(max_grid_y + 20)
+            # 重置建筑物 (清空避障，因为真实地图太复杂，此处仅演示轨迹)
+            buildings_location = np.zeros((map_w, map_h))
+            print(f"地图尺寸已根据深圳坐标动态扩展为: {map_w} x {map_h}")
+
+    # ==========================================================
 
     # 3. 初始化模块
     task_context.update_state(state="STARTED", meta={"progress": 20})
