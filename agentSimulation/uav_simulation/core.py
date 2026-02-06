@@ -39,7 +39,8 @@ class UAVEnv(gym.Env):
         if env_t % 2 == 0:
             for i in range(self.uav_num):
                 x, y, z = self.state[i][:3]
-                position = [round(x, 2), round(y, 2), round(z, 2), env_t]
+                # 显式转换为原生 float，避免 JSON 序列化错误
+                position = [float(round(x, 2)), float(round(y, 2)), float(round(z, 2)), int(env_t)]
                 self.position_pool[i].append(position)
 
     def step(self, actions, env_t):
@@ -276,12 +277,12 @@ def run_uav_simulation_core(params: dict, task_context):
 
     return {
         "map_name": map_name,
-        "uav_num": uav_num,
-        "total_steps": env_t,
-        "max_steps": max_steps,
-        "arrived_uav_count": arrived_count,
+        "uav_num": int(uav_num),
+        "total_steps": int(env_t),
+        "max_steps": int(max_steps),
+        "arrived_uav_count": int(arrived_count),
         "arrived_uav_ratio": round(arrived_count / uav_num, 2) if uav_num > 0 else 0,
         "uav_trajectories": uav_trajectories,
-        "uav_arrived_status": flag,
-        "map_info": {"map_w": map_w, "map_h": map_h, "map_z": map_z}
+        "uav_arrived_status": [bool(f) for f in flag], # 确保 bool 也是原生的
+        "map_info": {"map_w": float(map_w), "map_h": float(map_h), "map_z": float(map_z)}
     }
