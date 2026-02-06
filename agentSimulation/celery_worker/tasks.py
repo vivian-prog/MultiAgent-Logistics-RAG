@@ -417,17 +417,15 @@ def run_simulation_task_agent_truck(self, params: dict):
         self.update_state(state="STARTED", meta={"progress": 20})
         gh_params = {
             "point": [f"{params['start_lat']},{params['start_lng']}", f"{params['end_lat']},{params['end_lng']}"],
-            "vehicle": "truck",
-            "weighting": "fastest",
-            "points_encoded": False,
-            "instructions": False,
-            "key": GRAPH_HOPPER_API_KEY,
-            "details": "road_type,distance,time,speed"
+            "profile": "car",
+            "layer": "OpenStreetMap",
+            
+            
         }
-
+#'http://127.0.0.1:8989/route?point=22.9934,113.3278&point=22.8200,113.1175&profile=car&layer=OpenStreetMap'
         try:
             print(f"正在请求 GraphHopper: {GRAPH_HOPPER_BASE_URL}")
-            response = requests.get(GRAPH_HOPPER_BASE_URL, params=gh_params, timeout=5) # 缩短超时以便快速失败
+            response = requests.get(f'http://127.0.0.1:8989/route?point={params['start_lng']},{params['start_lat']}&point={params['end_lng']},{params['end_lat']}&profile=car&layer=OpenStreetMap', timeout=5) # 缩短超时以便快速失败
             response.raise_for_status()
             gh_data = response.json()
             best_route = gh_data["paths"][0]
