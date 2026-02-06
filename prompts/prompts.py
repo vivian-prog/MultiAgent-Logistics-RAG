@@ -65,7 +65,7 @@ class MultiAgentLogisticRAGPrompt:
     请将用户需求转化为以下**3条标准化检索短句**（用空格分隔，不要换行）：
     1. **查货物与仓库坐标**: "查找 [货物名称] 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y)"
     2. **查最近仓库**: "计算 [目的地] 与各仓库的距离并找出最近仓库"
-    3. **查可用Agent**: "查询状态为待命且电量充足的 [Agent类型] 列表"
+    3. **查最近Agent**: "查询状态为待命的 TRUCK、UAV、ROBOTS 列表及其所属仓库位置，找出距离 [起运点/货物所在仓库] 最近的可用Agent"
 
     ## 4. 错误禁止
     - 禁止生成JSON/Markdown格式，仅输出**纯文本字符串**；
@@ -76,14 +76,14 @@ class MultiAgentLogisticRAGPrompt:
     ## 示例1：用户输入
     user_prompt = "请调度无人机把干粉灭火器运到中山大学深圳校区"
     ## 示例1：生成的RAG Prompt
-    查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 中山大学深圳校区 与各仓库的距离并找出最近仓库 查询状态为待命且电量充足的 无人机 列表
+    查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 中山大学深圳校区 与各仓库的距离并找出最近仓库 查询状态为待命的 TRUCK、UAV、ROBOTS 列表及其所属仓库位置，找出距离 货物所在仓库 最近的可用Agent
 
     ## 示例2：用户输入
     user_prompt = "安排卡车从北京仓储中心运送生鲜到上海"
     ## 示例2：生成的RAG Prompt
-    查找 生鲜 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 上海 与各仓库的距离 查询状态为待命且电量充足的 卡车 列表
+    查找 生鲜 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 上海 与各仓库的距离 查询状态为待命的 TRUCK、UAV、ROBOTS 列表及其所属仓库位置，找出距离 北京仓储中心 最近的可用Agent
 
     ## 示例3：用户输入
     user_prompt = "查询哪里有空闲的仓储机器人"
     ## 示例3：生成的RAG Prompt
-    查询状态为待命且电量充足的 仓储机器人 列表"""
+    查询状态为待命的 TRUCK、UAV、ROBOTS 列表及其所属仓库位置，找出距离最近的可用Agent"""
