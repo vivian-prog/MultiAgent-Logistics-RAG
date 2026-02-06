@@ -16,7 +16,7 @@ DB_CONFIG = {
 }
 
 # 2. 输出配置
-OUTPUT_DIR = "/home/sysuvis/program/huangw293/GraphRagSQLTest/input"  # TXT文件输出目录（会自动创建）
+OUTPUT_DIR = "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/GraphRag/input"  # TXT文件输出目录（会自动创建）
 # 需要生成TXT的表列表（可根据需求调整）
 TABLES = [
     "warehouse_base",          # 仓储基础信息表
@@ -26,7 +26,8 @@ TABLES = [
     "task_agent_rel",          # 任务-Agent关联表
     "agent_uav_sensor",        # 无人机传感器表
     "agent_ground_sensor",     # 地面运输机器人传感器表
-    "agent_warehouse_sensor"   # 仓储机器人传感器表
+    "agent_warehouse_sensor",   # 仓储机器人传感器表
+    "uav_landing_points"        # uav起降点基础信息表
 ]
 # 表的中文备注（提升GraphRAG解析可读性）
 TABLE_REMARKS = {
@@ -35,9 +36,10 @@ TABLE_REMARKS = {
     "agent_base": "Agent基础信息表：存储各类Agent的基础属性，如Agent名称、类型、状态等",
     "task_main": "任务主表：存储任务的核心信息，如任务名称、描述、创建时间、状态等",
     "task_agent_rel": "任务-Agent关联表：存储任务与Agent的绑定关系，如任务ID、Agent ID、分配时间等",
-    "agent_uav_sensor": "无人机传感器表：存储无人机传感器数据，如传感器类型、采集值、采集时间等",
-    "agent_ground_sensor": "地面运输机器人传感器表：存储地面机器人传感器数据",
-    "agent_warehouse_sensor": "仓储机器人传感器表：存储仓储机器人传感器数据"
+    "agent_uav_sensor": "uav传感器表：存储uav传感器数据，如传感器类型、采集值、采集时间等",
+    "agent_ground_sensor": "truck传感器表：存储truck的经纬度和传感器数据",
+    "agent_warehouse_sensor": "robot传感器表：存储robot的经纬度传感器数据",
+    "uav_landing_points" :  "uav起降点基础信息表：存储uav的经纬度传感器数据"
 }
 
 # ===================== 核心工具类 =====================

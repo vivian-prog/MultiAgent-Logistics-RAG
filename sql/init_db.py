@@ -5,13 +5,12 @@ import sys
 # ================= 数据库配置 =================
 # 请根据实际环境修改以下配置
 DB_CONFIG = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'root',
-    'password': 'password',  # <--- 请修改为您的数据库密码
-    'database': 'hma_llm',   # <--- 请修改为您的数据库名称
-    'charset': 'utf8mb4',
-    'cursorclass': pymysql.cursors.DictCursor
+    "host": "localhost",  # 本地MySQL默认地址，远程服务器需改为对应IP
+    "user": "huangw293",       # 你的MySQL用户名（默认常为root）
+    "password": "Huangw293!@#",  # 替换为你自己的MySQL密码（如123456）
+    "database": "hma_llm",  # 之前创建的数据库名，保持不变
+    "charset": "utf8mb4",
+    "cursorclass": pymysql.cursors.DictCursor  # 仍返回字典格式，方便取值
 }
 # ============================================
 

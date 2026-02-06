@@ -40,7 +40,7 @@ logger = logging.getLogger(__name__)
 
 
 # 设置常量和配置  INPUT_DIR根据自己的建立graphrag的文件夹路径进行修改
-INPUT_DIR = "//home/sysuvis/program/huangw293/GraphRagSQLTest/inputs/artifacts"
+INPUT_DIR = "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/GraphRag/inputs/artifacts"
 LANCEDB_URI = f"{INPUT_DIR}/lancedb"
 COMMUNITY_REPORT_TABLE = "create_final_community_reports"
 ENTITY_TABLE = "create_final_nodes"
@@ -379,8 +379,8 @@ async def full_model_search(prompt: str):
     formatted_result = "#综合搜索结果:\n\n"
     formatted_result += "##本地检索结果:\n"
     formatted_result += format_response(local_result.response) + "\n\n"
-    formatted_result += "##全局检索结果:\n"
-    formatted_result += format_response(global_result.response) + "\n\n"
+    # formatted_result += "##全局检索结果:\n"
+    # formatted_result += format_response(global_result.response) + "\n\n"
     return formatted_result
 
 

@@ -56,7 +56,7 @@ def rag_search(prompt: str, rag_model: str = RAG_MODEL_FULL, temperature: float 
             RAG_URL,
             headers=RAG_HEADERS,
             data=json.dumps(rag_data),
-            timeout=30  # 设置超时时间
+            timeout=60  # 设置超时时间
         )
         response.raise_for_status()  # 检查HTTP错误
         
@@ -298,7 +298,7 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
     agentrobot_params = answer_dict.get("agentrobot", {})
 
     # 第四步：异步调用各 Agent 的接口（使用 httpx.AsyncClient 提升效率）
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    async with httpx.AsyncClient(timeout=60.0) as client:
         # 存储各 Agent 的 task_id
         task_ids = {}
 
@@ -447,7 +447,7 @@ if __name__ == "__main__":
     import asyncio
     
     # 示例用户问题（会触发 RAG+LLM 生成包含三类 Agent 指令的 JSON）
-    test_prompt = "请指挥各个agent把干粉灭火器从所在仓库运到深圳市中山大学深圳校区(北纬 22.770°，东经 113.904°)"
+    test_prompt = "请指挥各个agent把地面机器人轮胎从所在仓库运到深圳市中山大学深圳校区(北纬 22.770°，东经 113.904°)"
     
     # 异步执行
     task_ids = asyncio.run(extract_agent_commands_and_call_api(test_prompt))

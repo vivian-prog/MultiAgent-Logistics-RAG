@@ -1,7 +1,7 @@
 ====================================================================================================
 表名：agent_base
 备注：Agent基础信息表：存储各类Agent的基础属性，如Agent名称、类型、状态等
-生成时间：2025-12-16 21:59:07
+生成时间：2026-02-06 21:48:06
 数据记录数：10
 ====================================================================================================
 
@@ -23,7 +23,7 @@
 第1个数据：agent_id是GROUND-001,agent_type是2,warehouse_id是2,max_load是50.00,max_speed是2.00,battery_capacity是20000,status是2,last_maintain_time是2025-11-19 20:00:47。
 第2个数据：agent_id是GROUND-002,agent_type是2,warehouse_id是5,max_load是60.00,max_speed是2.50,battery_capacity是25000,status是1,last_maintain_time是2025-12-04 20:00:47。
 第3个数据：agent_id是GROUND-003,agent_type是2,warehouse_id是8,max_load是55.00,max_speed是2.20,battery_capacity是22000,status是3,last_maintain_time是2025-11-16 20:00:47。
-第4个数据：agent_id是UAV-001,agent_type是1,warehouse_id是1,max_load是5.00,max_speed是15.00,battery_capacity是10000,status是1,last_maintain_time是2025-11-14 20:00:47。
+第4个数据：agent_id是UAV-001,agent_type是1,warehouse_id是NULL,max_load是5.00,max_speed是15.00,battery_capacity是10000,status是1,last_maintain_time是2025-11-14 20:00:47。
 第5个数据：agent_id是UAV-002,agent_type是1,warehouse_id是4,max_load是8.00,max_speed是18.00,battery_capacity是12000,status是3,last_maintain_time是2025-11-29 20:00:47。
 第6个数据：agent_id是UAV-003,agent_type是1,warehouse_id是7,max_load是6.50,max_speed是16.00,battery_capacity是11000,status是1,last_maintain_time是2025-11-14 20:00:47。
 第7个数据：agent_id是UAV-004,agent_type是1,warehouse_id是10,max_load是7.20,max_speed是17.00,battery_capacity是11500,status是0,last_maintain_time是2025-11-26 20:00:47。
