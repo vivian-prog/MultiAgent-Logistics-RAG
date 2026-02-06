@@ -16,7 +16,7 @@ DB_CONFIG = {
 }
 
 # 2. 输出配置
-OUTPUT_DIR = "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/GraphRag/input"  # TXT文件输出目录（会自动创建）
+OUTPUT_DIR = "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/sql"  # TXT文件输出目录（会自动创建）
 # 需要生成TXT的表列表（可根据需求调整）
 TABLES = [
     "warehouse_base",          # 仓储基础信息表

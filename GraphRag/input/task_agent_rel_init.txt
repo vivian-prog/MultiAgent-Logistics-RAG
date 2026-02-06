@@ -1,8 +1,8 @@
 ====================================================================================================
 表名：task_agent_rel
 备注：任务-Agent关联表：存储任务与Agent的绑定关系，如任务ID、Agent ID、分配时间等
-生成时间：2026-02-06 21:48:06
-数据记录数：9
+生成时间：2025-12-16 21:59:07
+数据记录数：10
 ====================================================================================================
 
 【表结构】
@@ -20,12 +20,13 @@
 
 【表数据】
 表数据记录为：
-第1个数据：rel_id是2,task_id是LOG-20250520-002,agent_id是GROUND-001,agent_role是地面运输,start_time是2025-12-05 20:00:47,end_time是NULL,status是1,feedback_info是运输中，路况良好。
-第2个数据：rel_id是3,task_id是LOG-20250520-003,agent_id是WARE-001,agent_role是取货,start_time是2025-12-06 20:00:47,end_time是NULL,status是0,feedback_info是NULL。
-第3个数据：rel_id是4,task_id是LOG-20250520-004,agent_id是UAV-002,agent_role是空中投递,start_time是2025-12-07 20:00:47,end_time是2025-12-08 20:00:47,status是2,feedback_info是投递完成，信号稳定。
-第4个数据：rel_id是5,task_id是LOG-20250520-005,agent_id是GROUND-002,agent_role是地面运输,start_time是2025-12-08 20:00:47,end_time是NULL,status是1,feedback_info是运输中，接近目标点。
-第5个数据：rel_id是6,task_id是LOG-20250520-006,agent_id是WARE-002,agent_role是取货,start_time是2025-12-09 20:00:47,end_time是2025-12-10 20:00:47,status是2,feedback_info是取货失败，物品缺货。
-第6个数据：rel_id是7,task_id是LOG-20250520-007,agent_id是UAV-003,agent_role是空中巡检,start_time是2025-12-10 20:00:47,end_time是2025-12-11 20:00:47,status是2,feedback_info是巡检完成，无异常。
-第7个数据：rel_id是8,task_id是LOG-20250520-008,agent_id是GROUND-003,agent_role是地面运输,start_time是2025-12-11 20:00:47,end_time是NULL,status是0,feedback_info是NULL。
-第8个数据：rel_id是9,task_id是LOG-20250520-009,agent_id是WARE-003,agent_role是取货,start_time是2025-12-12 20:00:47,end_time是NULL,status是1,feedback_info是取货中，货架定位准确。
-第9个数据：rel_id是10,task_id是LOG-20250520-010,agent_id是UAV-004,agent_role是空中投递,start_time是2025-12-13 20:00:47,end_time是NULL,status是0,feedback_info是NULL。
+第1个数据：rel_id是1,task_id是LOG-20250520-001,agent_id是UAV-001,agent_role是空中投递,start_time是2025-12-04 20:00:47,end_time是2025-12-05 20:00:47,status是2,feedback_info是投递完成，无异常。
+第2个数据：rel_id是2,task_id是LOG-20250520-002,agent_id是GROUND-001,agent_role是地面运输,start_time是2025-12-05 20:00:47,end_time是NULL,status是1,feedback_info是运输中，路况良好。
+第3个数据：rel_id是3,task_id是LOG-20250520-003,agent_id是WARE-001,agent_role是取货,start_time是2025-12-06 20:00:47,end_time是NULL,status是0,feedback_info是NULL。
+第4个数据：rel_id是4,task_id是LOG-20250520-004,agent_id是UAV-002,agent_role是空中投递,start_time是2025-12-07 20:00:47,end_time是2025-12-08 20:00:47,status是2,feedback_info是投递完成，信号稳定。
+第5个数据：rel_id是5,task_id是LOG-20250520-005,agent_id是GROUND-002,agent_role是地面运输,start_time是2025-12-08 20:00:47,end_time是NULL,status是1,feedback_info是运输中，接近目标点。
+第6个数据：rel_id是6,task_id是LOG-20250520-006,agent_id是WARE-002,agent_role是取货,start_time是2025-12-09 20:00:47,end_time是2025-12-10 20:00:47,status是2,feedback_info是取货失败，物品缺货。
+第7个数据：rel_id是7,task_id是LOG-20250520-007,agent_id是UAV-003,agent_role是空中巡检,start_time是2025-12-10 20:00:47,end_time是2025-12-11 20:00:47,status是2,feedback_info是巡检完成，无异常。
+第8个数据：rel_id是8,task_id是LOG-20250520-008,agent_id是GROUND-003,agent_role是地面运输,start_time是2025-12-11 20:00:47,end_time是NULL,status是0,feedback_info是NULL。
+第9个数据：rel_id是9,task_id是LOG-20250520-009,agent_id是WARE-003,agent_role是取货,start_time是2025-12-12 20:00:47,end_time是NULL,status是1,feedback_info是取货中，货架定位准确。
+第10个数据：rel_id是10,task_id是LOG-20250520-010,agent_id是UAV-004,agent_role是空中投递,start_time是2025-12-13 20:00:47,end_time是NULL,status是0,feedback_info是NULL。

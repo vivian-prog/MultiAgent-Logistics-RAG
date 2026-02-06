@@ -1,0 +1,32 @@
+====================================================================================================
+表名：warehouse_base
+备注：仓储基础信息表：存储仓库的基础属性，如仓库名称、位置、容量等
+生成时间：2026-02-06 23:14:42
+数据记录数：10
+====================================================================================================
+
+【表结构】
+表结构中，有以下字段名，它们的属性如下：
+1. 字段名：warehouse_id，类型为int，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为auto_increment。
+2. 字段名：warehouse_name，类型为varchar(50)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+3. 字段名：location_x，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+4. 字段名：location_y，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+5. 字段名：max_capacity，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+6. 字段名：status，类型为tinyint，是否可以为空为否，是否是主键为否，默认值为1，额外属性为为空。
+7. 字段名：create_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED。
+8. 字段名：update_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED on update CURRENT_TIMESTAMP。
+
+----------------------------------------------------------------------------------------------------
+
+【表数据】
+表数据记录为：
+第1个数据：warehouse_id是2,warehouse_name是上海二号仓储中心,location_x是121.47,location_y是31.23,max_capacity是8000,status是1,create_time是2025-12-05 20:00:47,update_time是2025-12-05 20:00:47。
+第2个数据：warehouse_id是3,warehouse_name是广州三号仓储中心,location_x是113.26,location_y是23.13,max_capacity是4500,status是2,create_time是2025-12-06 20:00:47,update_time是2025-12-06 20:00:47。
+第3个数据：warehouse_id是4,warehouse_name是深圳四号仓储中心,location_x是114.06,location_y是22.54,max_capacity是6000,status是1,create_time是2025-12-07 20:00:47,update_time是2025-12-07 20:00:47。
+第4个数据：warehouse_id是5,warehouse_name是成都五号仓储中心,location_x是104.07,location_y是30.66,max_capacity是3800,status是1,create_time是2025-12-08 20:00:47,update_time是2025-12-08 20:00:47。
+第5个数据：warehouse_id是6,warehouse_name是杭州六号仓储中心,location_x是120.15,location_y是30.29,max_capacity是7200,status是0,create_time是2025-12-09 20:00:47,update_time是2025-12-09 20:00:47。
+第6个数据：warehouse_id是7,warehouse_name是武汉七号仓储中心,location_x是114.31,location_y是30.59,max_capacity是4200,status是1,create_time是2025-12-10 20:00:47,update_time是2025-12-10 20:00:47。
+第7个数据：warehouse_id是8,warehouse_name是西安八号仓储中心,location_x是108.95,location_y是34.26,max_capacity是3500,status是1,create_time是2025-12-11 20:00:47,update_time是2025-12-11 20:00:47。
+第8个数据：warehouse_id是9,warehouse_name是重庆九号仓储中心,location_x是106.55,location_y是29.56,max_capacity是5800,status是2,create_time是2025-12-12 20:00:47,update_time是2025-12-12 20:00:47。
+第9个数据：warehouse_id是10,warehouse_name是南京十号仓储中心,location_x是118.79,location_y是32.06,max_capacity是4900,status是1,create_time是2025-12-13 20:00:47,update_time是2025-12-13 20:00:47。
+第10个数据：warehouse_id是11,warehouse_name是主仓库A,location_x是100.00,location_y是200.00,max_capacity是5000,status是1,create_time是2025-12-18 13:37:52,update_time是2025-12-18 13:37:52。

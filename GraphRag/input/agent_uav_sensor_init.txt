@@ -1,8 +1,8 @@
 ====================================================================================================
 表名：agent_uav_sensor
-备注：uav传感器表：存储uav传感器数据，如传感器类型、采集值、采集时间等
-生成时间：2026-02-06 21:48:06
-数据记录数：7
+备注：无人机传感器表：存储无人机传感器数据，如传感器类型、采集值、采集时间等
+生成时间：2025-12-16 21:59:07
+数据记录数：10
 ====================================================================================================
 
 【表结构】
@@ -23,10 +23,13 @@
 
 【表数据】
 表数据记录为：
-第1个数据：sensor_id是3,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.059000,gps_y是22.544000,altitude是85.20,attitude_angle是0.80,obstacle_dist是3.50,battery_remaining是85,signal_strength是90,collect_time是2025-12-07 22:00:47。
-第2个数据：sensor_id是4,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.060000,gps_y是22.545000,altitude是80.70,attitude_angle是1.00,obstacle_dist是2.80,battery_remaining是80,signal_strength是88,collect_time是2025-12-07 23:00:47。
-第3个数据：sensor_id是5,agent_id是UAV-003,task_id是LOG-20250520-007,gps_x是114.306000,gps_y是30.594000,altitude是98.70,attitude_angle是0.50,obstacle_dist是4.20,battery_remaining是92,signal_strength是95,collect_time是2025-12-10 22:00:47。
-第4个数据：sensor_id是6,agent_id是UAV-003,task_id是LOG-20250520-007,gps_x是114.307000,gps_y是30.595000,altitude是95.40,attitude_angle是0.30,obstacle_dist是3.90,battery_remaining是88,signal_strength是94,collect_time是2025-12-10 23:00:47。
-第5个数据：sensor_id是7,agent_id是UAV-004,task_id是LOG-20250520-010,gps_x是118.792000,gps_y是32.059000,altitude是105.30,attitude_angle是1.50,obstacle_dist是6.10,battery_remaining是75,signal_strength是85,collect_time是2025-12-13 22:00:47。
-第6个数据：sensor_id是8,agent_id是UAV-004,task_id是LOG-20250520-010,gps_x是118.793000,gps_y是32.060000,altitude是100.80,attitude_angle是1.10,obstacle_dist是5.80,battery_remaining是70,signal_strength是83,collect_time是2025-12-13 23:00:47。
-第7个数据：sensor_id是10,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.061000,gps_y是22.546000,altitude是75.90,attitude_angle是0.90,obstacle_dist是3.20,battery_remaining是75,signal_strength是87,collect_time是2025-12-08 00:00:47。
+第1个数据：sensor_id是1,agent_id是UAV-001,task_id是LOG-20250520-001,gps_x是116.405000,gps_y是39.916000,altitude是120.50,attitude_angle是0.00,obstacle_dist是5.20,battery_remaining是95,signal_strength是98,collect_time是2025-12-04 22:00:47。
+第2个数据：sensor_id是2,agent_id是UAV-001,task_id是LOG-20250520-001,gps_x是116.406000,gps_y是39.917000,altitude是115.30,attitude_angle是1.20,obstacle_dist是4.80,battery_remaining是90,signal_strength是97,collect_time是2025-12-04 23:00:47。
+第3个数据：sensor_id是3,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.059000,gps_y是22.544000,altitude是85.20,attitude_angle是0.80,obstacle_dist是3.50,battery_remaining是85,signal_strength是90,collect_time是2025-12-07 22:00:47。
+第4个数据：sensor_id是4,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.060000,gps_y是22.545000,altitude是80.70,attitude_angle是1.00,obstacle_dist是2.80,battery_remaining是80,signal_strength是88,collect_time是2025-12-07 23:00:47。
+第5个数据：sensor_id是5,agent_id是UAV-003,task_id是LOG-20250520-007,gps_x是114.306000,gps_y是30.594000,altitude是98.70,attitude_angle是0.50,obstacle_dist是4.20,battery_remaining是92,signal_strength是95,collect_time是2025-12-10 22:00:47。
+第6个数据：sensor_id是6,agent_id是UAV-003,task_id是LOG-20250520-007,gps_x是114.307000,gps_y是30.595000,altitude是95.40,attitude_angle是0.30,obstacle_dist是3.90,battery_remaining是88,signal_strength是94,collect_time是2025-12-10 23:00:47。
+第7个数据：sensor_id是7,agent_id是UAV-004,task_id是LOG-20250520-010,gps_x是118.792000,gps_y是32.059000,altitude是105.30,attitude_angle是1.50,obstacle_dist是6.10,battery_remaining是75,signal_strength是85,collect_time是2025-12-13 22:00:47。
+第8个数据：sensor_id是8,agent_id是UAV-004,task_id是LOG-20250520-010,gps_x是118.793000,gps_y是32.060000,altitude是100.80,attitude_angle是1.10,obstacle_dist是5.80,battery_remaining是70,signal_strength是83,collect_time是2025-12-13 23:00:47。
+第9个数据：sensor_id是9,agent_id是UAV-001,task_id是LOG-20250520-001,gps_x是116.407000,gps_y是39.918000,altitude是110.20,attitude_angle是0.70,obstacle_dist是4.50,battery_remaining是85,signal_strength是96,collect_time是2025-12-05 00:00:47。
+第10个数据：sensor_id是10,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.061000,gps_y是22.546000,altitude是75.90,attitude_angle是0.90,obstacle_dist是3.20,battery_remaining是75,signal_strength是87,collect_time是2025-12-08 00:00:47。

@@ -1,0 +1,32 @@
+====================================================================================================
+表名：task_main
+备注：任务主表：存储任务的核心信息，如任务名称、描述、创建时间、状态等
+生成时间：2026-02-06 23:14:42
+数据记录数：9
+====================================================================================================
+
+【表结构】
+表结构中，有以下字段名，它们的属性如下：
+1. 字段名：task_id，类型为varchar(30)，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为为空。
+2. 字段名：task_type，类型为tinyint，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+3. 字段名：goods_id，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+4. 字段名：target_x，类型为decimal(12,6)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+5. 字段名：target_y，类型为decimal(12,6)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+6. 字段名：require_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。
+7. 字段名：status，类型为tinyint，是否可以为空为否，是否是主键为否，默认值为0，额外属性为为空。
+8. 字段名：create_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED。
+9. 字段名：complete_time，类型为datetime，是否可以为空为是，是否是主键为否，默认值为NULL，额外属性为为空。
+
+----------------------------------------------------------------------------------------------------
+
+【表数据】
+表数据记录为：
+第1个数据：task_id是LOG-20250520-002,task_type是1,goods_id是2,target_x是121.480000,target_y是31.240000,require_time是2025-12-16 20:00:47,status是1,create_time是2025-12-05 20:00:47,complete_time是NULL。
+第2个数据：task_id是LOG-20250520-003,task_type是2,goods_id是3,target_x是113.270000,target_y是23.130000,require_time是2025-12-15 20:00:47,status是0,create_time是2025-12-06 20:00:47,complete_time是NULL。
+第3个数据：task_id是LOG-20250520-004,task_type是1,goods_id是4,target_x是114.060000,target_y是22.550000,require_time是2025-12-15 20:00:47,status是2,create_time是2025-12-07 20:00:47,complete_time是2025-12-08 20:00:47。
+第4个数据：task_id是LOG-20250520-005,task_type是1,goods_id是5,target_x是104.070000,target_y是30.660000,require_time是2025-12-16 20:00:47,status是1,create_time是2025-12-08 20:00:47,complete_time是NULL。
+第5个数据：task_id是LOG-20250520-006,task_type是2,goods_id是6,target_x是120.160000,target_y是30.290000,require_time是2025-12-15 20:00:47,status是3,create_time是2025-12-09 20:00:47,complete_time是2025-12-10 20:00:47。
+第6个数据：task_id是LOG-20250520-007,task_type是1,goods_id是7,target_x是114.310000,target_y是30.600000,require_time是2025-12-15 20:00:47,status是2,create_time是2025-12-10 20:00:47,complete_time是2025-12-11 20:00:47。
+第7个数据：task_id是LOG-20250520-008,task_type是1,goods_id是8,target_x是108.950000,target_y是34.270000,require_time是2025-12-16 20:00:47,status是0,create_time是2025-12-11 20:00:47,complete_time是NULL。
+第8个数据：task_id是LOG-20250520-009,task_type是1,goods_id是9,target_x是106.560000,target_y是29.570000,require_time是2025-12-16 20:00:47,status是1,create_time是2025-12-12 20:00:47,complete_time是NULL。
+第9个数据：task_id是LOG-20250520-010,task_type是2,goods_id是10,target_x是118.795000,target_y是32.060000,require_time是2025-12-15 20:00:47,status是0,create_time是2025-12-13 20:00:47,complete_time是NULL。

@@ -1,8 +1,8 @@
 ====================================================================================================
 GraphRAG初始化TXT文件汇总
-生成时间：2026-02-06 21:48:06
+生成时间：2025-12-16 21:59:07
 数据库：hma_llm
-生成表数量：9
+生成表数量：8
 ====================================================================================================
 
 【文件列表】
@@ -17,13 +17,13 @@ GraphRAG初始化TXT文件汇总
 5. task_agent_rel → task_agent_rel_init.txt
    备注：任务-Agent关联表：存储任务与Agent的绑定关系，如任务ID、Agent ID、分配时间等
 6. agent_uav_sensor → agent_uav_sensor_init.txt
-   备注：uav传感器表：存储uav传感器数据，如传感器类型、采集值、采集时间等
-7. agent_ground_sensor → agent_ground_sensor_init.txt
-   备注：truck传感器表：存储truck的经纬度和传感器数据
-8. agent_warehouse_sensor → agent_warehouse_sensor_init.txt
-   备注：robot传感器表：存储robot的经纬度传感器数据
+   备注：UAV无人机传感器表：存储UAV无人机传感器和经纬度数据
+7. agent_TRUCK_sensor → agent_TRUCK_sensor_init.txt
+   备注：TRUCK卡车传感器表：存储TRUCK卡车的传感器和经纬度数据
+8. agent_ROBOTS_sensor → agent_ROBOTS_sensor_init.txt
+   备注：ROBOTS仓储机器人传感器表：存储ROBOTS仓储机器人传感器和经纬度数据
 9. uav_landing_points → uav_landing_points_init.txt
-   备注：uav起降点基础信息表：存储uav的经纬度传感器数据
+   备注：uav起降点基础信息表：存储uav起降点的经纬度数据
 
 【使用说明】
 1. 所有TXT文件采用自然语言描述格式，可直接作为GraphRAG的输入数据源

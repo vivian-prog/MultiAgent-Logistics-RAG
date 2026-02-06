@@ -447,7 +447,7 @@ if __name__ == "__main__":
     import asyncio
     
     # 示例用户问题（会触发 RAG+LLM 生成包含三类 Agent 指令的 JSON）
-    test_prompt = "请指挥各个agent把地面机器人轮胎从所在仓库运到深圳市中山大学深圳校区(北纬 22.770°，东经 113.904°)"
+    test_prompt = "请指挥各个agent把干粉灭火器从所在仓库运到深圳市中山大学深圳校区(北纬 22.770°，东经 113.904°)"
     
     # 异步执行
     task_ids = asyncio.run(extract_agent_commands_and_call_api(test_prompt))
