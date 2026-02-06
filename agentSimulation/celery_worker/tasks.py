@@ -8,6 +8,7 @@ if proj_root not in sys.path:
     sys.path.insert(0, proj_root)
 # celery_worker/tasks.py
 import time
+import math  # 补充导入 math
 from celery_worker import app  # 导入上面初始化的Celery实例
 from common.db import get_sync_db  # 若需要数据库操作，需用同步DB（Celery不支持异步Session）
 from common.schema import SimulationResultSchema
@@ -26,18 +27,18 @@ def run_simulation_task(self, params: dict):
     try:
         # 1. （可选）更新任务状态为"STARTED"（前端查询时能看到执行中）
         self.update_state(state="STARTED", meta={"progress": 0})
-        
+
         # 2. 模拟耗时的仿真计算（替换为你的实际业务逻辑）
         print(f"开始执行仿真任务，参数：{params}")
         time.sleep(5)  # 代表耗时操作（如Agent路径规划、任务调度）
-        
+
         # 3. （可选）数据库操作（注意：Celery任务是同步的，需用同步DB会话）
         db = next(get_sync_db())  # 替换为你的同步DB获取函数
         # 示例：将参数存入数据库 / 读取基础数据
         # task_record = TaskRecord(params=params, status="SUCCESS")
         # db.add(task_record)
         # db.commit()
-        
+
         # 4. 构造仿真结果（符合SimulationResultSchema模型）
         result = {
             "task_id": self.request.id,
@@ -57,16 +58,16 @@ def run_simulation_task(self, params: dict):
             "finish_time": "2025-12-19T14:30:00"
 
         }
-            
-        
+
+
         # 5. 返回结果（会自动保存到Celery backend）
         return SimulationResultSchema(**result).dict()  # 标准化结果格式
-    
+
     except Exception as e:
         # 捕获异常，更新状态为FAILURE，返回错误信息
         self.update_state(state="FAILURE", meta={"error": str(e)})
         raise e  # 让Celery记录异常，前端查询时能看到
-    
+
 
 # # 核心：用@app.task装饰，将普通函数转为Celery异步任务
 # @app.task(bind=True, name="run_simulation_task_agent1")  # name可选，指定任务名（方便查询）
@@ -81,24 +82,24 @@ def run_simulation_task(self, params: dict):
 #     try:
 #         # 1. （可选）更新任务状态为"STARTED"（前端查询时能看到执行中）
 #         self.update_state(state="STARTED", meta={"progress": 0})
-        
+#
 #         # 2. 模拟耗时的仿真计算（替换为你的实际业务逻辑）
 #         print(f"开始执行仿真任务，参数：{params}")
 #         time.sleep(5)  # 代表耗时操作（如Agent路径规划、任务调度）
-        
+#
 #         # 3. （可选）数据库操作（注意：Celery任务是同步的，需用同步DB会话）
 #         db = next(get_sync_db())  # 替换为你的同步DB获取函数
 #         # 示例：将参数存入数据库 / 读取基础数据
 #         # task_record = TaskRecord(params=params, status="SUCCESS")
 #         # db.add(task_record)
 #         # db.commit()
-        
+#
 #         # 4. 构造仿真结果（符合SimulationResultSchema模型）
 #         result = {
 #             "task_id": self.request.id,
 #             "params": {
 #                  "agent_type": 1,
-
+#
 #             },
 #             "simulation_data": {
 #                  "agent_count": 0,
@@ -109,18 +110,18 @@ def run_simulation_task(self, params: dict):
 #             "status": "SUCCESS",
 #             "error": None,
 #             "finish_time": "2025-12-19T14:30:00"
-
+#
 #         }
-            
-        
+#
+#
 #         # 5. 返回结果（会自动保存到Celery backend）
 #         return SimulationResultSchema(**result).dict()  # 标准化结果格式
-    
+#
 #     except Exception as e:
 #         # 捕获异常，更新状态为FAILURE，返回错误信息
 #         self.update_state(state="FAILURE", meta={"error": str(e)})
 #         raise e  # 让Celery记录异常，前端查询时能看到
-    
+#
 
 from datetime import datetime
 import requests  # 用于调用GraphHopper API（也可改用GraphHopper Python客户端）
@@ -134,7 +135,7 @@ class SimulationResultSchema(BaseModel):
     simulation_data: dict
     progress: int
     status: str
-    error: Optional[str] 
+    error: Optional[str]
     finish_time: str
 
     class Config:
@@ -228,23 +229,23 @@ def calculate_truck_fuel_consumption(route_data, truck_params):
             seg_distance_km = seg.get("distance", 0) / 1000
             if seg_distance_km <= 0:
                 continue
-            
+
             # 分段平均速度（km/h）
             seg_time_h = seg.get("time", 0) / 3600000  # GraphHopper time是毫秒，转小时
             seg_speed = seg_distance_km / seg_time_h if seg_time_h > 0 else economic_speed
-            
+
             # 道路类型系数（默认1.2）
             road_type = seg.get("road_type", "unclassified")
             road_factor = road_type_factors.get(road_type, 1.2)
-            
+
             # 速度影响系数（偏离经济时速越多，油耗越高）
             speed_deviation = abs(seg_speed - economic_speed)
             speed_impact = 1 + (speed_deviation * speed_factor)
-            
+
             # 分段油耗 = 基础油耗 * 距离 * 道路系数 * 速度系数 / 100
             seg_fuel = load_impacted_fuel * seg_distance_km * road_factor * speed_impact / 100
             total_fuel += seg_fuel
-            
+
             # 记录分段油耗明细
             segment_fuel_details.append({
                 "distance_km": round(seg_distance_km, 2),
@@ -293,7 +294,7 @@ def save_agent_sensor_data(db, task_id, agent_id, minute_positions, route_data, 
     goods_status = params.get("goods_status", 1)  # 默认已装载
     battery_remaining = params.get("battery_remaining", 100)  # 默认满电
     obstacle_dist = params.get("obstacle_dist", 100.0)  # 默认前方无障碍物（100米）
-    
+
     # 2. 转换GPS坐标为SLAM X/Y（若需坐标系转换，可在此补充）
     # 简化处理：直接将纬度作为Y，经度作为X（乘以100000转换为米级坐标，适配SLAM）
     def gps_to_slam(lat, lng):
@@ -308,13 +309,13 @@ def save_agent_sensor_data(db, task_id, agent_id, minute_positions, route_data, 
         # 计算当前分钟的速度（m/s）：模拟速度随路段变化
         current_speed = avg_speed_m_s * (0.8 + (minute % 5) * 0.04)  # 模拟速度波动
         current_speed = round(current_speed, 2)
-        
+
         # 电量衰减（每分钟减少1%）
         current_battery = max(0, battery_remaining - minute)
-        
+
         # 坐标转换
         slam_x, slam_y = gps_to_slam(lat, lng)
-        
+
         # 构建传感器数据对象
         sensor_data = AgentGroundSensor(
             agent_id=agent_id,
@@ -328,7 +329,7 @@ def save_agent_sensor_data(db, task_id, agent_id, minute_positions, route_data, 
             collect_time=start_time + timedelta(minutes=minute)  # 按分钟递增采集时间
         )
         sensor_data_list.append(sensor_data)
-    
+
     # 4. 批量插入数据库（高效批量操作）
     db.add_all(sensor_data_list)
     db.commit()
@@ -389,7 +390,7 @@ def run_simulation_task_agent_uav(self, params: dict):
             pass
         self.update_state(state="FAILURE", meta={"error": str(e), "progress": 0})
         raise e
-    
+
 
 #进行卡车的仿真路线规划，更新数据库的卡车传感器数据
 @app.task(bind=True, name="run_simulation_task_agent_truck")
@@ -423,10 +424,43 @@ def run_simulation_task_agent_truck(self, params: dict):
             "key": GRAPH_HOPPER_API_KEY,
             "details": "road_type,distance,time,speed"
         }
-        response = requests.get(GRAPH_HOPPER_BASE_URL, params=gh_params, timeout=30)
-        response.raise_for_status()
-        gh_data = response.json()
-        best_route = gh_data["paths"][0]
+
+        try:
+            print(f"正在请求 GraphHopper: {GRAPH_HOPPER_BASE_URL}")
+            response = requests.get(GRAPH_HOPPER_BASE_URL, params=gh_params, timeout=5) # 缩短超时以便快速失败
+            response.raise_for_status()
+            gh_data = response.json()
+            best_route = gh_data["paths"][0]
+            print("GraphHopper 请求成功")
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
+            print(f"GraphHopper 连接失败或超时 ({e})，切换至 Mock 模式...")
+
+            # --- Mock 兜底逻辑 ---
+            # 1. 计算直线距离 (Haversine公式简化版)
+            lat1, lng1 = float(params['start_lat']), float(params['start_lng'])
+            lat2, lng2 = float(params['end_lat']), float(params['end_lng'])
+            R = 6371  # 地球半径 km
+            dlat = math.radians(lat2 - lat1)
+            dlng = math.radians(lng2 - lng1)
+            a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlng/2)**2
+            c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+            straight_dist_km = R * c
+
+            # 模拟路网弯曲系数 1.4
+            mock_distance_m = straight_dist_km * 1.4 * 1000
+
+            # 2. 估算时间 (假设平均时速 60km/h)
+            mock_speed_mps = 60 / 3.6  # 16.6 m/s
+            mock_time_ms = (mock_distance_m / mock_speed_mps) * 1000
+
+            # 3. 构造 Mock 响应结构 (模仿 GraphHopper)
+            best_route = {
+                "distance": mock_distance_m,
+                "time": mock_time_ms,
+                "points": {"coordinates": [[lng1, lat1], [lng2, lat2]]}, # 仅起点终点
+                "segments": [{"distance_time": {"times": [mock_time_ms]}}] # 简化的分段
+            }
+            # --------------------
 
         # 4. 解析路线数据（进度50%）
         self.update_state(state="STARTED", meta={"progress": 50})
