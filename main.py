@@ -103,9 +103,11 @@ def call_llm_model(prompt: str, rag_context: str, temperature: float = 0.7) -> s
             messages=[{"role": "user", "content": full_prompt}],
             temperature=temperature,
         )
-        
+        content=completion.choices[0].message.content
+        import re
+        content=re.sub(r'<think>.*?</think>','',content,flags=re.DOTALL).strip()
         # 返回模型回答
-        return completion.choices[0].message.content
+        return content
     
     except Exception as e:
         print(f"调用8B模型出错: {e}")
@@ -124,6 +126,7 @@ def rag_plus_llm(prompt: str, rag_model: str = RAG_MODEL_FULL, temperature: floa
     rag_query_prompt = RAG_SYSTEM_PROMPT.format(user_prompt=prompt)
     # 第一步：执行RAG搜索
     rag_query = call_llm_model(rag_query_prompt , '', temperature)
+    print("生成的rag搜索的Prompt:",rag_query)
     print("正在执行RAG搜索...")
     rag_context = rag_search(rag_query, rag_model, temperature)
     if rag_context:
@@ -444,7 +447,7 @@ if __name__ == "__main__":
     import asyncio
     
     # 示例用户问题（会触发 RAG+LLM 生成包含三类 Agent 指令的 JSON）
-    test_prompt = "请指挥各个agent把无人机锂电池运到深圳市中山大学深圳校区"
+    test_prompt = "请指挥各个agent把干粉灭火器从所在仓库运到深圳市中山大学深圳校区(北纬 22.770°，东经 113.904°)"
     
     # 异步执行
     task_ids = asyncio.run(extract_agent_commands_and_call_api(test_prompt))

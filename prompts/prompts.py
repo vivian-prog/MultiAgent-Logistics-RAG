@@ -15,8 +15,12 @@ class MultiAgentLogisticRAGPrompt:
          "agenttruck": {{
            "type": "TRUCK",
            "tasks": ["任务描述1", "任务描述2"],
-           "start_location": "起点名称（如：深圳北站）",
-           "end_location": "终点名称（如：中山大学深圳校区）",
+           "start_location": "起点",
+           "end_location": "终点",
+           "start_lat":"起点维度（例如：22.543099）",
+           "start_lng":"起点经度（例如：114.057868）",
+           "end_lat":"终点维度（例如：22.793099）",
+           "end_lng":"终点维度（例如：113.913099）",
            "truck_params": {{"load_weight": 5.0, "base_fuel": 30}}  // 可选：载重(吨)、基础油耗
          }},
          "agentuav": {{
@@ -50,7 +54,6 @@ class MultiAgentLogisticRAGPrompt:
     ## 1. 实体提取范围（物流调度场景必选）
     必须提取以下类别中的相关实体（无则忽略）：
     - 主体类：TRUCK/卡车、UAV/无人机、ROBOTS/机器人（含编号/数量）、仓储点、配送站、客户、物流公司；
-    - 动作类：运输、分拣、配送、侦查、搬运、调度、装卸；
     - 属性类：货物类型（生鲜/工业品/医疗物资等）、货物重量/数量、运输距离/时间、约束条件（限速/禁行/优先级）；
     - 关系类：「实体A-动作-实体B」「实体-属性」「实体-约束」。
 
@@ -74,7 +77,7 @@ class MultiAgentLogisticRAGPrompt:
     ## 示例1：用户输入
     user_prompt = "请调度2辆TRUCK从北京仓储中心运输5吨生鲜到上海配送站，要求2小时内送达，避开拥堵路段"
     ## 示例1：生成的RAG Prompt
-    TRUCK 运输 5吨生鲜 北京仓储中心-上海配送站 2小时 避开拥堵
+    TRUCK 运输 5吨生鲜 北京仓储中心 上海配送站 2小时 避开拥堵
 
     ## 示例2：用户输入
     user_prompt = "UAV-01需要侦查仓储A到配送站B的路况，实时回传拥堵信息给调度中心"
