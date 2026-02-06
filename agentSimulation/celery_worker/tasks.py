@@ -415,22 +415,35 @@ def run_simulation_task_agent_truck(self, params: dict):
 
         # 3. 调用GraphHopper规划路线（进度20%）
         self.update_state(state="STARTED", meta={"progress": 20})
+
+        # 修正：根据 debug/test_graphhopper.py 的成功经验调整参数
+        # 1. 坐标顺序应为 lat,lng
+        # 2. 使用 profile=car (或 truck) 替代 vehicle/weighting
+        # 3. 添加 layer=OpenStreetMap (如果服务端需要)
         gh_params = {
             "point": [f"{params['start_lat']},{params['start_lng']}", f"{params['end_lat']},{params['end_lng']}"],
-            "profile": "car",
+            "profile": "car",  # 优先使用测试通过的 profile
             "layer": "OpenStreetMap",
-            
-            
+            "points_encoded": False,
+            "details": ["road_type", "distance", "time", "speed"] # details 需要是列表或多次重复的键，requests params支持列表
         }
-#'http://127.0.0.1:8989/route?point=22.9934,113.3278&point=22.8200,113.1175&profile=car&layer=OpenStreetMap'
+
         try:
-            print(f"正在请求 GraphHopper: {GRAPH_HOPPER_BASE_URL}")
-            response = requests.get(f'http://127.0.0.1:8989/route?point={params['start_lng']},{params['start_lat']}&point={params['end_lng']},{params['end_lat']}&profile=car&layer=OpenStreetMap', timeout=5) # 缩短超时以便快速失败
+            print(f"正在请求 GraphHopper: {GRAPH_HOPPER_BASE_URL} 参数: {gh_params}")
+            # 使用 params 字典传参，requests 会自动处理 url 编码和格式
+            response = requests.get(GRAPH_HOPPER_BASE_URL, params=gh_params, timeout=10)
+
+            # 如果 profile=car 失败，尝试回退到 profile=truck (可选优化，暂不加，保持简单)
             response.raise_for_status()
+
             gh_data = response.json()
+            if "paths" not in gh_data:
+                raise ValueError(f"GraphHopper 响应缺少 'paths' 字段: {gh_data}")
+
             best_route = gh_data["paths"][0]
             print("GraphHopper 请求成功")
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
+
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout, requests.exceptions.HTTPError, ValueError) as e:
             print(f"GraphHopper 连接失败或超时 ({e})，切换至 Mock 模式...")
 
             # --- Mock 兜底逻辑 ---
