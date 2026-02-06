@@ -12,6 +12,8 @@ import math  # 补充导入 math
 from celery_worker import app  # 导入上面初始化的Celery实例
 from common.db import get_sync_db  # 若需要数据库操作，需用同步DB（Celery不支持异步Session）
 from common.schema import SimulationResultSchema
+# 引入 ORM 模型
+from common.models import AgentGroundSensor, AgentUavSensor, AgentWarehouseSensor
 from uav_simulation.core import run_uav_simulation_core
 from warehouse_robot.core import simulate_single_task, simulate_batch_tasks
 # 核心：用@app.task装饰，将普通函数转为Celery异步任务
@@ -335,6 +337,44 @@ def save_agent_sensor_data(db, task_id, agent_id, minute_positions, route_data, 
     db.commit()
     print(f"成功写入{len(sensor_data_list)}条Agent传感器数据，任务ID：{task_id}，AgentID：{agent_id}")
 
+# ---------------------- 新增：UAV 传感器数据保存 ----------------------
+def save_uav_sensor_data(db, task_id, uav_trajectories, params):
+    """
+    保存无人机飞行轨迹数据
+    """
+    sensor_data_list = []
+    start_time = datetime.now()
+
+    # uav_trajectories 格式: {"uav_0": [[x, y, z, t], ...], ...}
+    for uav_name, trajectory in uav_trajectories.items():
+        agent_id = f"{uav_name}_{task_id[-4:]}" # 构造唯一AgentID或使用params中的
+
+        for point in trajectory:
+            # point: [x, y, z, t]
+            x, y, z, t = point
+
+            # 简单的电量模拟
+            battery = max(0, 100 - int(t * 0.5))
+
+            sensor_data = AgentUavSensor(
+                agent_id=agent_id,
+                task_id=task_id,
+                gps_x=x,
+                gps_y=y,
+                altitude=z,
+                attitude_angle=0.0, # 模拟值
+                obstacle_dist=100.0, # 模拟值
+                battery_remaining=battery,
+                signal_strength=90,
+                collect_time=start_time + timedelta(seconds=t)
+            )
+            sensor_data_list.append(sensor_data)
+
+    if sensor_data_list:
+        db.add_all(sensor_data_list)
+        db.commit()
+        print(f"成功写入{len(sensor_data_list)}条UAV传感器数据，任务ID：{task_id}")
+
 @app.task(bind=True, name="run_simulation_task_agent_uav")
 def run_simulation_task_agent_uav(self, params: dict):
     """
@@ -357,6 +397,14 @@ def run_simulation_task_agent_uav(self, params: dict):
 
         # 3. 关键：调用导入的无人机仿真核心函数
         uav_sim_result = run_uav_simulation_core(params, self)
+
+        # --- 新增：保存轨迹数据到数据库 ---
+        try:
+            if "uav_trajectories" in uav_sim_result:
+                save_uav_sensor_data(db, self.request.id, uav_sim_result["uav_trajectories"], params)
+        except Exception as e:
+            print(f"保存UAV传感器数据失败: {e}")
+        # ----------------------------------
 
         # 4. 构造标准化结果
         result = {
