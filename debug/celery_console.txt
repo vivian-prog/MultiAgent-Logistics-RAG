@@ -1,0 +1,276 @@
+[tasks]
+  . run_simulation_task
+  . run_simulation_task_agent_robot
+  . run_simulation_task_agent_truck
+  . run_simulation_task_agent_uav
+
+[2026-02-07 13:13:21,001: INFO/MainProcess] Connected to redis://:**@localhost:6379/0
+[2026-02-07 13:13:21,003: INFO/MainProcess] mingle: searching for neighbors
+[2026-02-07 13:13:22,009: INFO/MainProcess] mingle: all alone
+[2026-02-07 13:13:22,023: INFO/MainProcess] celery@sim4its232 ready.
+[2026-02-07 13:14:50,378: INFO/MainProcess] Task run_simulation_task_agent_uav[6281479f-a4e6-4c0b-b4ee-a73c6b81700c] received
+[2026-02-07 13:14:50,382: WARNING/ForkPoolWorker-6] 开始执行无人机仿真任务，参数：{'type': 'UAV', 'tasks': ['执行空中运输路径规划，辅助监控运输过程'], 'Map_name': 'Map1', 'max_steps': 1000, 'start_lat': '22.531267554516216', 'start_lng': '114.06042023957734', 'end_lat': '22.800884948488687', 'end_lng': '113.95443173232752'}
+[2026-02-07 13:14:50,382: WARNING/ForkPoolWorker-6] ensure_task_exists 警告: 'NoneType' object has no attribute 'query'
+[2026-02-07 13:14:50,389: WARNING/ForkPoolWorker-6] /home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py:662: RuntimeWarning: Exception raised outside body: ValueError('Exception information must include the exception type'):
+Traceback (most recent call last):
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 29, in ensure_task_exists
+    task = db.query(TaskMain).filter(TaskMain.task_id == task_id).first()
+AttributeError: 'NoneType' object has no attribute 'query'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 477, in run_simulation_task_agent_uav
+    raise e
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 428, in run_simulation_task_agent_uav
+    ensure_task_exists(db, self.request.id, 1, params) # task_type=1 (物流)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 51, in ensure_task_exists
+    db.rollback()
+AttributeError: 'NoneType' object has no attribute 'rollback'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 354, in exception_to_python
+    exc_type = exc['exc_type']
+KeyError: 'exc_type'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 470, in trace_task
+    I, R, state, retval = on_error(task_request, exc)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 381, in on_error
+    R = I.handle_error_state(
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 175, in handle_error_state
+    return {
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 227, in handle_failure
+    task.backend.mark_as_failure(
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 167, in mark_as_failure
+    self.store_result(task_id, exc, state,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 526, in store_result
+    self._store_result(task_id, result, state, traceback,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 975, in _store_result
+    current_meta = self._get_task_meta_for(task_id)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 1000, in _get_task_meta_for
+    return self.decode_result(meta)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 425, in decode_result
+    return self.meta_from_decoded(self.decode(payload))
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 421, in meta_from_decoded
+    meta['result'] = self.exception_to_python(meta['result'])
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 356, in exception_to_python
+    raise ValueError("Exception information must include "
+ValueError: Exception information must include the exception type
+
+  warn(RuntimeWarning(
+
+[2026-02-07 13:14:50,395: ERROR/MainProcess] Pool callback raised exception: ValueError('Exception information must include the exception type')
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 354, in exception_to_python
+    exc_type = exc['exc_type']
+KeyError: 'exc_type'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/billiard/pool.py", line 1799, in safe_apply_callback
+    fun(*args, **kwargs)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/worker/request.py", line 624, in on_failure
+    self.task.backend.mark_as_failure(
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 167, in mark_as_failure
+    self.store_result(task_id, exc, state,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 526, in store_result
+    self._store_result(task_id, result, state, traceback,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 975, in _store_result
+    current_meta = self._get_task_meta_for(task_id)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 1000, in _get_task_meta_for
+    return self.decode_result(meta)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 425, in decode_result
+    return self.meta_from_decoded(self.decode(payload))
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 421, in meta_from_decoded
+    meta['result'] = self.exception_to_python(meta['result'])
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 356, in exception_to_python
+    raise ValueError("Exception information must include "
+ValueError: Exception information must include the exception type
+[2026-02-07 13:14:52,402: INFO/MainProcess] Task run_simulation_task_agent_truck[05157983-9970-41da-87ad-9c7e7dbd8dc3] received
+[2026-02-07 13:14:52,406: INFO/MainProcess] Task run_simulation_task_agent_robot[b059154b-b63e-4450-a0d3-0864e2d4539c] received
+[2026-02-07 13:14:52,408: WARNING/ForkPoolWorker-11] 开始执行卡车仿真任务，AgentID：truck_001，任务ID：05157983-9970-41da-87ad-9c7e7dbd8dc3
+[2026-02-07 13:14:52,410: WARNING/ForkPoolWorker-11] 正在请求 GraphHopper: http://localhost:8989/route 参数: {'point': ['22.531267554516216,114.06042023957734', '22.800884948488687,113.95443173232752'], 'profile': 'car', 'layer': 'OpenStreetMap', 'points_encoded': False, 'details': ['road_type', 'distance', 'time', 'speed']}
+[2026-02-07 13:14:52,414: WARNING/ForkPoolWorker-7] 开始执行仓储机器人仿真任务，参数：{'type': 'ROBOTS', 'tasks': ['携带干粉灭火器从仓库9出发，配合TRUCK完成运输'], 'agent_id': 'robot_001', 'goods_name': '干粉灭火器'}
+[2026-02-07 13:14:52,414: WARNING/ForkPoolWorker-7] ensure_task_exists 警告: 'NoneType' object has no attribute 'query'
+[2026-02-07 13:14:52,419: WARNING/ForkPoolWorker-7] /home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py:662: RuntimeWarning: Exception raised outside body: ValueError('Exception information must include the exception type'):
+Traceback (most recent call last):
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 29, in ensure_task_exists
+    task = db.query(TaskMain).filter(TaskMain.task_id == task_id).first()
+AttributeError: 'NoneType' object has no attribute 'query'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 699, in run_simulation_task_agent_robot
+    raise e  # 让Celery记录异常
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 641, in run_simulation_task_agent_robot
+    ensure_task_exists(db, self.request.id, 2, params) # task_type=2 (仓储操作)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 51, in ensure_task_exists
+    db.rollback()
+AttributeError: 'NoneType' object has no attribute 'rollback'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 354, in exception_to_python
+    exc_type = exc['exc_type']
+KeyError: 'exc_type'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 470, in trace_task
+    I, R, state, retval = on_error(task_request, exc)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 381, in on_error
+    R = I.handle_error_state(
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 175, in handle_error_state
+    return {
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 227, in handle_failure
+    task.backend.mark_as_failure(
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 167, in mark_as_failure
+    self.store_result(task_id, exc, state,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 526, in store_result
+    self._store_result(task_id, result, state, traceback,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 975, in _store_result
+    current_meta = self._get_task_meta_for(task_id)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 1000, in _get_task_meta_for
+    return self.decode_result(meta)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 425, in decode_result
+    return self.meta_from_decoded(self.decode(payload))
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 421, in meta_from_decoded
+    meta['result'] = self.exception_to_python(meta['result'])
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 356, in exception_to_python
+    raise ValueError("Exception information must include "
+ValueError: Exception information must include the exception type
+
+  warn(RuntimeWarning(
+
+[2026-02-07 13:14:52,423: ERROR/MainProcess] Pool callback raised exception: ValueError('Exception information must include the exception type')
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 354, in exception_to_python
+    exc_type = exc['exc_type']
+KeyError: 'exc_type'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/billiard/pool.py", line 1799, in safe_apply_callback
+    fun(*args, **kwargs)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/worker/request.py", line 624, in on_failure
+    self.task.backend.mark_as_failure(
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 167, in mark_as_failure
+    self.store_result(task_id, exc, state,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 526, in store_result
+    self._store_result(task_id, result, state, traceback,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 975, in _store_result
+    current_meta = self._get_task_meta_for(task_id)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 1000, in _get_task_meta_for
+    return self.decode_result(meta)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 425, in decode_result
+    return self.meta_from_decoded(self.decode(payload))
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 421, in meta_from_decoded
+    meta['result'] = self.exception_to_python(meta['result'])
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 356, in exception_to_python
+    raise ValueError("Exception information must include "
+ValueError: Exception information must include the exception type
+[2026-02-07 13:14:52,444: WARNING/ForkPoolWorker-11] GraphHopper 连接失败或超时 (400 Client Error: Bad Request for url: http://localhost:8989/route?point=22.531267554516216%2C114.06042023957734&point=22.800884948488687%2C113.95443173232752&profile=car&layer=OpenStreetMap&points_encoded=False&details=road_type&details=distance&details=time&details=speed)，切换至 Mock 模式...
+[2026-02-07 13:14:52,447: WARNING/ForkPoolWorker-11] ensure_task_exists 警告: 'NoneType' object has no attribute 'query'
+[2026-02-07 13:14:52,451: WARNING/ForkPoolWorker-11] /home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py:662: RuntimeWarning: Exception raised outside body: ValueError('Exception information must include the exception type'):
+Traceback (most recent call last):
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 29, in ensure_task_exists
+    task = db.query(TaskMain).filter(TaskMain.task_id == task_id).first()
+AttributeError: 'NoneType' object has no attribute 'query'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 453, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 736, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 612, in run_simulation_task_agent_truck
+    raise e
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 581, in run_simulation_task_agent_truck
+    ensure_task_exists(db, task_id, 1, params)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/celery_worker/tasks.py", line 51, in ensure_task_exists
+    db.rollback()
+AttributeError: 'NoneType' object has no attribute 'rollback'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 354, in exception_to_python
+    exc_type = exc['exc_type']
+KeyError: 'exc_type'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 470, in trace_task
+    I, R, state, retval = on_error(task_request, exc)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 381, in on_error
+    R = I.handle_error_state(
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 175, in handle_error_state
+    return {
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py", line 227, in handle_failure
+    task.backend.mark_as_failure(
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 167, in mark_as_failure
+    self.store_result(task_id, exc, state,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 526, in store_result
+    self._store_result(task_id, result, state, traceback,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 975, in _store_result
+    current_meta = self._get_task_meta_for(task_id)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 1000, in _get_task_meta_for
+    return self.decode_result(meta)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 425, in decode_result
+    return self.meta_from_decoded(self.decode(payload))
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 421, in meta_from_decoded
+    meta['result'] = self.exception_to_python(meta['result'])
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 356, in exception_to_python
+    raise ValueError("Exception information must include "
+ValueError: Exception information must include the exception type
+
+  warn(RuntimeWarning(
+
+[2026-02-07 13:14:52,454: ERROR/MainProcess] Pool callback raised exception: ValueError('Exception information must include the exception type')
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 354, in exception_to_python
+    exc_type = exc['exc_type']
+KeyError: 'exc_type'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/billiard/pool.py", line 1799, in safe_apply_callback
+    fun(*args, **kwargs)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/worker/request.py", line 624, in on_failure
+    self.task.backend.mark_as_failure(
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 167, in mark_as_failure
+    self.store_result(task_id, exc, state,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 526, in store_result
+    self._store_result(task_id, result, state, traceback,
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 975, in _store_result
+    current_meta = self._get_task_meta_for(task_id)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 1000, in _get_task_meta_for
+    return self.decode_result(meta)
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 425, in decode_result
+    return self.meta_from_decoded(self.decode(payload))
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 421, in meta_from_decoded
+    meta['result'] = self.exception_to_python(meta['result'])
+  File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 356, in exception_to_python
+    raise ValueError("Exception information must include "
+ValueError: Exception information must include the exception type

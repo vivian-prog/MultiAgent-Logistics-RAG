@@ -510,7 +510,7 @@ def run_simulation_task_agent_truck(self, params: dict):
             "profile": "car",  # 优先使用测试通过的 profile
             "layer": "OpenStreetMap",
             "points_encoded": False,
-            "details": ["road_type", "distance", "time", "speed"] # details 需要是列表或多次重复的键，requests params支持列表
+            "details": [ "distance", "time"] # details 需要是列表或多次重复的键，requests params支持列表
         }
 
         try:
