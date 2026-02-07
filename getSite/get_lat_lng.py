@@ -7,7 +7,7 @@ key = "f104b4f956280fdfa5c446d03ffa9a2c"
 url = "https://restapi.amap.com/v3/geocode/geo"
  
 # 读取Excel数据
-df = pd.read_csv("/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/getSite/jd_warehouses_shenzhen.csv")
+df = pd.read_csv("/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/getSite/jd_points.csv")
  
 # 请求参数
 max_retries = 3
