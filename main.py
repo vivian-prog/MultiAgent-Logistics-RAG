@@ -164,29 +164,16 @@ def rag_plus_llm(prompt: str, rag_model: str = RAG_MODEL_FULL, temperature: floa
 def extract_and_parse_json(final_answer: str) -> dict:
     """
     从混杂了调试信息的字符串中提取JSON部分并解析
-
-    Args:
-        final_answer: 包含调试信息和JSON的原始字符串
-
-    Returns:
-        解析后的JSON字典
-
-    Raises:
-        ValueError: 未找到合法JSON或解析失败
     """
-    # 步骤1：使用正则表达式匹配JSON对象（{...}）
-    # 匹配规则：以{开头，以}结尾，中间包含任意字符（非贪婪匹配）
     json_pattern = r'\{[\s\S]*\}'
     matches = re.findall(json_pattern, final_answer)
 
     if not matches:
         raise ValueError("在final_answer中未找到JSON格式内容")
 
-    # 步骤2：取最后一个匹配结果（通常是完整的JSON）
     pure_json_str = matches[-1]
 
     try:
-        # 步骤3：解析纯JSON字符串
         answer_dict = json.loads(pure_json_str)
         return answer_dict
     except json.JSONDecodeError as e:
@@ -195,39 +182,18 @@ def extract_and_parse_json(final_answer: str) -> dict:
 def extract_and_parse_last_json(final_answer: str) -> dict:
     """
     修复版：精准提取最外层的顶层JSON（解决只提取最后一个子JSON的问题）
-
-    Args:
-        final_answer: 包含调试信息和JSON的原始字符串
-
-    Returns:
-        解析后的完整顶层JSON字典（包含agentuav/agenttruck/agentrobot）
-
-    Raises:
-        ValueError: 未找到合法JSON或解析失败
     """
-    # 步骤1：清理特殊字符，只保留关键内容
     cleaned_str = final_answer.replace('\u200b', '').replace('\xa0', ' ').strip()
-
-    # 步骤2：匹配最外层的顶层JSON（关键修复：用贪婪匹配找最外层{}）
-    # 正则说明：
-    # ^.*?  匹配JSON前的所有文本（非贪婪）
-    # \{    匹配顶层JSON的起始{
-    # [\s\S]*? 匹配中间所有内容（非贪婪，避免匹配到多个JSON）
-    # \}    匹配顶层JSON的结束}
-    # .*$   匹配JSON后的所有文本
     top_level_pattern = r'^.*?(\{[\s\S]*\}).*$'
     matches = re.findall(top_level_pattern, cleaned_str, re.DOTALL)
 
     if not matches:
         raise ValueError("未找到顶层JSON结构，原始文本片段：\n" + cleaned_str[:500])
 
-    # 步骤3：取第一个匹配的顶层JSON（也是唯一的顶层JSON）
     top_level_json_str = matches[0].strip()
 
-    # 步骤4：解析顶层JSON
     try:
         answer_dict = json.loads(top_level_json_str)
-        # 验证是否包含agentuav/agenttruck/agentrobot（可选，调试用）
         required_keys = ["agentuav", "agenttruck", "agentrobot"]
         missing_keys = [k for k in required_keys if k not in answer_dict]
         if missing_keys:
@@ -240,8 +206,6 @@ def extract_and_parse_last_json(final_answer: str) -> dict:
 def get_osm_coordinates(location_name: str) -> Optional[tuple]:
     """
     使用 OpenStreetMap Nominatim API 将地点名称转换为经纬度
-    :param location_name: 地点名称（如 "中山大学深圳校区"）
-    :return: (lat, lng) 元组或 None
     """
     if not location_name:
         return None
@@ -253,7 +217,6 @@ def get_osm_coordinates(location_name: str) -> Optional[tuple]:
             "format": "json",
             "limit": 1
         }
-        # OSM 要求必须带 User-Agent
         headers = {
             "User-Agent": "AgentSimulation/1.0 (contact@example.com)"
         }
@@ -281,16 +244,14 @@ def get_osm_coordinates(location_name: str) -> Optional[tuple]:
 async def poll_task(client, task_id, agent_name):
     """通用任务轮询函数"""
     print(f"⏳ 正在等待 {agent_name} 任务完成 (Task ID: {task_id})...")
-    max_retries = 120  # 增加等待时间
+    max_retries = 120
     retry_interval = 1
 
     for _ in range(max_retries):
         try:
-            # 尝试通用接口
             url = AGENT_API_MAP["common_result"].format(task_id)
             resp = await client.get(url)
 
-            # 如果通用接口404（可能是旧的agent1接口），尝试备用接口
             if resp.status_code == 404 and agent_name == "agentuav":
                 url = AGENT_API_MAP["agentuav_result"].format(task_id)
                 resp = await client.get(url)
@@ -298,7 +259,6 @@ async def poll_task(client, task_id, agent_name):
             resp.raise_for_status()
             data = resp.json()
 
-            # 兼容不同的状态字段名 (status/state)
             status = str(data.get("status", "")).upper()
 
             if status == "SUCCESS":
@@ -309,9 +269,6 @@ async def poll_task(client, task_id, agent_name):
                 print(f"❌ {agent_name} 任务失败: {error_msg}")
                 return None
             else:
-                # 仍在运行
-                progress = data.get("progress", 0)
-                # print(f"   [{agent_name}] 进度: {progress}%")
                 await asyncio.sleep(retry_interval)
 
         except Exception as e:
@@ -362,9 +319,13 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
                 print(f"UAV 任务已提交: {task_id}")
 
                 # 轮询等待结果
-                await poll_task(client, task_id, "agentuav")
+                uav_result = await poll_task(client, task_id, "agentuav")
 
-                timing_stats["UAV工作时间"] = time.time() - t_start
+                # 优先使用仿真内部时间，否则使用客户端计时
+                if uav_result and "total_steps" in uav_result:
+                    timing_stats["UAV工作时间"] = float(uav_result["total_steps"])
+                else:
+                    timing_stats["UAV工作时间"] = time.time() - t_start
             except Exception as e:
                 print(f"UAV 任务异常: {e}")
                 timing_stats["UAV工作时间"] = -1
@@ -399,9 +360,12 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
                 print(f"Truck 任务已提交: {task_id}")
 
                 # 轮询等待结果
-                await poll_task(client, task_id, "agenttruck")
+                truck_result = await poll_task(client, task_id, "agenttruck")
 
-                timing_stats["Truck工作时间"] = time.time() - t_start
+                if truck_result and "total_time" in truck_result:
+                    timing_stats["Truck工作时间"] = float(truck_result["total_time"]) * 3600
+                else:
+                    timing_stats["Truck工作时间"] = time.time() - t_start
             except Exception as e:
                 print(f"Truck 任务异常: {e}")
                 timing_stats["Truck工作时间"] = -1
