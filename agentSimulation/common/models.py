@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime, Text, ForeignKey, DECIMAL
+from sqlalchemy import Column, Integer, String, Float, DateTime, Text, ForeignKey, DECIMAL, BigInteger
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from common.db import Base  # 使用 common/db.py 中定义的 Base
@@ -63,7 +63,7 @@ class TaskMain(Base):
 class TaskAgentRel(Base):
     __tablename__ = "task_agent_rel"
 
-    rel_id = Column(Integer, primary_key=True, autoincrement=True)
+    rel_id = Column(BigInteger, primary_key=True, autoincrement=True)
     task_id = Column(String(30), ForeignKey("task_main.task_id"), nullable=False)
     agent_id = Column(String(20), ForeignKey("agent_base.agent_id"), nullable=False)
     agent_role = Column(String(20), nullable=False, comment="分工")
@@ -76,7 +76,7 @@ class TaskAgentRel(Base):
 class AgentUavSensor(Base):
     __tablename__ = "agent_uav_sensor"
 
-    sensor_id = Column(Integer, primary_key=True, autoincrement=True)
+    sensor_id = Column(BigInteger, primary_key=True, autoincrement=True)
     agent_id = Column(String(20), ForeignKey("agent_base.agent_id"), nullable=False)
     task_id = Column(String(30), ForeignKey("task_main.task_id"), nullable=False)
     gps_x = Column(DECIMAL(12, 6), nullable=False, comment="GPS经度")
@@ -92,7 +92,7 @@ class AgentUavSensor(Base):
 class AgentGroundSensor(Base):
     __tablename__ = "agent_ground_sensor"
 
-    sensor_id = Column(Integer, primary_key=True, autoincrement=True)
+    sensor_id = Column(BigInteger, primary_key=True, autoincrement=True)
     agent_id = Column(String(20), ForeignKey("agent_base.agent_id"), nullable=False)
     task_id = Column(String(30), ForeignKey("task_main.task_id"), nullable=False)
     slam_x = Column(DECIMAL(10, 2), nullable=False, comment="SLAM X")
@@ -107,7 +107,7 @@ class AgentGroundSensor(Base):
 class AgentWarehouseSensor(Base):
     __tablename__ = "agent_warehouse_sensor"
 
-    sensor_id = Column(Integer, primary_key=True, autoincrement=True)
+    sensor_id = Column(BigInteger, primary_key=True, autoincrement=True)
     agent_id = Column(String(20), ForeignKey("agent_base.agent_id"), nullable=False)
     task_id = Column(String(30), ForeignKey("task_main.task_id"), nullable=False)
     shelf_nav_x = Column(DECIMAL(10, 2), nullable=False, comment="货架导航X")

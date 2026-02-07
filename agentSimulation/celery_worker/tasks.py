@@ -9,13 +9,47 @@ if proj_root not in sys.path:
 # celery_worker/tasks.py
 import time
 import math  # 补充导入 math
+from datetime import datetime, timedelta # 补充导入 timedelta
 from celery_worker import app  # 导入上面初始化的Celery实例
 from common.db import get_sync_db  # 若需要数据库操作，需用同步DB（Celery不支持异步Session）
 from common.schema import SimulationResultSchema
 # 引入 ORM 模型
-from common.models import AgentGroundSensor, AgentUavSensor, AgentWarehouseSensor
+from common.models import AgentGroundSensor, AgentUavSensor, AgentWarehouseSensor, TaskMain, WarehouseGoods
 from uav_simulation.core import run_uav_simulation_core
 from warehouse_robot.core import simulate_single_task, simulate_batch_tasks
+
+# ---------------------- 辅助函数：确保任务在 task_main 中存在 ----------------------
+def ensure_task_exists(db, task_id, task_type_code, params):
+    """
+    检查 task_main 表中是否存在该任务，若不存在则创建。
+    防止外键约束失败。
+    :param task_type_code: 1=物流运输, 2=紧急调货 (根据 create.sql 定义)
+    """
+    try:
+        task = db.query(TaskMain).filter(TaskMain.task_id == task_id).first()
+        if not task:
+            # 尝试获取关联的 goods_id，如果 params 里没有，可能需要先创建一个默认 goods
+            # 这里为了简化，假设 goods_id=1 存在 (通常是 insert_test_data.sql 初始化的)
+            # 或者我们先查一个存在的 goods_id
+            default_goods = db.query(WarehouseGoods).first()
+            goods_id = default_goods.goods_id if default_goods else 1
+
+            new_task = TaskMain(
+                task_id=task_id,
+                task_type=task_type_code,
+                goods_id=goods_id, # 兜底
+                target_x=params.get("end_lng", 0.0),
+                target_y=params.get("end_lat", 0.0),
+                require_time=datetime.now() + timedelta(hours=2),
+                status=1 # 执行中
+            )
+            db.add(new_task)
+            db.commit()
+            print(f"已在 task_main 创建任务记录: {task_id}")
+    except Exception as e:
+        print(f"ensure_task_exists 警告: {e}")
+        db.rollback()
+
 # 核心：用@app.task装饰，将普通函数转为Celery异步任务
 @app.task(bind=True, name="run_simulation_task")  # name可选，指定任务名（方便查询）
 def run_simulation_task(self, params: dict):
@@ -390,6 +424,9 @@ def run_simulation_task_agent_uav(self, params: dict):
 
         # 2. （可选）数据库操作
         db = next(get_sync_db())
+        # 确保任务主表记录存在
+        ensure_task_exists(db, self.request.id, 1, params) # task_type=1 (物流)
+
         # 示例：保存任务记录
         # task_record = TaskRecord(task_id=self.request.id, params=params, status="STARTED")
         # db.add(task_record)
@@ -540,6 +577,9 @@ def run_simulation_task_agent_truck(self, params: dict):
         # 7. 新增：写入传感器数据到数据库（进度90%）
         self.update_state(state="STARTED", meta={"progress": 90})
         db = next(get_sync_db())  # 获取ORM会话
+        # 确保任务主表记录存在
+        ensure_task_exists(db, task_id, 1, params)
+
         save_agent_sensor_data(db, task_id, agent_id, minute_positions, best_route, params)
 
         # 8. 构造最终结果
@@ -597,6 +637,9 @@ def run_simulation_task_agent_robot(self, params: dict):
 
         # 2. （可选）数据库操作（保存任务记录）
         db = next(get_sync_db())
+        # 确保任务主表记录存在
+        ensure_task_exists(db, self.request.id, 2, params) # task_type=2 (仓储操作)
+
         # 示例：task_record = TaskRecord(task_id=self.request.id, params=params, status="STARTED")
         # db.add(task_record)
         # db.commit()
