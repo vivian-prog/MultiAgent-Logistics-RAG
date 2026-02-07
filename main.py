@@ -303,11 +303,93 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
     agentrobot_params = answer_dict.get("agentrobot", {})
 
     # 第四步：异步调用各 Agent 的接口
-    print("\n>>> 阶段2: 多智能体仿真任务执行")
+    print("\n>>> 阶段2: 多智能体仿真任务执行 (顺序: Robot -> Truck -> UAV)")
     async with httpx.AsyncClient(timeout=60.0) as client:
         task_ids = {}
 
-        # 1. UAV 任务
+        # ==================== 1. Robot 任务 (分拣) ====================
+        if agentrobot_params:
+            logging.info("启动 Robot 任务...")
+            t_start = time.time()
+            try:
+                resp3 = await client.post(AGENT_API_MAP["agentrobot"], json=agentrobot_params)
+                resp3.raise_for_status()
+                task_id = resp3.json()["task_id"]
+                task_ids["agentrobot"] = task_id
+                print(f"Robot 任务已提交: {task_id}")
+
+                # 轮询等待结果
+                await poll_task(client, task_id, "agentrobot")
+
+                # Robot 目前使用客户端计时，但由于 core.py 中开启了 10倍速 (TIME_SCALE=10)
+                # 为了还原真实的业务仿真耗时，我们需要乘以 10
+                robot_physical_time = time.time() - t_start
+                timing_stats["Robot工作时间"] = robot_physical_time * 10.0
+            except Exception as e:
+                print(f"Robot 任务异常: {e}")
+                timing_stats["Robot工作时间"] = -1
+        else:
+            print("无 Robot 任务")
+
+        # ==================== 2. Truck 任务 (干线) ====================
+        if agenttruck_params:
+            logging.info("启动 Truck 任务...")
+            t_start = time.time()
+
+            # GPS 兜底
+            # 1. 尝试从 UAV 参数中复用坐标 (Truck终点 = UAV起点)
+            if "end_lat" not in agenttruck_params and agentuav_params.get("start_lat"):
+                print("💡 从 UAV 任务中复用终点坐标")
+                agenttruck_params["end_lat"] = agentuav_params["start_lat"]
+                agenttruck_params["end_lng"] = agentuav_params["start_lng"]
+
+            # 3. OSM 兜底
+            if "start_lat" not in agenttruck_params:
+                start_name = agenttruck_params.get("start_location", "深圳北站")
+                end_name = agenttruck_params.get("end_location", "中山大学深圳校区")
+
+                # 只有当确实缺坐标时才调 OSM
+                s_coords = get_osm_coordinates(start_name)
+                if s_coords:
+                    agenttruck_params["start_lat"], agenttruck_params["start_lng"] = s_coords
+                else:
+                    # 默认值 (深圳市民中心)
+                    if "start_lat" not in agenttruck_params:
+                        agenttruck_params["start_lat"], agenttruck_params["start_lng"] = 22.543, 114.057
+                        print(f"⚠️ 无法获取起点坐标，使用默认值: {start_name} -> (22.543, 114.057)")
+
+                if "end_lat" not in agenttruck_params:
+                    e_coords = get_osm_coordinates(end_name)
+                    if e_coords:
+                        agenttruck_params["end_lat"], agenttruck_params["end_lng"] = e_coords
+                    else:
+                        # 默认值
+                        agenttruck_params["end_lat"], agenttruck_params["end_lng"] = 22.793, 113.914
+                        print(f"⚠️ 无法获取终点坐标，使用默认值: {end_name} -> (22.793, 113.914)")
+
+            try:
+                resp2 = await client.post(AGENT_API_MAP["agenttruck"], json=agenttruck_params)
+                resp2.raise_for_status()
+                task_id = resp2.json()["task_id"]
+                task_ids["agenttruck"] = task_id
+                print(f"Truck 任务已提交: {task_id}")
+
+                # 轮询等待结果
+                truck_result = await poll_task(client, task_id, "agenttruck")
+
+                # 修正：从 simulation_data 提取
+                sim_data = truck_result.get("simulation_data", truck_result) if truck_result else {}
+                if sim_data and "total_time" in sim_data:
+                    timing_stats["Truck工作时间"] = float(sim_data["total_time"]) * 3600
+                else:
+                    timing_stats["Truck工作时间"] = time.time() - t_start
+            except Exception as e:
+                print(f"Truck 任务异常: {e}")
+                timing_stats["Truck工作时间"] = -1
+        else:
+            print("无 Truck 任务")
+
+        # ==================== 3. UAV 任务 (末端) ====================
         if agentuav_params:
             logging.info("启动 UAV 任务...")
             t_start = time.time()
@@ -333,92 +415,6 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
         else:
             print("无 UAV 任务")
 
-        # 2. Truck 任务
-        if agenttruck_params:
-            logging.info("启动 Truck 任务...")
-            t_start = time.time()
-
-            # ----------------- GPS 补全逻辑 -----------------
-            # 1. 尝试从 UAV 参数中复用坐标 (因为 Truck终点 = UAV起点)
-            if "end_lat" not in agenttruck_params and agentuav_params.get("start_lat"):
-                print("💡 从 UAV 任务中复用终点坐标")
-                agenttruck_params["end_lat"] = agentuav_params["start_lat"]
-                agenttruck_params["end_lng"] = agentuav_params["start_lng"]
-
-            # 2. 尝试从数据库中查找起降点/仓库坐标 (TODO: 对接数据库查询)
-            # 这里暂时只能依赖 OSM 或默认值
-
-            # 3. OSM 兜底 (网络不可达时会失败)
-            if "start_lat" not in agenttruck_params:
-                start_name = agenttruck_params.get("start_location", "深圳北站")
-                end_name = agenttruck_params.get("end_location", "中山大学深圳校区")
-
-                # 只有当确实缺坐标时才调 OSM
-                s_coords = get_osm_coordinates(start_name)
-                if s_coords:
-                    agenttruck_params["start_lat"], agenttruck_params["start_lng"] = s_coords
-                else:
-                    # 默认值 (深圳市民中心)
-                    if "start_lat" not in agenttruck_params:
-                        agenttruck_params["start_lat"], agenttruck_params["start_lng"] = 22.543, 114.057
-                        print(f"⚠️ 无法获取起点坐标，使用默认值: {start_name} -> (22.543, 114.057)")
-
-                if "end_lat" not in agenttruck_params:
-                    e_coords = get_osm_coordinates(end_name)
-                    if e_coords:
-                        agenttruck_params["end_lat"], agenttruck_params["end_lng"] = e_coords
-                    else:
-                        # 默认值
-                        agenttruck_params["end_lat"], agenttruck_params["end_lng"] = 22.793, 113.914
-                        print(f"⚠️ 无法获取终点坐标，使用默认值: {end_name} -> (22.793, 113.914)")
-            # -----------------------------------------------
-
-            try:
-                resp2 = await client.post(AGENT_API_MAP["agenttruck"], json=agenttruck_params)
-                resp2.raise_for_status()
-                task_id = resp2.json()["task_id"]
-                task_ids["agenttruck"] = task_id
-                print(f"Truck 任务已提交: {task_id}")
-
-                # 轮询等待结果
-                truck_result = await poll_task(client, task_id, "agenttruck")
-
-                # 修正：从 simulation_data 提取
-                sim_data = truck_result.get("simulation_data", truck_result) if truck_result else {}
-                if sim_data and "total_time" in sim_data:
-                    timing_stats["Truck工作时间"] = float(sim_data["total_time"]) * 3600
-                else:
-                    timing_stats["Truck工作时间"] = time.time() - t_start
-            except Exception as e:
-                print(f"Truck 任务异常: {e}")
-                timing_stats["Truck工作时间"] = -1
-        else:
-            print("无 Truck 任务")
-
-        # 3. Robot 任务
-        if agentrobot_params:
-            logging.info("启动 Robot 任务...")
-            t_start = time.time()
-            try:
-                resp3 = await client.post(AGENT_API_MAP["agentrobot"], json=agentrobot_params)
-                resp3.raise_for_status()
-                task_id = resp3.json()["task_id"]
-                task_ids["agentrobot"] = task_id
-                print(f"Robot 任务已提交: {task_id}")
-
-                # 轮询等待结果
-                await poll_task(client, task_id, "agentrobot")
-
-                # Robot 目前使用客户端计时，但由于 core.py 中开启了 10倍速 (TIME_SCALE=10)
-                # 为了还原真实的业务仿真耗时，我们需要乘以 10
-                robot_physical_time = time.time() - t_start
-                timing_stats["Robot工作时间"] = robot_physical_time * 10.0
-            except Exception as e:
-                print(f"Robot 任务异常: {e}")
-                timing_stats["Robot工作时间"] = -1
-        else:
-            print("无 Robot 任务")
-
     total_end_time = time.time()
     timing_stats["全流程总耗时"] = total_end_time - total_start_time
 
@@ -426,11 +422,23 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
     print("📊 任务执行时间统计 (单位: 秒)")
     print("注: Agent时间为仿真业务耗时(如行驶时间)，非计算耗时")
     print("="*40)
-    for k, v in timing_stats.items():
+
+    # 按照执行顺序打印
+    order = ["Robot工作时间", "Truck工作时间", "UAV工作时间", "全流程总耗时"]
+    for k in order:
+        v = timing_stats.get(k)
+        if v is None: continue
+
         if v == -1:
             print(f"{k:<15}: ❌ 失败/未执行")
         else:
             print(f"{k:<15}: {v:.2f} s")
+
+    # 打印其他额外统计（如RAG耗时）
+    for k, v in timing_stats.items():
+        if k not in order:
+             print(f"{k:<15}: {v:.2f} s")
+
     print("="*40 + "\n")
 
     return task_ids
@@ -447,6 +455,9 @@ if __name__ == "__main__":
 
     # 异步执行
     task_ids = asyncio.run(extract_agent_commands_and_call_api(test_prompt))
-    print("\n所有 Agent 任务提交结果：")
-    for agent, task_id in task_ids.items():
-        print(f"{agent}: {task_id}")
+    print("\n所有 Agent 任务提交结果（按执行顺序）：")
+
+    # 按顺序打印
+    for agent in ["agentrobot", "agenttruck", "agentuav"]:
+        if agent in task_ids:
+            print(f"{agent}: {task_ids[agent]}")
