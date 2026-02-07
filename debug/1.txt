@@ -6,3 +6,9 @@ path的info响应： {'distance': 44595.51, 'weight': 1697.581059, 'time': 16975
 =================================================================================
 44.6
 28.0
+
+  ALTER TABLE task_main MODIFY task_id VARCHAR(50);
+  ALTER TABLE task_agent_rel MODIFY task_id VARCHAR(50);
+  ALTER TABLE agent_uav_sensor MODIFY task_id VARCHAR(50);
+  ALTER TABLE agent_ground_sensor MODIFY task_id VARCHAR(50);
+  ALTER TABLE agent_warehouse_sensor MODIFY task_id VARCHAR(50);

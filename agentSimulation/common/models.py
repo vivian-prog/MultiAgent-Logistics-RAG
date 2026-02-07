@@ -49,7 +49,7 @@ class AgentBase(Base):
 class TaskMain(Base):
     __tablename__ = "task_main"
 
-    task_id = Column(String(30), primary_key=True, comment="任务ID")
+    task_id = Column(String(50), primary_key=True, comment="任务ID") # 修正长度适配 UUID (36 chars)
     task_type = Column(Integer, nullable=False, comment="类型：1=物流运输，2=紧急调货")
     goods_id = Column(Integer, ForeignKey("warehouse_goods.goods_id"), nullable=False, comment="关联物品ID")
     target_x = Column(DECIMAL(12, 6), nullable=False, comment="目标点X坐标")
@@ -64,7 +64,7 @@ class TaskAgentRel(Base):
     __tablename__ = "task_agent_rel"
 
     rel_id = Column(BigInteger, primary_key=True, autoincrement=True)
-    task_id = Column(String(30), ForeignKey("task_main.task_id"), nullable=False)
+    task_id = Column(String(50), ForeignKey("task_main.task_id"), nullable=False) # 修正长度
     agent_id = Column(String(20), ForeignKey("agent_base.agent_id"), nullable=False)
     agent_role = Column(String(20), nullable=False, comment="分工")
     start_time = Column(DateTime, nullable=False)
@@ -78,7 +78,7 @@ class AgentUavSensor(Base):
 
     sensor_id = Column(BigInteger, primary_key=True, autoincrement=True)
     agent_id = Column(String(20), ForeignKey("agent_base.agent_id"), nullable=False)
-    task_id = Column(String(30), ForeignKey("task_main.task_id"), nullable=False)
+    task_id = Column(String(50), ForeignKey("task_main.task_id"), nullable=False) # 修正长度
     gps_x = Column(DECIMAL(12, 6), nullable=False, comment="GPS经度")
     gps_y = Column(DECIMAL(12, 6), nullable=False, comment="GPS纬度")
     altitude = Column(DECIMAL(8, 2), nullable=False, comment="飞行高度")
@@ -94,7 +94,7 @@ class AgentGroundSensor(Base):
 
     sensor_id = Column(BigInteger, primary_key=True, autoincrement=True)
     agent_id = Column(String(20), ForeignKey("agent_base.agent_id"), nullable=False)
-    task_id = Column(String(30), ForeignKey("task_main.task_id"), nullable=False)
+    task_id = Column(String(50), ForeignKey("task_main.task_id"), nullable=False) # 修正长度
     slam_x = Column(DECIMAL(10, 2), nullable=False, comment="SLAM X")
     slam_y = Column(DECIMAL(10, 2), nullable=False, comment="SLAM Y")
     speed = Column(DECIMAL(6, 2), nullable=False, comment="当前速度")
@@ -109,7 +109,7 @@ class AgentWarehouseSensor(Base):
 
     sensor_id = Column(BigInteger, primary_key=True, autoincrement=True)
     agent_id = Column(String(20), ForeignKey("agent_base.agent_id"), nullable=False)
-    task_id = Column(String(30), ForeignKey("task_main.task_id"), nullable=False)
+    task_id = Column(String(50), ForeignKey("task_main.task_id"), nullable=False) # 修正长度
     shelf_nav_x = Column(DECIMAL(10, 2), nullable=False, comment="货架导航X")
     shelf_nav_y = Column(DECIMAL(10, 2), nullable=False, comment="货架导航Y")
     grip_force = Column(DECIMAL(6, 2), nullable=False, comment="夹持力")
