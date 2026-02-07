@@ -321,9 +321,10 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
                 # 轮询等待结果
                 uav_result = await poll_task(client, task_id, "agentuav")
 
-                # 优先使用仿真内部时间，否则使用客户端计时
-                if uav_result and "total_steps" in uav_result:
-                    timing_stats["UAV工作时间"] = float(uav_result["total_steps"])
+                # 修正：从 simulation_data 提取
+                sim_data = uav_result.get("simulation_data", uav_result) if uav_result else {}
+                if sim_data and "total_steps" in sim_data:
+                    timing_stats["UAV工作时间"] = float(sim_data["total_steps"])
                 else:
                     timing_stats["UAV工作时间"] = time.time() - t_start
             except Exception as e:
@@ -362,8 +363,10 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
                 # 轮询等待结果
                 truck_result = await poll_task(client, task_id, "agenttruck")
 
-                if truck_result and "total_time" in truck_result:
-                    timing_stats["Truck工作时间"] = float(truck_result["total_time"]) * 3600
+                # 修正：从 simulation_data 提取
+                sim_data = truck_result.get("simulation_data", truck_result) if truck_result else {}
+                if sim_data and "total_time" in sim_data:
+                    timing_stats["Truck工作时间"] = float(sim_data["total_time"]) * 3600
                 else:
                     timing_stats["Truck工作时间"] = time.time() - t_start
             except Exception as e:
