@@ -20,6 +20,7 @@ MYSQL_CFG = {
 SPEED_M_PER_SEC = 1.0
 GRIP_RATIO = 10.0
 BATTERY_DRAIN_PER_SEC = 0.02
+TIME_SCALE = 10.0  # 新增：时间加速因子（10倍速），避免仿真过慢导致超时
 # -------------------------------------
 
 # ---------- 数据库连接 ----------
@@ -214,7 +215,7 @@ def simulate_single_task(agent_id: str, goods_name: str, task_context=None, task
             if task_context and max_steps > 0:
                 progress = 10 + int((step_count / max_steps) * 30)
                 task_context.update_state(state="STARTED", meta={"progress": min(progress, 40)})
-            time.sleep(sec)
+            time.sleep(sec / TIME_SCALE) # 加速仿真
 
         # 4. 抓取商品（进度40%→50%）
         if task_context:
@@ -242,7 +243,7 @@ def simulate_single_task(agent_id: str, goods_name: str, task_context=None, task
             if task_context and max_steps > 0:
                 progress = 50 + int((step_count / max_steps) * 30)
                 task_context.update_state(state="STARTED", meta={"progress": min(progress, 80)})
-            time.sleep(sec)
+            time.sleep(sec / TIME_SCALE) # 加速仿真
 
         # 6. 卸货并更新货位（进度80%→100%）
         if task_context:
