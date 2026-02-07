@@ -4,6 +4,10 @@
 USE hma_llm;
 SET NAMES utf8mb4;
 
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE warehouse_base;
+SET FOREIGN_KEY_CHECKS = 1;
+
 INSERT INTO warehouse_base (
     warehouse_name, location_x, location_y, max_capacity, status, create_time, update_time
 ) VALUES
