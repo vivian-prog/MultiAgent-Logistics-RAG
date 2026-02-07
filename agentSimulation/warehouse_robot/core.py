@@ -162,23 +162,28 @@ def parse_task_csv(csv_path: str) -> List[Tuple[str, str]]:
         raise Exception(f"解析CSV失败：{str(e)}")
 
 # ---------- 单任务仿真核心函数 ----------
-def simulate_single_task(agent_id: str, goods_name: str, task_context=None) -> dict:
+def simulate_single_task(agent_id: str, goods_name: str, task_context=None, task_id=None) -> dict:
     """
     执行单个仓储机器人仿真任务
     :param agent_id: 机器人ID
     :param goods_name: 商品名称
     :param task_context: Celery任务上下文（用于更新进度）
+    :param task_id: 指定任务ID（可选，若不传则自动生成）
     :return: 仿真结果字典
     """
     try:
         # 1. 初始化进度
         if task_context:
             task_context.update_state(state="STARTED", meta={"progress": 10})
-        
+
         # 2. 获取基础数据
         home_x, home_y = get_home_location()
         shelf_x, shelf_y, weight, target_str, old_qty, wh_id = query_goods(goods_name)
-        task_id = f"T{datetime.datetime.now():%Y%m%d%H%M%S}"
+
+        # 使用传入的task_id或自动生成
+        if not task_id:
+            task_id = f"T{datetime.datetime.now():%Y%m%d%H%M%S}"
+
         robot = Robot(agent_id, task_id, home_x, home_y)
         
         # 记录任务基础信息

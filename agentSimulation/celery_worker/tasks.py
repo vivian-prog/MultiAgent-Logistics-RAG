@@ -679,7 +679,7 @@ def run_simulation_task_agent_robot(self, params: dict):
             sim_result = simulate_batch_tasks(params["csv_path"], self)
         elif "agent_id" in params and "goods_name" in params:
             # 单任务模式
-            sim_result = simulate_single_task(params["agent_id"], params["goods_name"], self)
+            sim_result = simulate_single_task(params["agent_id"], params["goods_name"], self, task_id=self.request.id)
         else:
             raise Exception("参数错误：必须提供 csv_path 或 agent_id+goods_name")
 
