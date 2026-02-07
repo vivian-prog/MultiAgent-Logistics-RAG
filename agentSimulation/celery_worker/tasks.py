@@ -14,7 +14,7 @@ from celery_worker import app  # 导入上面初始化的Celery实例
 from common.db import get_sync_db  # 若需要数据库操作，需用同步DB（Celery不支持异步Session）
 from common.schema import SimulationResultSchema
 # 引入 ORM 模型
-from common.models import AgentGroundSensor, AgentUavSensor, AgentWarehouseSensor, TaskMain, WarehouseGoods
+from common.models import AgentGroundSensor, AgentUavSensor, AgentWarehouseSensor, TaskMain, WarehouseGoods, AgentBase
 from uav_simulation.core import run_uav_simulation_core
 from warehouse_robot.core import simulate_single_task, simulate_batch_tasks
 
@@ -48,6 +48,30 @@ def ensure_task_exists(db, task_id, task_type_code, params):
             print(f"已在 task_main 创建任务记录: {task_id}")
     except Exception as e:
         print(f"ensure_task_exists 警告: {e}")
+        db.rollback()
+
+# ---------------------- 辅助函数：确保 Agent 在 agent_base 中存在 ----------------------
+def ensure_agent_exists(db, agent_id, agent_type_code):
+    """
+    检查 agent_base 表中是否存在该 Agent，若不存在则创建。
+    :param agent_type_code: 1=UAV, 2=Truck, 3=Robot
+    """
+    try:
+        agent = db.query(AgentBase).filter(AgentBase.agent_id == agent_id).first()
+        if not agent:
+            new_agent = AgentBase(
+                agent_id=agent_id,
+                agent_type=agent_type_code,
+                max_load=10.0, # 默认值
+                max_speed=10.0, # 默认值
+                battery_capacity=10000, # 默认值
+                status=1 # 待命
+            )
+            db.add(new_agent)
+            db.commit()
+            print(f"已在 agent_base 创建 Agent 记录: {agent_id}")
+    except Exception as e:
+        print(f"ensure_agent_exists 警告: {e}")
         db.rollback()
 
 # 核心：用@app.task装饰，将普通函数转为Celery异步任务
@@ -318,6 +342,9 @@ def save_agent_sensor_data(db, task_id, agent_id, minute_positions, route_data, 
     :param route_data: GraphHopper路线数据
     :param params: 前端传入参数（含货物状态、电量等）
     """
+    # 确保 Agent 存在
+    ensure_agent_exists(db, agent_id, 2) # Truck = 2
+
     # 1. 基础参数提取
     total_distance_m = route_data["distance"]  # 总距离（米）
     total_time_s = route_data["time"] / 1000   # 总耗时（秒）
@@ -377,6 +404,9 @@ def save_uav_sensor_data(db, task_id, uav_trajectories, params):
     # uav_trajectories 格式: {"uav_0": [[x, y, z, t], ...], ...}
     for uav_name, trajectory in uav_trajectories.items():
         agent_id = f"{uav_name}_{task_id[-4:]}" # 构造唯一AgentID或使用params中的
+
+        # 确保 Agent 存在
+        ensure_agent_exists(db, agent_id, 1) # UAV = 1
 
         for point in trajectory:
             # point: [x, y, z, t]
@@ -634,6 +664,10 @@ def run_simulation_task_agent_robot(self, params: dict):
         db = next(get_sync_db())
         # 确保任务主表记录存在
         ensure_task_exists(db, self.request.id, 2, params) # task_type=2 (仓储操作)
+
+        # 确保 Agent 存在
+        if "agent_id" in params:
+            ensure_agent_exists(db, params["agent_id"], 3) # Robot = 3
 
         # 示例：task_record = TaskRecord(task_id=self.request.id, params=params, status="STARTED")
         # db.add(task_record)
