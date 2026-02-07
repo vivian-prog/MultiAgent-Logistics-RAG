@@ -338,20 +338,40 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
             logging.info("启动 Truck 任务...")
             t_start = time.time()
 
-            # GPS 兜底
+            # ----------------- GPS 补全逻辑 -----------------
+            # 1. 尝试从 UAV 参数中复用坐标 (因为 Truck终点 = UAV起点)
+            if "end_lat" not in agenttruck_params and agentuav_params.get("start_lat"):
+                print("💡 从 UAV 任务中复用终点坐标")
+                agenttruck_params["end_lat"] = agentuav_params["start_lat"]
+                agenttruck_params["end_lng"] = agentuav_params["start_lng"]
+
+            # 2. 尝试从数据库中查找起降点/仓库坐标 (TODO: 对接数据库查询)
+            # 这里暂时只能依赖 OSM 或默认值
+
+            # 3. OSM 兜底 (网络不可达时会失败)
             if "start_lat" not in agenttruck_params:
                 start_name = agenttruck_params.get("start_location", "深圳北站")
                 end_name = agenttruck_params.get("end_location", "中山大学深圳校区")
+
+                # 只有当确实缺坐标时才调 OSM
                 s_coords = get_osm_coordinates(start_name)
-                e_coords = get_osm_coordinates(end_name)
                 if s_coords:
                     agenttruck_params["start_lat"], agenttruck_params["start_lng"] = s_coords
-                else: # 默认值
-                    agenttruck_params["start_lat"], agenttruck_params["start_lng"] = 22.543, 114.057
-                if e_coords:
-                    agenttruck_params["end_lat"], agenttruck_params["end_lng"] = e_coords
-                else: # 默认值
-                    agenttruck_params["end_lat"], agenttruck_params["end_lng"] = 22.793, 113.914
+                else:
+                    # 默认值 (深圳市民中心)
+                    if "start_lat" not in agenttruck_params:
+                        agenttruck_params["start_lat"], agenttruck_params["start_lng"] = 22.543, 114.057
+                        print(f"⚠️ 无法获取起点坐标，使用默认值: {start_name} -> (22.543, 114.057)")
+
+                if "end_lat" not in agenttruck_params:
+                    e_coords = get_osm_coordinates(end_name)
+                    if e_coords:
+                        agenttruck_params["end_lat"], agenttruck_params["end_lng"] = e_coords
+                    else:
+                        # 默认值
+                        agenttruck_params["end_lat"], agenttruck_params["end_lng"] = 22.793, 113.914
+                        print(f"⚠️ 无法获取终点坐标，使用默认值: {end_name} -> (22.793, 113.914)")
+            # -----------------------------------------------
 
             try:
                 resp2 = await client.post(AGENT_API_MAP["agenttruck"], json=agenttruck_params)
