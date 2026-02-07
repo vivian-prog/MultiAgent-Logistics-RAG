@@ -1,4 +1,13 @@
---DB:hma_llm 
+-- 0. 清理旧表（注意顺序，先删子表）
+DROP TABLE IF EXISTS agent_uav_sensor;
+DROP TABLE IF EXISTS agent_ground_sensor;
+DROP TABLE IF EXISTS agent_warehouse_sensor;
+DROP TABLE IF EXISTS task_agent_rel;
+DROP TABLE IF EXISTS task_main;
+DROP TABLE IF EXISTS agent_base;
+DROP TABLE IF EXISTS warehouse_goods;
+DROP TABLE IF EXISTS warehouse_base;
+
 -- 1. 仓储基础信息表
 CREATE TABLE IF NOT EXISTS warehouse_base (
     warehouse_id INT PRIMARY KEY AUTO_INCREMENT,
