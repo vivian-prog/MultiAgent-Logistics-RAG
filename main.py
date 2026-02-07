@@ -389,7 +389,10 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
                 # 轮询等待结果
                 await poll_task(client, task_id, "agentrobot")
 
-                timing_stats["Robot工作时间"] = time.time() - t_start
+                # Robot 目前使用客户端计时，但由于 core.py 中开启了 10倍速 (TIME_SCALE=10)
+                # 为了还原真实的业务仿真耗时，我们需要乘以 10
+                robot_physical_time = time.time() - t_start
+                timing_stats["Robot工作时间"] = robot_physical_time * 10.0
             except Exception as e:
                 print(f"Robot 任务异常: {e}")
                 timing_stats["Robot工作时间"] = -1
@@ -400,7 +403,8 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
     timing_stats["全流程总耗时"] = total_end_time - total_start_time
 
     print("\n" + "="*40)
-    print("📊 任务执行时间统计")
+    print("📊 任务执行时间统计 (单位: 秒)")
+    print("注: Agent时间为仿真业务耗时(如行驶时间)，非计算耗时")
     print("="*40)
     for k, v in timing_stats.items():
         if v == -1:

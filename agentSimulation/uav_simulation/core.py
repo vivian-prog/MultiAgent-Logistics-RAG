@@ -5,17 +5,25 @@ import gym
 from gym import spaces
 import numpy as np
 import math
+import os
 
-# -------------------------- 模拟外部数据导入（替换为你的真实数据） --------------------------
-# 注：请将你的 array_data_zhuanyi.py、WH_test.py 等文件中的变量导入到这里
-# 示例模拟数据（实际使用时删除并替换为真实数据）
-buildings_location_WH = np.zeros((50, 50))
-buildings_WH = []
-match_pairs_WH = [[i, [0,0,0], [random.uniform(10,40), random.uniform(10,40), random.uniform(1,5)]] for i in range(50)]
-uav_init_pos_WH = np.random.uniform(0, 50, (50,7))
+# 深圳参考原点 (用于 Grid 映射 - 必须与预处理脚本保持一致)
+ORIGIN_LNG = 113.70
+ORIGIN_LAT = 22.40
+SCALE_FACTOR = 1000.0 # 0.001度 ≈ 1个Grid单位 ≈ 100米
+
+def gps_to_grid(lng, lat):
+    grid_x = (float(lng) - ORIGIN_LNG) * SCALE_FACTOR
+    grid_y = (float(lat) - ORIGIN_LAT) * SCALE_FACTOR
+    return grid_x, grid_y
+
+# -------------------------- 模拟外部数据导入 --------------------------
+# 预先定义变量，稍后在 SetConfig 中初始化
+buildings_location_WH = None
+uav_init_pos_WH = None
+match_pairs_WH = None
 
 buildings_location_zhuanyi = np.zeros((50, 50))
-buildings_zhuanyi = []
 match_pairs_zhuanyi = [[i, [0,0,0], [random.uniform(10,40), random.uniform(10,40), random.uniform(1,5)]] for i in range(32)]
 uav_init_state_zhuanyi = np.random.uniform(0, 50, (32,7))
 
@@ -70,13 +78,32 @@ class SetConfig:
         self.Init_state = []
 
     def Setting(self):
+        global buildings_location_WH, uav_init_pos_WH, match_pairs_WH
+
         if self.name == 'Map1':
+            # 加载预处理的地图数据 (.npy)
+            if buildings_location_WH is None:
+                npy_path = os.path.join(os.path.dirname(__file__), "map1_buildings.npy")
+                if os.path.exists(npy_path):
+                    print(f"Loading cached map: {npy_path}")
+                    buildings_location_WH = np.load(npy_path)
+                else:
+                    print(f"Warning: Map cache not found ({npy_path}), using empty map.")
+                    buildings_location_WH = np.zeros((50, 50))
+
+                w, h = buildings_location_WH.shape
+                # 初始化匹配对和状态 (随机分布在地图范围内)
+                uav_init_pos_WH = np.random.uniform(0, min(w, h), (50, 7))
+                match_pairs_WH = [[i, [0,0,0], [random.uniform(0,w), random.uniform(0,h), random.uniform(5,10)]] for i in range(50)]
+
             self.uav_num = 50
-            self.map_w, self.map_h, self.map_z = 50, 50, 5
+            self.map_w = buildings_location_WH.shape[0]
+            self.map_h = buildings_location_WH.shape[1]
+            self.map_z = 20
             self.buildings_location = buildings_location_WH
-            self.buildings = buildings_WH
             self.match_pairs = match_pairs_WH
             self.Init_state = uav_init_pos_WH
+
         elif self.name == 'Map2':
             self.uav_num = 32
             self.map_w, self.map_h, self.map_z = 50, 50, 5
@@ -87,12 +114,7 @@ class SetConfig:
         else:
             # 默认兜底
             print(f"Warning: Unknown Map_name '{self.name}', defaulting to Map1 config.")
-            self.uav_num = 50
-            self.map_w, self.map_h, self.map_z = 50, 50, 5
-            self.buildings_location = buildings_location_WH
-            self.buildings = buildings_WH
-            self.match_pairs = match_pairs_WH
-            self.Init_state = uav_init_pos_WH
+            return self.Setting() # 递归调用 Map1
 
         return self.uav_num, self.map_w, self.map_h, self.map_z, self.buildings_location, self.buildings, self.match_pairs, self.uav_r, self.Init_state
 
@@ -144,10 +166,12 @@ class MvController:
         next_z = uav[2] + action[2]
         grid_x = int(next_x)
         grid_y = int(next_y)
-        if 0 <= grid_x < len(self.buildings_location) and 0 <= grid_y < len(self.buildings_location[0]):
-            height = self.buildings_location[grid_x][grid_y]
-        else:
-            height = 0
+        # 边界检查
+        if grid_x < 0 or grid_x >= len(self.buildings_location) or grid_y < 0 or grid_y >= len(self.buildings_location[0]):
+            return False
+
+        height = self.buildings_location[grid_x][grid_y]
+
         if next_z - uav_r <= height:
             return True
         return False
@@ -164,9 +188,6 @@ class MvController:
 def run_uav_simulation_core(params: dict, task_context):
     """
     无人机仿真核心函数（供Celery任务调用）
-    :param params: 仿真参数（Map_name、max_steps）
-    :param task_context: Celery任务上下文（self）
-    :return: 仿真结果字典
     """
     # 1. 解析参数
     map_name = params.get("Map_name", "Map1")
@@ -178,29 +199,13 @@ def run_uav_simulation_core(params: dict, task_context):
     uav_num, map_w, map_h, map_z, buildings_location, buildings, match_pairs, uav_r, Init_state = MAP.Setting()
 
     # ================= 核心修改：支持动态单机任务（深圳坐标系映射） =================
-    # 检查是否传入了特定的起终点坐标 (GPS 经纬度)
-    # 兼容 LLM 可能生成的 start_lat/lng 格式
     raw_start_lng = params.get("start_lng") or params.get("start_x")
     raw_start_lat = params.get("start_lat") or params.get("start_y")
     raw_end_lng = params.get("end_lng") or params.get("end_x")
     raw_end_lat = params.get("end_lat") or params.get("end_y")
 
     if all(v is not None for v in [raw_start_lng, raw_start_lat, raw_end_lng, raw_end_lat]):
-        # 1. 定义深圳区域的参考原点 (左下角近似值：宝安机场西南侧)
-        # 这样可以将 GPS (113.x, 22.x) 映射为相对较小的正数
-        ORIGIN_LNG = 113.70
-        ORIGIN_LAT = 22.40
-
-        # 2. 定义缩放比例 (将经纬度差值放大为 Grid 坐标)
-        # 假设 0.01 度 (约1km) 对应 10 个 Grid 单位 -> 1 Grid ≈ 100米
-        SCALE_FACTOR = 1000.0
-
-        def gps_to_grid(lng, lat):
-            grid_x = (float(lng) - ORIGIN_LNG) * SCALE_FACTOR
-            grid_y = (float(lat) - ORIGIN_LAT) * SCALE_FACTOR
-            return grid_x, grid_y
-
-        # 3. 转换坐标
+        # 3. 转换坐标 (复用全局定义的转换逻辑)
         start_x, start_y = gps_to_grid(raw_start_lng, raw_start_lat)
         end_x, end_y = gps_to_grid(raw_end_lng, raw_end_lat)
 
@@ -214,20 +219,26 @@ def run_uav_simulation_core(params: dict, task_context):
         Init_state[0] = [start_x, start_y, 0, 0, 0, 0, 0]
 
         # 6. 覆盖目标配对
-        target_z = min(5.0, map_z)
+        target_z = min(15.0, map_z) # 目标高度设高一点
         match_pairs = [[0, [0,0,0], [end_x, end_y, target_z]]]
 
         # 7. 动态调整地图边界 (确保转换后的坐标在地图内)
-        # 找出最大 Grid 坐标，并留出缓冲
         max_grid_x = max(start_x, end_x, map_w)
         max_grid_y = max(start_y, end_y, map_h)
 
         if max_grid_x >= map_w or max_grid_y >= map_h:
-            map_w = math.ceil(max_grid_x + 20)
-            map_h = math.ceil(max_grid_y + 20)
-            # 重置建筑物 (清空避障，因为真实地图太复杂，此处仅演示轨迹)
-            buildings_location = np.zeros((map_w, map_h))
-            print(f"地图尺寸已根据深圳坐标动态扩展为: {map_w} x {map_h}")
+            new_w = math.ceil(max_grid_x + 20)
+            new_h = math.ceil(max_grid_y + 20)
+
+            # 创建新的扩展地图
+            new_buildings = np.zeros((new_w, new_h))
+            # 将旧地图数据复制进去 (左下角对齐)
+            old_w, old_h = buildings_location.shape
+            new_buildings[0:old_w, 0:old_h] = buildings_location
+
+            buildings_location = new_buildings
+            map_w, map_h = new_w, new_h
+            print(f"地图尺寸已根据深圳坐标动态扩展为: {map_w} x {map_h} (保留了SHP数据)")
 
     # ==========================================================
 
@@ -283,6 +294,6 @@ def run_uav_simulation_core(params: dict, task_context):
         "arrived_uav_count": int(arrived_count),
         "arrived_uav_ratio": round(arrived_count / uav_num, 2) if uav_num > 0 else 0,
         "uav_trajectories": uav_trajectories,
-        "uav_arrived_status": [bool(f) for f in flag], # 确保 bool 也是原生的
+        "uav_arrived_status": [bool(f) for f in flag],
         "map_info": {"map_w": float(map_w), "map_h": float(map_h), "map_z": float(map_z)}
     }
