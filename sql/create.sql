@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS agent_base (
 
 -- 4. 任务主表
 CREATE TABLE IF NOT EXISTS task_main (
-    task_id VARCHAR(30) PRIMARY KEY COMMENT '任务ID（如LOG-20250520-001）',
+    task_id VARCHAR(50) PRIMARY KEY COMMENT '任务ID（如LOG-20250520-001）',
     task_type TINYINT NOT NULL COMMENT '类型：1=物流运输，2=紧急调货',
     goods_id INT NOT NULL COMMENT '关联物品ID',
     target_x DECIMAL(12,6) NOT NULL COMMENT '目标点X坐标',
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS task_main (
 -- 5. 任务-Agent关联表
 CREATE TABLE IF NOT EXISTS task_agent_rel (
     rel_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    task_id VARCHAR(30) NOT NULL COMMENT '关联任务ID',
+    task_id VARCHAR(50) NOT NULL COMMENT '关联任务ID',
     agent_id VARCHAR(20) NOT NULL COMMENT '关联AgentID',
     agent_role VARCHAR(20) NOT NULL COMMENT '分工（如取货、地面运输、空中投递）',
     start_time DATETIME NOT NULL COMMENT '开始执行时间',
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS task_agent_rel (
 CREATE TABLE IF NOT EXISTS agent_uav_sensor (
     sensor_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     agent_id VARCHAR(20) NOT NULL COMMENT '关联AgentID',
-    task_id VARCHAR(30) NOT NULL COMMENT '关联任务ID',
+    task_id VARCHAR(50) NOT NULL COMMENT '关联任务ID',
     gps_x DECIMAL(12,6) NOT NULL COMMENT 'GPS经度',
     gps_y DECIMAL(12,6) NOT NULL COMMENT 'GPS纬度',
     altitude DECIMAL(8,2) NOT NULL COMMENT '飞行高度（m）',
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS agent_uav_sensor (
 CREATE TABLE IF NOT EXISTS agent_ground_sensor (
     sensor_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     agent_id VARCHAR(20) NOT NULL COMMENT '关联AgentID',
-    task_id VARCHAR(30) NOT NULL COMMENT '关联任务ID',
+    task_id VARCHAR(50) NOT NULL COMMENT '关联任务ID',
     slam_x DECIMAL(10,2) NOT NULL COMMENT 'SLAM定位X坐标',
     slam_y DECIMAL(10,2) NOT NULL COMMENT 'SLAM定位Y坐标',
     speed DECIMAL(6,2) NOT NULL COMMENT '当前速度（m/s）',
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS agent_ground_sensor (
 CREATE TABLE IF NOT EXISTS agent_warehouse_sensor (
     sensor_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     agent_id VARCHAR(20) NOT NULL COMMENT '关联AgentID',
-    task_id VARCHAR(30) NOT NULL COMMENT '关联任务ID',
+    task_id VARCHAR(50) NOT NULL COMMENT '关联任务ID',
     shelf_nav_x DECIMAL(10,2) NOT NULL COMMENT '货架导航X坐标',
     shelf_nav_y DECIMAL(10,2) NOT NULL COMMENT '货架导航Y坐标',
     grip_force DECIMAL(6,2) NOT NULL COMMENT '夹持力（N）',

@@ -52,6 +52,8 @@ def main():
 
     # 要执行的 SQL 文件列表（按顺序）
     sql_files = [
+        os.path.join(current_dir, 'create.sql'), # 优先创建主表
+        os.path.join(current_dir, 'insert_test_data.sql'), # 插入基础数据
         os.path.join(current_dir, 'uav_landing_points.sql'),
         os.path.join(current_dir, 'insert_uav_landing_points.sql')
     ]
