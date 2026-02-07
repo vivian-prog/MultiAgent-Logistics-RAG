@@ -15,12 +15,8 @@ class MultiAgentLogisticRAGPrompt:
          "agenttruck": {{
            "type": "TRUCK",
            "tasks": ["任务描述1", "任务描述2"],
-           "start_location": "起点",
-           "end_location": "终点",
-           "start_lat":"起点维度（例如：22.543099）",
-           "start_lng":"起点经度（例如：114.057868）",
-           "end_lat":"终点维度（例如：22.793099）",
-           "end_lng":"终点维度（例如：113.913099）",
+           "start_location": "起点名称（如：深圳北站仓库）",
+           "end_location": "终点名称（如：光明城起降点）",
            "truck_params": {{"load_weight": 5.0, "base_fuel": 30}}  // 可选：载重(吨)、基础油耗
          }},
          "agentuav": {{
@@ -28,10 +24,10 @@ class MultiAgentLogisticRAGPrompt:
            "tasks": ["任务描述1"],
            "Map_name": "Map1",  // 必填：Map1(50架无人机) 或 Map2(32架无人机)
            "max_steps": 1000,     // 必填：最大仿真步数
-           "start_lat": 22.123,   // 可选：动态任务起点纬度
-           "start_lng": 113.123,  // 可选：动态任务起点经度
-           "end_lat": 22.456,     // 可选：动态任务终点纬度
-           "end_lng": 113.456     // 可选：动态任务终点经度
+           "start_lat": 22.123,   // 必填：UAV起点纬度（应等于Truck终点）
+           "start_lng": 113.123,  // 必填：UAV起点经度
+           "end_lat": 22.456,     // 必填：UAV终点纬度（最终目的地）
+           "end_lng": 113.456     // 必填：UAV终点经度
          }},
          "agentrobot": {{
            "type": "ROBOTS",
@@ -42,15 +38,32 @@ class MultiAgentLogisticRAGPrompt:
          "instruction_summary": "对所有Agent指令的简短汇总"
        }}
     3. 参数生成规则：
-       - **agenttruck**：必须提取明确的起点和终点名称赋值给 `start_location` 和 `end_location`。如果用户未指定，请根据上下文合理推断或使用默认值（如“物流中心”）。
+       - **agenttruck**：必须提取明确的起点和终点名称赋值给 `start_location` 和 `end_location`。
        - **agentuav**：`Map_name`根据无人机数量需求选择（Map1为50架大规模，Map2为32架中规模）。
-       - **agentrobot**：`goods_name`从用户需求中提取（如“生鲜”、“建材”），若无则填“标准件”。
+       - **agentrobot**：`goods_name`从用户需求中提取。
+
+    # 指令生成规则 (多Agent协同SOP - 强制分段联运)
+    1. **严格遵循“仓-干-配”三段式联运流程**：
+       - **第一步 (ROBOTS)**：在[始发仓库]内分拣货物 -> 搬运至卡车。
+       - **第二步 (TRUCK - 干线运输)**：
+         - 起点：[始发仓库]
+         - **终点**：必须是**距离最终目的地最近的无人机起降点**（Transit Point），**严禁**直接运到最终目的地。
+         - 示例："从深圳北仓库运输到光明天安云谷起降点"。
+       - **第三步 (UAV - 最后一公里)**：
+         - **起点**：必须与Truck的终点一致（即该无人机起降点）。
+         - **终点**：[最终目的地]（如用户指定的收货地址）。
+         - 任务类型必须是“接驳配送”而非“监控”。
+    2. **位置参数强制约束**：
+       - Truck的 `end_location` 必须等于 UAV的 `start_location`。
+       - 如果上下文中未提及具体起降点名称，请生成“距离[目的地]最近的起降点”作为名称，并根据目的地坐标反推一个合理的中间坐标（例如在目的地坐标基础上偏移 0.05 度）。
+    3. 若用户明确指定了非联运流程（如“只用卡车送达”），则以用户指令为准；否则默认为上述联运流程。
 
     # 错误禁止
     1. 禁止输出JSON以外的任何内容；
     2. 禁止修改JSON字段名；
-    3. **禁止遗漏必填参数**（特别是 location、Map_name、agent_id）；
-    4. 所有字符串使用中文。"""
+    3. **禁止Truck直接直达终点**（除非目的地本身就是仓库或起降点）；
+    4. **禁止UAV做全程跟随监控**（UAV应专注于末端配送）；
+    5. 所有字符串使用中文。"""
     RAG_session_init: str = """# 角色定位
     你是物流调度领域的实体关系提取专家，同时精通RAG检索Prompt构建逻辑。你的核心任务是：从用户输入的物流调度需求:{user_prompt} 中，精准提取关键实体（货物、地点、Agent类型），并基于数据库结构生成**语义化检索短句**，用于查询仓库位置、货物库存和空闲Agent信息。
 
@@ -64,12 +77,14 @@ class MultiAgentLogisticRAGPrompt:
     - **仓库表(warehouse_base)**: 包含仓库名称、坐标(location_x, location_y)。
     - **货物表(warehouse_goods)**: 包含货物名称(goods_name)、库存(stock_quantity)、所属仓库ID。
     - **Agent表(agent_base)**: 包含Agent类型、状态(status=1为待命/空闲)、电量(battery)、载重。
+    - **起降点表(uav_landing_points)**: 包含起降点名称、坐标(location_x, location_y)。
 
-    ## 3. RAG Prompt生成规则（生成3条核心检索指令）
-    请将用户需求转化为以下**3条标准化检索短句**（用空格分隔，不要换行）：
-    1. **查货物与仓库坐标**: "查找 [货物名称] 所属的仓库ID以及仓库的坐标(location_x, location_y)"
-    2. **查最近仓库**: "计算 [目的地] 与各仓库的距离并找出最近仓库"
-    3. **查最近Agent**: "查询状态为待命的 TRUCK、UAV、ROBOTS 列表及其所属仓库位置，找出距离 [起运点/货物所在仓库] 最近的可用Agent"
+    ## 3. RAG Prompt生成规则（生成4条核心检索指令）
+    请将用户需求转化为以下**4条标准化检索短句**（用空格分隔，不要换行）：
+    1. **查货物与仓库坐标**: "查找 [货物名称] 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y)"
+    2. **查最近起降点**: "计算 [目的地] 与各无人机起降点的距离，找出最近的起降点坐标"
+    3. **查最近仓库**: "计算 [目的地] 与各仓库的距离并找出最近仓库"
+    4. **查最近Agent**: "查询状态为待命的 TRUCK、UAV、ROBOTS 列表及其所属仓库位置，找出距离 [起运点/货物所在仓库] 最近的可用Agent"
 
     ## 4. 错误禁止
     - 禁止生成JSON/Markdown格式，仅输出**纯文本字符串**；
@@ -80,14 +95,9 @@ class MultiAgentLogisticRAGPrompt:
     ## 示例1：用户输入
     user_prompt = "请调度无人机把干粉灭火器运到中山大学深圳校区"
     ## 示例1：生成的RAG Prompt
-    查找 干粉灭火器 所属的仓库ID，仓库的坐标(location_x, location_y) 计算 中山大学深圳校区 与各仓库的距离并找出最近仓库 查询状态为待命的 TRUCK、UAV、ROBOTS 列表及其所属仓库位置，找出距离 货物所在仓库 最近的可用Agent
+    查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 中山大学深圳校区 与各无人机起降点的距离，找出最近的起降点坐标 计算 中山大学深圳校区 与各仓库的距离并找出最近仓库 查询状态为待命的 TRUCK、UAV、ROBOTS 列表及其所属仓库位置，找出距离 货物所在仓库 最近的可用Agent
 
     ## 示例2：用户输入
     user_prompt = "安排卡车从北京仓储中心运送生鲜到上海"
     ## 示例2：生成的RAG Prompt
-    查找 生鲜 所属的仓库ID，仓库的坐标(location_x, location_y) 计算 上海 与各仓库的距离 查询状态为待命的 TRUCK、UAV、ROBOTS 列表及其所属仓库位置，找出距离 北京仓储中心 最近的可用Agent
-
-    ## 示例3：用户输入
-    user_prompt = "查询哪里有空闲的仓储机器人"
-    ## 示例3：生成的RAG Prompt
-    查询状态为待命的 TRUCK、UAV、ROBOTS 列表及其坐标(gps_x, gps_y) ，找出距离最近的可用Agent"""
+    查找 生鲜 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 上海 与各无人机起降点的距离，找出最近的起降点坐标 计算 上海 与各仓库的距离 查询状态为待命的 TRUCK、UAV、ROBOTS 列表及其所属仓库位置，找出距离 北京仓储中心 最近的可用Agent"""
