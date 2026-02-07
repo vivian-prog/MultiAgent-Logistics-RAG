@@ -177,11 +177,6 @@ class SimulationResultSchema(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-# 模拟获取同步数据库会话的函数（替换为你实际的DB逻辑）
-def get_sync_db():
-    """模拟生成同步数据库会话，需替换为你的真实实现"""
-    yield None
-
 # GraphHopper配置（根据你的部署地址/密钥调整）
 GRAPH_HOPPER_BASE_URL = "http://localhost:8989/route"
 GRAPH_HOPPER_API_KEY = "your_api_key"  # 本地部署可留空，云端需填密钥
@@ -510,7 +505,7 @@ def run_simulation_task_agent_truck(self, params: dict):
             "profile": "car",  # 优先使用测试通过的 profile
             "layer": "OpenStreetMap",
             "points_encoded": False,
-            "details": [ "distance", "time"] # details 需要是列表或多次重复的键，requests params支持列表
+            "details": ["distance", "time"] # details 需要是列表或多次重复的键，requests params支持列表
         }
 
         try:

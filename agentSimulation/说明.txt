@@ -1,0 +1,101 @@
+# 多智能体物流仿真任务说明
+
+本文档详细说明 UAV（无人机）、Robot（仓储机器人）和 Truck（卡车）仿真任务的执行流程、输入参数及输出结果。
+
+## 1. UAV 仿真任务 (Unmanned Aerial Vehicle)
+
+### 执行流程
+1.  **触发**：通过 Celery 任务 `run_simulation_task_agent_uav` (位于 `celery_worker/tasks.py`) 触发。
+2.  **初始化**：调用 `uav_simulation/core.py` 中的 `run_uav_simulation_core`。
+    - 初始化 3D 网格环境 (`UAVEnv`) 和运动控制器 (`MvController`)。
+    - 加载地图和建筑物数据。
+3.  **坐标映射**：如果提供了起终点 GPS 坐标，将其转换为局部网格坐标（相对于深圳原点）。
+4.  **仿真循环**：
+    - 按时间步迭代，基于物理模型（速度、波动率）计算 UAV 移动。
+    - 执行碰撞检测（建筑物）和边界检查。
+    - 记录每一步的轨迹 `[x, y, z, t]`。
+5.  **数据持久化**：将生成的传感器数据（GPS、海拔、电池、信号强度）批量保存到数据库表 `agent_uav_sensor`。
+
+### 输入 (Input)
+*   **任务参数**：
+    *   `Map_name` (例如 "Map1")
+    *   `max_steps` (最大步数)
+    *   `start_lat`, `start_lng` (起点 GPS，可选)
+    *   `end_lat`, `end_lng` (终点 GPS，可选)
+*   **环境数据**：建筑物位置信息（代码内置或加载）。
+
+### 输出 (Output)
+*   **数据库输出**：
+    *   表 `agent_uav_sensor`：包含 timestamp, agent_id, gps_lat, gps_lng, altitude, battery_level, signal_strength 等字段。
+*   **函数返回 (JSON)**：
+    *   `uav_trajectories`: 轨迹数据列表
+    *   `arrived_uav_count`: 到达目标数量
+    *   `map_info`: 地图元数据
+
+---
+
+## 2. Robot 仿真任务 (Warehouse Robot)
+
+### 执行流程
+1.  **触发**：通过 Celery 任务 `run_simulation_task_agent_robot` (位于 `celery_worker/tasks.py`) 触发。
+2.  **任务解析**：调用 `warehouse_robot/core.py`。
+    - 支持单任务模式（直接传参）或批量模式（读取 CSV）。
+3.  **资源查询**：查询数据库表 `warehouse_goods` 获取目标货物 (`goods_name`) 的货架位置和库存。
+4.  **四阶段仿真**：
+    - **Phase 1 (Cruise)**: 从 Home 点移动到货架位置（基于距离计算时间）。
+    - **Phase 2 (Pick)**: 执行抓取动作，扣减 `warehouse_goods` 库存。
+    - **Phase 3 (Transport)**: 从货架移动到投递点 (Delivery Point)。
+    - **Phase 4 (Drop)**: 放置货物，更新 `warehouse_goods` 位置状态为 'DELIVERED'。
+5.  **传感器模拟**：在移动过程中持续生成 SLAM 坐标、抓力、电池电量等数据。
+6.  **数据持久化**：数据存入 `agent_warehouse_sensor` 表。
+
+### 输入 (Input)
+*   **任务参数**：
+    *   `agent_id`
+    *   `goods_name` (目标货物名称)
+    *   `csv_path` (可选，批量任务文件路径)
+*   **数据库依赖**：
+    *   `warehouse_base`: 获取机器人 Home 坐标。
+    *   `warehouse_goods`: 获取货物位置、库存信息。
+
+### 输出 (Output)
+*   **数据库输出**：
+    *   更新 `warehouse_goods`: 更新 stock_quantity 和 current_location。
+    *   表 `agent_warehouse_sensor`: 包含 slam_x, slam_y, grip_force, weight, battery_level, status 等。
+*   **函数返回 (JSON)**：
+    *   `final_battery`: 剩余电量
+    *   `final_stock`: 剩余库存
+    *   `task_status`: 任务最终状态
+
+---
+
+## 3. Truck 仿真任务 (Ground Transport)
+
+### 执行流程
+1.  **触发**：通过 Celery 任务 `run_simulation_task_agent_truck` (位于 `celery_worker/tasks.py`) 触发。
+2.  **路径规划**：
+    - 优先调用 **GraphHopper API** (`http://localhost:8989/route`) 获取真实路径点。
+    - **兜底机制 (Mock)**: 如果 API 不可用，使用直线距离 * 1.4 估算路径。
+3.  **轨迹插值**：调用 `calculate_truck_minute_positions` 计算每分钟的 GPS 坐标点。
+4.  **能耗计算**：调用 `calculate_truck_fuel_consumption` 基于距离、路况类型和载重计算油耗。
+5.  **数据生成**：
+    - 生成每分钟的传感器数据：速度、电池/油量（模拟衰减）、障碍物距离。
+    - 将 GPS 坐标转换为 SLAM 坐标。
+6.  **数据持久化**：将数据批量存入 `agent_ground_sensor` 表。
+
+### 输入 (Input)
+*   **任务参数**：
+    *   `agent_id`
+    *   `start_lat`, `start_lng` (起点)
+    *   `end_lat`, `end_lng` (终点)
+    *   `truck_params` (字典，包含 load_weight, fuel_efficiency 等配置)
+
+### 输出 (Output)
+*   **数据库输出**：
+    *   表 `agent_ground_sensor`: 包含 slam_x, slam_y, speed, obstacle_distance, battery_level 等。
+*   **函数返回 (JSON)**：
+    *   `route_points`: 原始路径点
+    *   `minute_positions`: 插值后的分钟级位置
+    *   `fuel_consumption`: 总油耗
+    *   `total_distance_km`: 总距离
+    *   `total_time_min`: 总耗时
