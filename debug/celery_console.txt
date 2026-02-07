@@ -1,42 +1,48 @@
 
-[2026-02-07 13:27:54,460: INFO/MainProcess] Connected to redis://:**@localhost:6379/0
-[2026-02-07 13:27:54,464: INFO/MainProcess] mingle: searching for neighbors
-[2026-02-07 13:27:55,473: INFO/MainProcess] mingle: all alone
-[2026-02-07 13:27:55,489: INFO/MainProcess] celery@sim4its232 ready.
-[2026-02-07 13:29:46,489: INFO/MainProcess] Task run_simulation_task_agent_uav[c3faf71e-7ef4-4ad5-80c3-bc4feaf103a4] received
-[2026-02-07 13:29:46,497: WARNING/ForkPoolWorker-6] 开始执行无人机仿真任务，参数：{'type': 'UAV', 'tasks': ['执行空中运输路径规划'], 'Map_name': 'Map1', 'max_steps': 1000, 'start_lat': '22.531267554516216', 'start_lng': '114.06042023957734', 'end_lat': '22.800884948488687', 'end_lng': '113.95443173232752'}
-[2026-02-07 13:29:46,527: WARNING/ForkPoolWorker-6] ensure_task_exists 警告: (pymysql.err.DataError) (1406, "Data too long for column 'task_id' at row 1")
+[tasks]
+  . run_simulation_task
+  . run_simulation_task_agent_robot
+  . run_simulation_task_agent_truck
+  . run_simulation_task_agent_uav
+
+[2026-02-07 13:42:47,681: INFO/MainProcess] Connected to redis://:**@localhost:6379/0
+[2026-02-07 13:42:47,683: INFO/MainProcess] mingle: searching for neighbors
+[2026-02-07 13:42:48,690: INFO/MainProcess] mingle: all alone
+[2026-02-07 13:42:48,707: INFO/MainProcess] celery@sim4its232 ready.
+[2026-02-07 13:44:14,238: INFO/MainProcess] Task run_simulation_task_agent_uav[5d4a96f4-00fd-4188-b39d-7a4d7f612ee1] received
+[2026-02-07 13:44:14,245: WARNING/ForkPoolWorker-6] 开始执行无人机仿真任务，参数：{'type': 'UAV', 'tasks': ['执行空投任务，将干粉灭火器运送至中山大学深圳校区'], 'Map_name': 'Map2', 'max_steps': 1000, 'start_lat': '22.531267554516216', 'start_lng': '114.06042023957734', 'end_lat': '22.800884948488687', 'end_lng': '113.95443173232752'}
+[2026-02-07 13:44:14,280: WARNING/ForkPoolWorker-6] ensure_task_exists 警告: (pymysql.err.DataError) (1406, "Data too long for column 'task_id' at row 1")
 [SQL: INSERT INTO task_main (task_id, task_type, goods_id, target_x, target_y, require_time, status, create_time, complete_time) VALUES (%(task_id)s, %(task_type)s, %(goods_id)s, %(target_x)s, %(target_y)s, %(require_time)s, %(status)s, %(create_time)s, %(complete_time)s)]
-[parameters: {'task_id': 'c3faf71e-7ef4-4ad5-80c3-bc4feaf103a4', 'task_type': 1, 'goods_id': 2, 'target_x': '113.95443173232752', 'target_y': '22.800884948488687', 'require_time': datetime.datetime(2026, 2, 7, 15, 29, 46, 522879), 'status': 1, 'create_time': datetime.datetime(2026, 2, 7, 13, 29, 46, 525281), 'complete_time': None}]
+[parameters: {'task_id': '5d4a96f4-00fd-4188-b39d-7a4d7f612ee1', 'task_type': 1, 'goods_id': 2, 'target_x': '113.95443173232752', 'target_y': '22.800884948488687', 'require_time': datetime.datetime(2026, 2, 7, 15, 44, 14, 277137), 'status': 1, 'create_time': datetime.datetime(2026, 2, 7, 13, 44, 14, 278742), 'complete_time': None}]
 (Background on this error at: https://sqlalche.me/e/20/9h9h)
-[2026-02-07 13:29:46,528: WARNING/ForkPoolWorker-6] 检测到动态单机任务。GPS映射: 起点(114.06042023957734,22.531267554516216)->(360.42,131.27)
-[2026-02-07 13:29:46,528: WARNING/ForkPoolWorker-6] 地图尺寸已根据深圳坐标动态扩展为: 381 x 421
-[2026-02-07 13:29:46,530: WARNING/ForkPoolWorker-6] /home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/gym/spaces/box.py:127: UserWarning: WARN: Box bound precision lowered by casting to float32
+[2026-02-07 13:44:14,281: WARNING/ForkPoolWorker-6] 检测到动态单机任务。GPS映射: 起点(114.06042023957734,22.531267554516216)->(360.42,131.27)
+[2026-02-07 13:44:14,281: WARNING/ForkPoolWorker-6] 地图尺寸已根据深圳坐标动态扩展为: 381 x 421
+[2026-02-07 13:44:14,283: WARNING/ForkPoolWorker-6] /home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/gym/spaces/box.py:127: UserWarning: WARN: Box bound precision lowered by casting to float32
   logger.warn(f"Box bound precision lowered by casting to {self.dtype}")
 
-[2026-02-07 13:29:46,994: WARNING/ForkPoolWorker-6] 保存UAV传感器数据失败: (pymysql.err.DataError) (1406, "Data too long for column 'task_id' at row 1")
+[2026-02-07 13:44:14,726: WARNING/ForkPoolWorker-6] 保存UAV传感器数据失败: (pymysql.err.DataError) (1406, "Data too long for column 'task_id' at row 1")
 [SQL: INSERT INTO agent_uav_sensor (agent_id, task_id, gps_x, gps_y, altitude, attitude_angle, obstacle_dist, battery_remaining, signal_strength, collect_time) VALUES (%(agent_id)s, %(task_id)s, %(gps_x)s, %(gps_y)s, %(altitude)s, %(attitude_angle)s, %(obstacle_dist)s, %(battery_remaining)s, %(signal_strength)s, %(collect_time)s)]
-[parameters: {'agent_id': 'uav_0_03a4', 'task_id': 'c3faf71e-7ef4-4ad5-80c3-bc4feaf103a4', 'gps_x': 360.4200134277344, 'gps_y': 131.27000427246094, 'altitude': 0.20000000298023224, 'attitude_angle': 0.0, 'obstacle_dist': 100.0, 'battery_remaining': 100, 'signal_strength': 90, 'collect_time': datetime.datetime(2026, 2, 7, 13, 29, 46, 967967)}]
+[parameters: {'agent_id': 'uav_0_2ee1', 'task_id': '5d4a96f4-00fd-4188-b39d-7a4d7f612ee1', 'gps_x': 360.4200134277344, 'gps_y': 131.27000427246094, 'altitude': 0.20000000298023224, 'attitude_angle': 0.0, 'obstacle_dist': 100.0, 'battery_remaining': 100, 'signal_strength': 90, 'collect_time': datetime.datetime(2026, 2, 7, 13, 44, 14, 701989)}]
 (Background on this error at: https://sqlalche.me/e/20/9h9h)
-[2026-02-07 13:29:46,997: INFO/ForkPoolWorker-6] Task run_simulation_task_agent_uav[c3faf71e-7ef4-4ad5-80c3-bc4feaf103a4] succeeded in 0.5058627277612686s: {'task_id': 'c3faf71e-7ef4-4ad5-80c3-bc4feaf103a4', 'params': {'agent_type': 1, 'type': 'UAV', 'tasks': ['执行空中运输路径规划'], 'Map_name': 'Map1', 'max_steps': 1000, 'start_lat': '22.531267554516216', 'start_lng': '114.06042023957734', 'end_lat': '22.800884948488687', 'end_lng': '113.95443173232752'}, 'simulation_data': {'agent_count': 1, 'task_type': 1, 'warehouse_id': 0, 'map_name': 'Map1', 'uav_num': 1, 'total_steps': 973, 'max_steps': 1000, 'arrived_uav_count': 1, 'arrived_uav_ratio': 1.0, 'uav_trajectories': {'uav_0': [...]}, 'uav_arrived_status': [True], 'map_info': {'map_w': 381.0, 'map_h': 421.0, 'map_z': 5.0}}, 'progress': 100, 'status': 'SUCCESS', 'error': None, 'finish_time': '2026-02-07T13:29:46'}
-[2026-02-07 13:29:48,527: INFO/MainProcess] Task run_simulation_task_agent_truck[a474c761-f501-47ed-8ff7-36ce24c8f662] received
-[2026-02-07 13:29:48,532: INFO/MainProcess] Task run_simulation_task_agent_robot[86fe74c8-a900-47d4-9260-f6450f90acc7] received
-[2026-02-07 13:29:48,533: WARNING/ForkPoolWorker-11] 开始执行卡车仿真任务，AgentID：truck_001，任务ID：a474c761-f501-47ed-8ff7-36ce24c8f662
-[2026-02-07 13:29:48,534: WARNING/ForkPoolWorker-11] 正在请求 GraphHopper: http://localhost:8989/route 参数: {'point': ['22.531267554516216,114.06042023957734', '22.800884948488687,113.95443173232752'], 'profile': 'car', 'layer': 'OpenStreetMap', 'points_encoded': False, 'details': ['distance', 'time']}
-[2026-02-07 13:29:48,538: WARNING/ForkPoolWorker-7] 开始执行仓储机器人仿真任务，参数：{'type': 'ROBOTS', 'tasks': ['携带干粉灭火器前往指定坐标'], 'agent_id': 'robot_001', 'goods_name': '干粉灭火器'}
-[2026-02-07 13:29:48,569: WARNING/ForkPoolWorker-7] ensure_task_exists 警告: (pymysql.err.DataError) (1406, "Data too long for column 'task_id' at row 1")
+[2026-02-07 13:44:14,729: INFO/ForkPoolWorker-6] Task run_simulation_task_agent_uav[5d4a96f4-00fd-4188-b39d-7a4d7f612ee1] succeeded in 0.4884549230337143s: {'task_id': '5d4a96f4-00fd-4188-b39d-7a4d7f612ee1', 'params': {'agent_type': 1, 'type': 'UAV', 'tasks': ['执行空投任务，将干粉灭火器运送至中山大学深圳校区'], 'Map_name': 'Map2', 'max_steps': 1000, 'start_lat': '22.531267554516216', 'start_lng': '114.06042023957734', 'end_lat': '22.800884948488687', 'end_lng': '113.95443173232752'}, 'simulation_data': {'agent_count': 1, 'task_type': 1, 'warehouse_id': 0, 'map_name': 'Map2', 'uav_num': 1, 'total_steps': 970, 'max_steps': 1000, 'arrived_uav_count': 1, 'arrived_uav_ratio': 1.0, 'uav_trajectories': {'uav_0': [...]}, 'uav_arrived_status': [True], 'map_info': {'map_w': 381.0, 'map_h': 421.0, 'map_z': 5.0}}, 'progress': 100, 'status': 'SUCCESS', 'error': None, 'finish_time': '2026-02-07T13:44:14'}
+[2026-02-07 13:44:16,275: INFO/MainProcess] Task run_simulation_task_agent_truck[3f7c51b8-b751-4411-8da3-72a9784f1482] received
+[2026-02-07 13:44:16,278: INFO/MainProcess] Task run_simulation_task_agent_robot[92d331aa-eb0b-49f3-8706-1fa540289f7e] received
+[2026-02-07 13:44:16,285: WARNING/ForkPoolWorker-11] 开始执行卡车仿真任务，AgentID：truck_001，任务ID：3f7c51b8-b751-4411-8da3-72a9784f1482
+[2026-02-07 13:44:16,286: WARNING/ForkPoolWorker-7] 开始执行仓储机器人仿真任务，参数：{'type': 'ROBOTS', 'tasks': ['携带干粉灭火器从仓库9前往中山大学深圳校区'], 'agent_id': 'robot_001', 'goods_name': '干粉灭火器'}
+[2026-02-07 13:44:16,286: WARNING/ForkPoolWorker-11] 正在请求 GraphHopper: http://localhost:8989/route 参数: {'point': ['22.531267554516216,114.06042023957734', '22.800884948488687,113.95443173232752'], 'profile': 'car', 'layer': 'OpenStreetMap', 'points_encoded': False, 'details': ['distance', 'time']}
+[2026-02-07 13:44:16,313: WARNING/ForkPoolWorker-7] ensure_task_exists 警告: (pymysql.err.DataError) (1406, "Data too long for column 'task_id' at row 1")
 [SQL: INSERT INTO task_main (task_id, task_type, goods_id, target_x, target_y, require_time, status, create_time, complete_time) VALUES (%(task_id)s, %(task_type)s, %(goods_id)s, %(target_x)s, %(target_y)s, %(require_time)s, %(status)s, %(create_time)s, %(complete_time)s)]
-[parameters: {'task_id': '86fe74c8-a900-47d4-9260-f6450f90acc7', 'task_type': 2, 'goods_id': 2, 'target_x': 0.0, 'target_y': 0.0, 'require_time': datetime.datetime(2026, 2, 7, 15, 29, 48, 565376), 'status': 1, 'create_time': datetime.datetime(2026, 2, 7, 13, 29, 48, 567645), 'complete_time': None}]
+[parameters: {'task_id': '92d331aa-eb0b-49f3-8706-1fa540289f7e', 'task_type': 2, 'goods_id': 2, 'target_x': 0.0, 'target_y': 0.0, 'require_time': datetime.datetime(2026, 2, 7, 15, 44, 16, 309308), 'status': 1, 'create_time': datetime.datetime(2026, 2, 7, 13, 44, 16, 311680), 'complete_time': None}]
 (Background on this error at: https://sqlalche.me/e/20/9h9h)
-[2026-02-07 13:29:48,574: WARNING/ForkPoolWorker-11] GraphHopper 请求成功
-[2026-02-07 13:29:48,575: WARNING/ForkPoolWorker-7] [INFO] 空载巡航中：robot_001 → 货架(106.55,29.56)
-[2026-02-07 13:29:48,578: WARNING/ForkPoolWorker-7] [ERROR] 单任务仿真失败：(1452, 'Cannot add or update a child row: a foreign key constraint fails (`hma_llm`.`agent_warehouse_sensor`, CONSTRAINT `agent_warehouse_sensor_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task_main` (`task_id`) ON DELETE CASCADE)')
-[2026-02-07 13:29:48,580: INFO/ForkPoolWorker-7] Task run_simulation_task_agent_robot[86fe74c8-a900-47d4-9260-f6450f90acc7] succeeded in 0.046656541526317596s: {'task_id': '86fe74c8-a900-47d4-9260-f6450f90acc7', 'params': {'agent_type': 3, 'type': 'ROBOTS', 'tasks': ['携带干粉灭火器前往指定坐标'], 'agent_id': 'robot_001', 'goods_name': '干粉灭火器'}, 'simulation_data': {'agent_count': 1, 'task_type': 2, 'warehouse_id': 0, 'agent_id': 'robot_001', 'goods_name': '干粉灭火器', 'status': 'FAILURE', 'error': '(1452, \'Cannot add or update a child row: a foreign key constraint fails (`hma_llm`.`agent_warehouse_sensor`, CONSTRAINT `agent_warehouse_sensor_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task_main` (`task_id`) ON DELETE CASCADE)\')', 'final_battery': None, 'task_id': None}, 'progress': 100, 'status': 'FAILURE', 'error': '(1452, \'Cannot add or update a child row: a foreign key constraint fails (`hma_llm`.`agent_warehouse_sensor`, CONSTRAINT `agent_warehouse_sensor_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task_main` (`task_id`) ON DELETE CASCADE)\')', 'finish_time': '2026-02-07T13:29:48'}
-[2026-02-07 13:29:48,609: WARNING/ForkPoolWorker-11] ensure_task_exists 警告: (pymysql.err.DataError) (1406, "Data too long for column 'task_id' at row 1")
+[2026-02-07 13:44:16,321: WARNING/ForkPoolWorker-7] [INFO] 空载巡航中：robot_001 → 货架(106.55,29.56)
+[2026-02-07 13:44:16,323: WARNING/ForkPoolWorker-11] GraphHopper 请求成功
+[2026-02-07 13:44:16,325: WARNING/ForkPoolWorker-7] [ERROR] 单任务仿真失败：(1452, 'Cannot add or update a child row: a foreign key constraint fails (`hma_llm`.`agent_warehouse_sensor`, CONSTRAINT `agent_warehouse_sensor_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task_main` (`task_id`) ON DELETE CASCADE)')
+[2026-02-07 13:44:16,329: INFO/ForkPoolWorker-7] Task run_simulation_task_agent_robot[92d331aa-eb0b-49f3-8706-1fa540289f7e] succeeded in 0.04924719035625458s: {'task_id': '92d331aa-eb0b-49f3-8706-1fa540289f7e', 'params': {'agent_type': 3, 'type': 'ROBOTS', 'tasks': ['携带干粉灭火器从仓库9前往中山大学深圳校区'], 'agent_id': 'robot_001', 'goods_name': '干粉灭火器'}, 'simulation_data': {'agent_count': 1, 'task_type': 2, 'warehouse_id': 0, 'agent_id': 'robot_001', 'goods_name': '干粉灭火器', 'status': 'FAILURE', 'error': '(1452, \'Cannot add or update a child row: a foreign key constraint fails (`hma_llm`.`agent_warehouse_sensor`, CONSTRAINT `agent_warehouse_sensor_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task_main` (`task_id`) ON DELETE CASCADE)\')', 'final_battery': None, 'task_id': None}, 'progress': 100, 'status': 'FAILURE', 'error': '(1452, \'Cannot add or update a child row: a foreign key constraint fails (`hma_llm`.`agent_warehouse_sensor`, CONSTRAINT `agent_warehouse_sensor_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task_main` (`task_id`) ON DELETE CASCADE)\')', 'finish_time': '2026-02-07T13:44:16'}
+[2026-02-07 13:44:16,367: WARNING/ForkPoolWorker-11] ensure_task_exists 警告: (pymysql.err.DataError) (1406, "Data too long for column 'task_id' at row 1")
 [SQL: INSERT INTO task_main (task_id, task_type, goods_id, target_x, target_y, require_time, status, create_time, complete_time) VALUES (%(task_id)s, %(task_type)s, %(goods_id)s, %(target_x)s, %(target_y)s, %(require_time)s, %(status)s, %(create_time)s, %(complete_time)s)]
-[parameters: {'task_id': 'a474c761-f501-47ed-8ff7-36ce24c8f662', 'task_type': 1, 'goods_id': 2, 'target_x': '113.95443173232752', 'target_y': '22.800884948488687', 'require_time': datetime.datetime(2026, 2, 7, 15, 29, 48, 604624), 'status': 1, 'create_time': datetime.datetime(2026, 2, 7, 13, 29, 48, 606980), 'complete_time': None}]
+[parameters: {'task_id': '3f7c51b8-b751-4411-8da3-72a9784f1482', 'task_type': 1, 'goods_id': 2, 'target_x': '113.95443173232752', 'target_y': '22.800884948488687', 'require_time': datetime.datetime(2026, 2, 7, 15, 44, 16, 363220), 'status': 1, 'create_time': datetime.datetime(2026, 2, 7, 13, 44, 16, 366419), 'complete_time': None}]
 (Background on this error at: https://sqlalche.me/e/20/9h9h)
-[2026-02-07 13:29:48,807: WARNING/ForkPoolWorker-11] /home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py:662: RuntimeWarning: Exception raised outside body: ValueError('Exception information must include the exception type'):
+[2026-02-07 13:44:16,382: WARNING/ForkPoolWorker-11] /home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/app/trace.py:662: RuntimeWarning: Exception raised outside body: ValueError('Exception information must include the exception type'):
 Traceback (most recent call last):
   File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
     self.dialect.do_execute(
@@ -135,7 +141,7 @@ Traceback (most recent call last):
     raise errorclass(errno, errval)
 sqlalchemy.exc.DataError: (pymysql.err.DataError) (1406, "Data too long for column 'task_id' at row 1")
 [SQL: INSERT INTO agent_ground_sensor (agent_id, task_id, slam_x, slam_y, speed, obstacle_dist, goods_status, battery_remaining, collect_time) VALUES (%(agent_id)s, %(task_id)s, %(slam_x)s, %(slam_y)s, %(speed)s, %(obstacle_dist)s, %(goods_status)s, %(battery_remaining)s, %(collect_time)s)]
-[parameters: {'agent_id': 'truck_001', 'task_id': 'a474c761-f501-47ed-8ff7-36ce24c8f662', 'slam_x': 2253128.7, 'slam_y': 11406042.0, 'speed': 16.05, 'obstacle_dist': 100.0, 'goods_status': 1, 'battery_remaining': 100, 'collect_time': datetime.datetime(2026, 2, 7, 13, 29, 48, 609437)}]
+[parameters: {'agent_id': 'truck_001', 'task_id': '3f7c51b8-b751-4411-8da3-72a9784f1482', 'slam_x': 2253128.7, 'slam_y': 11406042.0, 'speed': 16.05, 'obstacle_dist': 100.0, 'goods_status': 1, 'battery_remaining': 100, 'collect_time': datetime.datetime(2026, 2, 7, 13, 44, 16, 368376)}]
 (Background on this error at: https://sqlalche.me/e/20/9h9h)
 
 During handling of the above exception, another exception occurred:
@@ -174,7 +180,7 @@ ValueError: Exception information must include the exception type
 
   warn(RuntimeWarning(
 
-[2026-02-07 13:29:48,815: ERROR/MainProcess] Pool callback raised exception: ValueError('Exception information must include the exception type')
+[2026-02-07 13:44:16,389: ERROR/MainProcess] Pool callback raised exception: ValueError('Exception information must include the exception type')
 Traceback (most recent call last):
   File "/home/sysuvis/program/miniconda/envs/gym_py38/lib/python3.8/site-packages/celery/backends/base.py", line 354, in exception_to_python
     exc_type = exc['exc_type']
