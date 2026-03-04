@@ -9,6 +9,9 @@ import logging
 import re
 
 # ===================== 配置项 =====================
+# RAG 开关配置 (设为 True 启用 RAG，设为 False 禁用 RAG，用于对比实验)
+ENABLE_RAG = True
+
 # RAG服务配置
 RAG_URL = "http://localhost:8015/v1/chat/completions"
 RAG_HEADERS = {"Content-Type": "application/json"}
@@ -117,37 +120,50 @@ def call_llm_model(prompt: str, rag_context: str, temperature: float = 0.7) -> s
         print(f"调用8B模型出错: {e}")
         return ""
 
-def rag_plus_llm(prompt: str, rag_model: str = RAG_MODEL_FULL, temperature: float = 0.7) -> str:
+def rag_plus_llm(prompt: str, rag_model: str = RAG_MODEL_FULL, temperature: float = 0.7, enable_rag: bool = ENABLE_RAG) -> str:
     """
     完整的RAG+LLM流程：先RAG搜索，再调用8B模型
     :param prompt: 用户输入的问题
     :param rag_model: 使用的RAG模型类型
     :param temperature: 温度参数
+    :param enable_rag: 是否启用RAG (默认使用全局配置 ENABLE_RAG)
     :return: 最终的回答结果
     """
     print(f"用户问题: {prompt}\n")
+    print(f"{'='*50}")
+    print(f"🔍 RAG 模式: {'启用 (RAG+LLM)' if enable_rag else '禁用 (仅LLM)'}")
+    print(f"{'='*50}\n")
 
     t0 = time.time()
-    #将user_prompt嵌入rag_system_prompt
-    rag_query_prompt = RAG_SYSTEM_PROMPT.format(user_prompt=prompt)
-    # 第一步：执行RAG搜索
-    rag_query = call_llm_model(rag_query_prompt , '', temperature)
+    rag_context = ""
+    rag_time = 0
 
-    # 处理：按空格切分字段形成列表
-    rag_query_list = rag_query.split()
-    print(f"RAG检索关键词列表: {rag_query_list}")
-    # 重新组合为标准字符串传给检索接口（去除多余空白）
-    rag_query = " ".join(rag_query_list)
+    if enable_rag:
+        # RAG 启用模式：先检索再生成
+        # 将user_prompt嵌入rag_system_prompt
+        rag_query_prompt = RAG_SYSTEM_PROMPT.format(user_prompt=prompt)
+        # 第一步：执行RAG搜索
+        rag_query = call_llm_model(rag_query_prompt , '', temperature)
 
-    print("正在执行RAG搜索...")
-    rag_context = rag_search(rag_query, rag_model, temperature)
-    t1 = time.time()
-    rag_time = t1 - t0
+        # 处理：按空格切分字段形成列表
+        rag_query_list = rag_query.split()
+        print(f"RAG检索关键词列表: {rag_query_list}")
+        # 重新组合为标准字符串传给检索接口（去除多余空白）
+        rag_query = " ".join(rag_query_list)
 
-    if rag_context:
-        print(f"RAG搜索结果:\n{rag_context}\n")
+        print("正在执行RAG搜索...")
+        rag_context = rag_search(rag_query, rag_model, temperature)
+        t1 = time.time()
+        rag_time = t1 - t0
+
+        if rag_context:
+            print(f"RAG搜索结果:\n{rag_context}\n")
+        else:
+            print("RAG搜索未获取到相关内容\n")
     else:
-        print("RAG搜索未获取到相关内容\n")
+        # RAG 禁用模式：直接调用 LLM
+        t1 = time.time()
+        print("跳过 RAG 检索，直接调用 LLM...\n")
 
     # 第二步：调用8B模型生成回答
     #将user_prompt嵌入cloudllm_system_prompt
@@ -157,7 +173,10 @@ def rag_plus_llm(prompt: str, rag_model: str = RAG_MODEL_FULL, temperature: floa
     t2 = time.time()
     llm_time = t2 - t1
 
-    print(f"\n[性能统计] RAG搜索耗时: {rag_time:.2f}s | LLM推理耗时: {llm_time:.2f}s")
+    if enable_rag:
+        print(f"\n[性能统计] RAG搜索耗时: {rag_time:.2f}s | LLM推理耗时: {llm_time:.2f}s")
+    else:
+        print(f"\n[性能统计] LLM推理耗时: {llm_time:.2f}s")
 
     return final_answer
 
@@ -278,18 +297,20 @@ async def poll_task(client, task_id, agent_name):
     print(f"❌ {agent_name} 任务等待超时")
     return None
 
-async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str]:
+async def extract_agent_commands_and_call_api(user_prompt: str, enable_rag: bool = ENABLE_RAG) -> Dict[str, str]:
     """
     1. 调用 RAG+LLM 获取包含三类 Agent 指令的 JSON 结果
     2. 解析指令并调用对应 Agent 的仿真接口
     3. 返回各 Agent 的 task_id 及耗时统计
+    :param user_prompt: 用户输入的问题
+    :param enable_rag: 是否启用RAG (默认使用全局配置 ENABLE_RAG)
     """
     total_start_time = time.time()
     timing_stats = {}
 
     # 第一步：调用 RAG+LLM 流程
-    print(">>> 阶段1: RAG检索与指令生成")
-    final_answer = rag_plus_llm(prompt=user_prompt, rag_model=RAG_MODEL_FULL, temperature=0.7)
+    print(">>> 阶段1: 指令生成")
+    final_answer = rag_plus_llm(prompt=user_prompt, rag_model=RAG_MODEL_FULL, temperature=0.7, enable_rag=enable_rag)
 
     # 解析 JSON
     try:
@@ -447,14 +468,36 @@ async def extract_agent_commands_and_call_api(user_prompt: str) -> Dict[str, str
 # ===================== 测试示例 =====================
 if __name__ == "__main__":
 
-
     import asyncio
+    import argparse
+
+    # 解析命令行参数
+    parser = argparse.ArgumentParser(description="多智能体物流调度系统")
+    parser.add_argument("--no-rag", action="store_true", help="禁用 RAG 检索，仅使用 LLM")
+    parser.add_argument("--rag", action="store_true", help="启用 RAG 检索 (默认)")
+    parser.add_argument("--prompt", type=str, default=None, help="自定义用户提示词")
+    args = parser.parse_args()
+
+    # 确定 RAG 模式：命令行参数优先于全局配置
+    if args.no_rag:
+        use_rag = False
+    elif args.rag:
+        use_rag = True
+    else:
+        use_rag = ENABLE_RAG  # 使用全局配置
 
     # 示例用户问题
-    test_prompt = "请指挥各个agent把干粉灭火器从所在仓库运到深圳市中山大学深圳校区(北纬 22.800884948488687°，东经 113.95443173232752°)"
+    if args.prompt:
+        test_prompt = args.prompt
+    else:
+        test_prompt = "请指挥各个agent把干粉灭火器从所在仓库运到深圳市中山大学深圳校区(北纬 22.800884948488687°，东经 113.95443173232752°)"
+
+    print("\n" + "="*60)
+    print(f"  多智能体物流调度系统 - {'RAG+LLM' if use_rag else '仅LLM'} 模式")
+    print("="*60 + "\n")
 
     # 异步执行
-    task_ids = asyncio.run(extract_agent_commands_and_call_api(test_prompt))
+    task_ids = asyncio.run(extract_agent_commands_and_call_api(test_prompt, enable_rag=use_rag))
     print("\n所有 Agent 任务提交结果（按执行顺序）：")
 
     # 按顺序打印
