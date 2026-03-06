@@ -6,11 +6,24 @@ from gym import spaces
 import numpy as np
 import math
 import os
+import sys
+# 添加项目根目录到路径，以便导入配置模块
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+from configs.loader import get_uav_config, get_simulation_config
 
 # 深圳参考原点 (用于 Grid 映射 - 必须与预处理脚本保持一致)
-ORIGIN_LNG = 113.70
-ORIGIN_LAT = 22.40
-SCALE_FACTOR = 1000.0 # 0.001度 ≈ 1个Grid单位 ≈ 100米
+# 现在从配置文件读取
+_sim_config = get_simulation_config()
+ORIGIN_LNG = _sim_config.get("origin_lng", 113.70)
+ORIGIN_LAT = _sim_config.get("origin_lat", 22.40)
+SCALE_FACTOR = _sim_config.get("scale_factor", 1000.0)  # 0.001度 ≈ 1个Grid单位 ≈ 100米
+
+# UAV配置参数（从配置文件读取）
+_uav_config = get_uav_config()
+UAV_MAX_SPEED = _uav_config.get("max_speed", 0.3)
+UAV_VOLATILITY = _uav_config.get("volatility", 0.02)
+UAV_RADIUS = _uav_config.get("radius", 0.3)
+UAV_TOLERANCE = _uav_config.get("tolerance", 0.1)
 
 def gps_to_grid(lng, lat):
     grid_x = (float(lng) - ORIGIN_LNG) * SCALE_FACTOR
@@ -70,7 +83,7 @@ class SetConfig:
     def __init__(self, name):
         self.name = name
         self.uav_num = 0
-        self.uav_r = 0.3
+        self.uav_r = UAV_RADIUS  # 从配置文件读取
         self.map_w, self.map_h, self.map_z = 0, 0, 0
         self.buildings_location = []
         self.buildings = []
@@ -125,13 +138,15 @@ class MvController:
         self.map_h = map_h
         self.map_z = map_z
         self.buildings_location = buildings_location
+        # 从配置文件读取运动参数
+        self.max_speed = UAV_MAX_SPEED
+        self.volatility = UAV_VOLATILITY
+        self.tolerance = UAV_TOLERANCE
 
     def Move_up(self):
         return 0, 0, 0.2
 
     def Move_to(self, uav, aim):
-        max_speed = 0.3
-        volatility = 0.02
         x_diff = aim[0] - uav[0]
         y_diff = aim[1] - uav[1]
         z_diff = aim[2] - uav[2]
@@ -140,25 +155,24 @@ class MvController:
             vx = 0
         else:
             vx_normalized = x_diff / distance
-            vx = vx_normalized * max_speed + random.gauss(0, volatility)
+            vx = vx_normalized * self.max_speed + random.gauss(0, self.volatility)
         if abs(y_diff) < 0.1:
             vy = 0
         else:
             vy_normalized = y_diff / distance
-            vy = vy_normalized * max_speed + random.gauss(0, volatility)
+            vy = vy_normalized * self.max_speed + random.gauss(0, self.volatility)
         if abs(z_diff) < 0.1:
             vz = 0
         else:
             vz_normalized = z_diff / distance
-            vz = vz_normalized * max_speed + random.gauss(0, volatility)
+            vz = vz_normalized * self.max_speed + random.gauss(0, self.volatility)
         return vx, vy, vz
 
     def Is_arrive(self, uav, aim):
-        tolerance = 0.1
         x_error = abs(uav[0] - aim[0])
         y_error = abs(uav[1] - aim[1])
         z_error = abs(uav[2] - aim[2])
-        return x_error < tolerance and y_error < tolerance and z_error < tolerance
+        return x_error < self.tolerance and y_error < self.tolerance and z_error < self.tolerance
 
     def Will_enter_buildings(self, uav, action, uav_r):
         next_x = uav[0] + action[0]

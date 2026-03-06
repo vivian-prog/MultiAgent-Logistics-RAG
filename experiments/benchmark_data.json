@@ -1,0 +1,122 @@
+{
+    "description": "真实快递配送时间基准数据，用于与仿真结果对比",
+    "version": "1.0",
+    "last_updated": "2025-01-01",
+    "data_source": "手动标注 / API获取 / 历史订单数据",
+    "notes": "请根据实际情况填充真实配送时间数据",
+
+    "benchmark_cases": [
+        {
+            "case_id": "case_001",
+            "description": "干粉灭火器配送 - 仓库到中山大学深圳校区",
+            "user_prompt": "请指挥各个agent把干粉灭火器从所在仓库运到深圳市中山大学深圳校区(北纬 22.800884948488687°，东经 113.95443173232752°)",
+
+            "真实配送信息": {
+                "origin": "深圳北仓库",
+                "destination": "中山大学深圳校区",
+                "distance_km": 35.5,
+                "courier_company": "京东物流",
+                "service_type": "次日达",
+
+                "time_breakdown": {
+                    "warehouse_processing_hours": 0.5,
+                    "truck_transport_hours": 1.2,
+                    "transfer_station_hours": 0.3,
+                    "last_mile_delivery_hours": 0.5,
+                    "total_delivery_hours": 2.5
+                },
+
+                "actual_delivery_timestamp": "2025-01-01T14:30:00",
+                "order_placement_timestamp": "2025-01-01T10:00:00",
+                "total_order_to_delivery_hours": 4.5
+            },
+
+            "expected_simulation_output": {
+                "robot_time_seconds": 300,
+                "truck_time_seconds": 4320,
+                "uav_time_seconds": 600,
+                "total_simulation_seconds": 5220
+            }
+        },
+        {
+            "case_id": "case_002",
+            "description": "急救药品配送 - 仓库到光明区人民医院",
+            "user_prompt": "请调度无人机把急救药品从深圳仓库运到深圳市光明区人民医院",
+
+            "真实配送信息": {
+                "origin": "深圳龙华仓储中心",
+                "destination": "光明区人民医院",
+                "distance_km": 15.0,
+                "courier_company": "顺丰速运",
+                "service_type": "即日达",
+
+                "time_breakdown": {
+                    "warehouse_processing_hours": 0.25,
+                    "truck_transport_hours": 0.5,
+                    "transfer_station_hours": 0.2,
+                    "last_mile_delivery_hours": 0.3,
+                    "total_delivery_hours": 1.25
+                },
+
+                "actual_delivery_timestamp": "2025-01-01T11:30:00",
+                "order_placement_timestamp": "2025-01-01T10:00:00",
+                "total_order_to_delivery_hours": 1.5
+            },
+
+            "expected_simulation_output": {
+                "robot_time_seconds": 180,
+                "truck_time_seconds": 1800,
+                "uav_time_seconds": 400,
+                "total_simulation_seconds": 2380
+            }
+        },
+        {
+            "case_id": "case_003",
+            "description": "生鲜配送 - 龙华到南山",
+            "user_prompt": "安排卡车运送500公斤生鲜从龙华仓储中心到南山配送站",
+
+            "真实配送信息": {
+                "origin": "龙华仓储中心",
+                "destination": "南山配送站",
+                "distance_km": 25.0,
+                "courier_company": "京东生鲜",
+                "service_type": "冷链配送",
+
+                "time_breakdown": {
+                    "warehouse_processing_hours": 0.5,
+                    "truck_transport_hours": 1.0,
+                    "transfer_station_hours": 0.3,
+                    "last_mile_delivery_hours": 0.5,
+                    "total_delivery_hours": 2.3
+                },
+
+                "actual_delivery_timestamp": "2025-01-01T12:30:00",
+                "order_placement_timestamp": "2025-01-01T10:00:00",
+                "total_order_to_delivery_hours": 2.5
+            },
+
+            "expected_simulation_output": {
+                "robot_time_seconds": 240,
+                "truck_time_seconds": 3600,
+                "uav_time_seconds": 0,
+                "total_simulation_seconds": 3840
+            }
+        }
+    ],
+
+    "metrics_definition": {
+        "time_error": "仿真时间与真实时间的绝对误差（小时）",
+        "time_error_ratio": "时间误差率 = |仿真时间 - 真实时间| / 真实时间",
+        "stage_accuracy": "各阶段时间分配的合理性评分（0-1）"
+    },
+
+    "comparison_template": {
+        "case_id": "",
+        "experiment_id": "",
+        "real_total_hours": 0,
+        "simulated_total_hours": 0,
+        "time_error_hours": 0,
+        "time_error_ratio": 0,
+        "notes": ""
+    }
+}

@@ -6,7 +6,12 @@ import random
 import sys
 import time
 import csv
+import os
 from typing import List, Tuple
+
+# 添加项目根目录到路径，以便导入配置模块
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+from configs.loader import get_robot_config
 
 # ---------------- 配置 ----------------
 MYSQL_CFG = {
@@ -17,10 +22,12 @@ MYSQL_CFG = {
     "charset": "utf8mb4",
 }
 
-SPEED_M_PER_SEC = 1.0
-GRIP_RATIO = 10.0
-BATTERY_DRAIN_PER_SEC = 0.02
-TIME_SCALE = 10.0  # 新增：时间加速因子（10倍速），避免仿真过慢导致超时
+# 从配置文件读取Robot参数
+_robot_config = get_robot_config()
+SPEED_M_PER_SEC = _robot_config.get("speed_m_per_sec", 1.0)
+GRIP_RATIO = _robot_config.get("grip_ratio", 10.0)
+BATTERY_DRAIN_PER_SEC = _robot_config.get("battery_drain_per_sec", 0.02)
+TIME_SCALE = _robot_config.get("time_scale", 10.0)  # 时间加速因子（10倍速），避免仿真过慢导致超时
 # -------------------------------------
 
 # ---------- 数据库连接 ----------

@@ -18,6 +18,10 @@ from common.models import AgentGroundSensor, AgentUavSensor, AgentWarehouseSenso
 from uav_simulation.core import run_uav_simulation_core
 from warehouse_robot.core import simulate_single_task, simulate_batch_tasks
 
+# 导入配置加载器
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+from configs.loader import get_truck_config
+
 # ---------------------- 辅助函数：确保任务在 task_main 中存在 ----------------------
 def ensure_task_exists(db, task_id, task_type_code, params):
     """
@@ -253,10 +257,13 @@ def calculate_truck_fuel_consumption(route_data, truck_params):
     :param truck_params: 卡车参数（载重、车型、基础油耗等）
     :return: 油耗结果字典（总油耗、单位油耗、分段油耗等）
     """
-    # 1. 基础参数（可根据实际车型调整，或从truck_params传入）
-    base_fuel_per_100km = truck_params.get("base_fuel", 30)  # 空车百公里油耗（升），默认30L/100km
-    load_factor = truck_params.get("load_factor", 0.3)       # 载重油耗系数（载重每增加1吨，油耗增加30%）
-    road_type_factors = {                                    # 不同道路类型油耗系数
+    # 从配置文件读取默认参数
+    _truck_config = get_truck_config()
+
+    # 1. 基础参数（优先使用传入参数，否则使用配置文件默认值）
+    base_fuel_per_100km = truck_params.get("base_fuel", _truck_config.get("base_fuel_per_100km", 30))  # 空车百公里油耗（升）
+    load_factor = truck_params.get("load_factor", _truck_config.get("load_factor", 0.3))       # 载重油耗系数
+    road_type_factors = _truck_config.get("road_type_factors", {                                    # 不同道路类型油耗系数
         "motorway": 1.0,    # 高速路
         "trunk": 1.1,       # 主干道
         "primary": 1.2,     # 一级公路
@@ -264,9 +271,9 @@ def calculate_truck_fuel_consumption(route_data, truck_params):
         "tertiary": 1.4,    # 三级公路
         "residential": 1.5, # 居民区道路
         "unclassified": 1.4 # 未分类道路
-    }
-    speed_factor = truck_params.get("speed_factor", 0.005)   # 速度影响系数（速度偏离经济时速的油耗增量）
-    economic_speed = 60                                      # 经济时速（km/h）
+    })
+    speed_factor = truck_params.get("speed_factor", _truck_config.get("speed_factor", 0.005))   # 速度影响系数
+    economic_speed = _truck_config.get("economic_speed", 60)                                      # 经济时速（km/h）
 
     # 2. 提取路线核心数据
     total_distance_km = route_data["distance"] / 1000  # 总距离（公里）
@@ -274,7 +281,7 @@ def calculate_truck_fuel_consumption(route_data, truck_params):
     segment_fuel_details = []                          # 分段油耗明细
 
     # 3. 计算载重影响后的基础油耗
-    load_weight = truck_params.get("load_weight", 0)   # 载重（吨）
+    load_weight = truck_params.get("load_weight", _truck_config.get("default_load_weight", 0))   # 载重（吨）
     load_impacted_fuel = base_fuel_per_100km * (1 + load_weight * load_factor)
 
     # 4. 遍历路线分段计算油耗（若有分段数据）
@@ -317,7 +324,7 @@ def calculate_truck_fuel_consumption(route_data, truck_params):
         total_fuel = load_impacted_fuel * total_distance_km * speed_impact / 100
 
     # 5. 计算单位油耗（升/公里）、费用（可选）
-    fuel_price = truck_params.get("fuel_price", 7.5)  # 油价（元/升），默认7.5元
+    fuel_price = truck_params.get("fuel_price", _truck_config.get("fuel_price", 7.5))  # 油价（元/升）
     total_fuel_cost = total_fuel * fuel_price         # 总油费（元）
     fuel_per_km = total_fuel / total_distance_km if total_distance_km > 0 else 0  # 升/公里
 
