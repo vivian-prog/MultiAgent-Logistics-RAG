@@ -28,16 +28,18 @@ run_in_tmux(){
 ##############################
 # ① Qwen3-8B 生成模型
 run_in_tmux qwen3-8b  vllmModel  /home/sysuvis/program/huangw293/model \
-  bash -c 'CUDA_VISIBLE_DEVICES=2,3 vllm serve /home/sysuvis/huangw293/model/qwen3-8b/tmp/Qwen/Qwen3-8B \
-  --served-model-name Qwen3-8B --max_model_len 8192 --port 8080 \
-  --trust-remote-code --gpu-memory-utilization 0.5 --tensor-parallel-size 2'
+  bash -c 'CUDA_VISIBLE_DEVICES=2,3 vllm serve /home/sysuvis/huangw293/model/qwen3-8b/tmp/Qwen/Qwen3-8B --served-model-name Qwen3-8B --max_model_len 8192 --port 8080 --trust-remote-code --gpu-memory-utilization 0.5 --tensor-parallel-size 2'
 
 # ② Qwen3-Embedding-8B 向量模型
 run_in_tmux qwen3-emb vllmModel  /home/sysuvis/program/huangw293/model \
-  bash -c 'CUDA_VISIBLE_DEVICES=2,3 VLLM_USE_MODELSCOPE=true \
-  vllm serve Qwen/Qwen3-Embedding-8B \
-  --served-model-name Qwen3-Embedding-8B --port 8021 \
-  --max-model-len 8192 --gpu-memory-utilization 0.3 --tensor-parallel-size 2'
+  bash -c 'CUDA_VISIBLE_DEVICES=2,3 \
+VLLM_USE_MODELSCOPE=true \
+vllm serve Qwen/Qwen3-Embedding-8B \
+  --served-model-name Qwen3-Embedding-8B \
+  --port 8021 \
+  --max-model-len 8192 \
+  --gpu-memory-utilization 0.3 \
+  --tensor-parallel-size 2'
 
 # ③ FastAPI 主服务
 run_in_tmux api  gym_py38  /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation \
