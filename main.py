@@ -78,6 +78,7 @@ def rag_search(prompt: str, rag_model: str = RAG_MODEL_FULL, temperature: float 
             data=json.dumps(rag_data),
             timeout=60  # 设置超时时间
         )
+        print(f"Rag响应：{response.json()}")
         response.raise_for_status()  # 检查HTTP错误
 
         # 解析RAG响应

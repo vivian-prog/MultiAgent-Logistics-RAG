@@ -387,6 +387,7 @@ async def full_model_search(prompt: str):
 # POST请求接口，与大模型进行知识问答
 @app.post("/v1/chat/completions")
 async def chat_completions(request: ChatCompletionRequest):
+    print(f"收到请求:{request}")
     if not local_search_engine or not global_search_engine:
         logger.error("搜索引擎未初始化")
         raise HTTPException(status_code=500, detail="搜索引擎未初始化")
