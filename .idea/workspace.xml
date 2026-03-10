@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d7a71121-0967-4dc2-b6c7-de90490ffe47" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/GraphRag/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GraphRag/utils/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/GraphRag/utils/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +23,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
@@ -51,6 +51,9 @@
       <workItem from="1769866265755" duration="6016000" />
       <workItem from="1769927083369" duration="1723000" />
       <workItem from="1770086634070" duration="1963000" />
+      <workItem from="1770622855983" duration="2000" />
+      <workItem from="1772592340104" duration="7580000" />
+      <workItem from="1773040411664" duration="740000" />
     </task>
     <servers />
   </component>
