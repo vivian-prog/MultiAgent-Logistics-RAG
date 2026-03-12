@@ -1,0 +1,100 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4A90D9', 'primaryTextColor': '#fff', 'primaryBorderColor': '#357ABD', 'lineColor': '#666', 'secondaryColor': '#6DB33F', 'tertiaryColor': '#F5A623'}}}%%
+
+flowchart TB
+    subgraph UPSTREAM["上游服务"]
+        UC["linkmic_understand_consumer<br/>SendDataGrabMsg()"]
+    end
+
+    subgraph EVENTBUS["EventBus"]
+        EB1["tiktok.webcast.linkmic.llm.data_grab"]
+        EB2["tiktok.webcast.linkmic.llm.data_grab_bot"]
+        EB3["tiktok.webcast.linkmic.llm.data_grab_full"]
+    end
+
+    subgraph DATAGRAB["linkmic_llm_data_grab"]
+        subgraph PHASES["Phase 流水线 (串行)"]
+            P0["Phase 0<br/>RoomInformation<br/>PreparedContent"]
+            P1["Phase 1<br/>AnchorInformation<br/>Comments<br/>VideoSlice(提交)"]
+            P2["Phase 2<br/>VideoSlice(结果)"]
+            P3["Phase 3<br/>TnsAudioText<br/>DivAudioSliceAndText"]
+            P4["Phase 4<br/>Embedding"]
+        end
+
+        subgraph PARALLEL["并行处理细节"]
+            direction LR
+            PL1["同阶段内 Loaders 并行"]
+            PL2["VideoSlice 多时间范围并行"]
+            PL3["转码+截图任务并行提交"]
+        end
+
+        subgraph LOADERS["Loader 实现"]
+            L1["VideoSliceLoader<br/>视频切片提取"]
+            L2["CommentsLoader<br/>评论抓取"]
+            L3["DivAudioSliceLoader<br/>分离音频+ASR"]
+            L4["EmbeddingLoader<br/>向量嵌入"]
+            L5["RoomInfoLoader<br/>房间信息"]
+            L6["AnchorInfoLoader<br/>主播信息"]
+        end
+
+        subgraph CLIENTS["RPC 客户端"]
+            C1["rpc_live_video<br/>视频转码/截图"]
+            C2["rpc_room_comment<br/>评论获取"]
+            C3["rpc_div_audio<br/>音频分离"]
+            C4["rpc_arch<br/>ASR/Embedding"]
+            C5["rpc_room_data<br/>房间数据"]
+        end
+    end
+
+    subgraph DOWNSTREAM["下游服务"]
+        DB1["tiktok.webcast.linkmic.llm.understanding"]
+        DB2["tiktok.webcast.linkmic.llm.understanding_bot"]
+        DB3["tiktok.webcast.linkmic.llm.understanding_full"]
+        DB4["tiktok.webcast.linkmic.llm.result"]
+    end
+
+    subgraph EXTERNAL["外部服务"]
+        VOD["VOD 服务<br/>视频转码"]
+        TOS["TOS 存储<br/>文件存储"]
+        ASR["ASR 服务<br/>语音转文本"]
+        EMB["Embedding 服务<br/>向量生成"]
+    end
+
+    UC -->|"TaskItem"| EB1
+    UC -->|"TaskItem"| EB2
+    UC -->|"TaskItem"| EB3
+
+    EB1 -->|"消费"| DATAGRAB
+    EB2 -->|"消费"| DATAGRAB
+    EB3 -->|"消费"| DATAGRAB
+
+    P0 -->|"串行"| P1
+    P1 -->|"串行"| P2
+    P2 -->|"串行"| P3
+    P3 -->|"串行"| P4
+
+    P0 -.->|"并行"| PARALLEL
+    P1 -.->|"并行"| PARALLEL
+    P2 -.->|"并行"| PARALLEL
+
+    PARALLEL --> LOADERS
+    LOADERS --> CLIENTS
+
+    CLIENTS -->|"HTTP/RPC"| VOD
+    CLIENTS -->|"HTTP/RPC"| TOS
+    CLIENTS -->|"HTTP/RPC"| ASR
+    CLIENTS -->|"HTTP/RPC"| EMB
+
+    P4 -->|"完成"| DB1
+    P4 -->|"完成"| DB2
+    P4 -->|"完成"| DB3
+    P4 -->|"完成"| DB4
+
+    style UPSTREAM fill:#E8F5E9,stroke:#4CAF50
+    style EVENTBUS fill:#E3F2FD,stroke:#2196F3
+    style DATAGRAB fill:#FFF3E0,stroke:#FF9800
+    style DOWNSTREAM fill:#FCE4EC,stroke:#E91E63
+    style EXTERNAL fill:#F3E5F5,stroke:#9C27B0
+    style PHASES fill:#FAFAFA,stroke:#666
+    style PARALLEL fill:#E8EAF6,stroke:#3F51B5
+    style LOADERS fill:#E0F7FA,stroke:#00BCD4
+    style CLIENTS fill:#FFF8E1,stroke:#FFC107
