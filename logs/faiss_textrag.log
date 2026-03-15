@@ -20,3 +20,16 @@ INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8016 (Press CTRL+C to quit)
 INFO:     127.0.0.1:49544 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35558 - "GET /health HTTP/1.1" 200 OK
+2026-03-15 13:35:45,367 - __main__ - INFO - 查询文本: > 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳市中山大学深圳校区 与各无人机起降点的距离，找出最近的起降点坐标 计算 深圳...
+2026-03-15 13:35:45,421 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
+2026-03-15 13:35:45,433 - __main__ - INFO - 返回 5 条相关文本
+INFO:     127.0.0.1:60374 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+2026-03-15 13:45:44,381 - __main__ - INFO - 查询文本: > 查找 急救药品 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳市光明区人民医院 与各无人机起降点的距离，找出最近的起降点坐标 计算 深圳市光...
+2026-03-15 13:45:44,432 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
+2026-03-15 13:45:44,446 - __main__ - INFO - 返回 5 条相关文本
+INFO:     127.0.0.1:47138 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+2026-03-15 13:53:54,266 - __main__ - INFO - 查询文本: > 查找 生鲜 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 南山配送站 与各无人机起降点的距离，找出最近的起降点坐标 计算 南山配送站 与各仓库的...
+2026-03-15 13:53:54,312 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
+2026-03-15 13:53:54,318 - __main__ - INFO - 返回 5 条相关文本
+INFO:     127.0.0.1:44112 - "POST /v1/chat/completions HTTP/1.1" 200 OK

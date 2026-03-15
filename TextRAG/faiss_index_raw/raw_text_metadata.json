@@ -1,0 +1,2096 @@
+[
+  {
+    "id": "0",
+    "text": "====================================================================================================\n表名：task_main\n备注：任务主表：存储任务的核心信息，如任务名称、描述、创建时间、状态等\n生成时间：2025-12-16 21:59:07\n数据记录数：10\n====================================================================================================",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "1",
+    "text": "【表结构】\n表结构中，有以下字段名，它们的属性如下：\n1. 字段名：task_id，类型为varchar(30)，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为为空。\n2. 字段名：task_type，类型为tinyint，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n3. 字段名：goods_id，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n4. 字段名：target_x，类型为decimal(12,6)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n5. 字段名：target_y，类型为decimal(12,6)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n6. 字段名：require_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n7. 字段名：status，类型为tinyint，是否可以为空为否，是否是主键为否，默认值为0，额外属性为为空。\n8. 字段名：create_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED。\n9. 字段名：complete_time，类型为datetime，是否可以为空为是，是否是主键为否，默认值为NULL，额外属性为为空。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "2",
+    "text": "----------------------------------------------------------------------------------------------------",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "3",
+    "text": "【表数据】\n表数据记录为：\n第1个数据：task_id是LOG-20250520-001,task_type是1,goods_id是1,target_x是116.410000,target_y是39.920000,require_time是2025-12-15 20:00:47,status是2,create_time是2025-12-04 20:00:47,complete_time是2025-12-05 20:00:47。\n第2个数据：task_id是LOG-20250520-002,task_type是1,goods_id是2,target_x是121.480000,target_y是31.240000,require_time是2025-12-16 20:00:47,status是1,create_time是2025-12-05 20:00:47,complete_time是NULL。\n第3个数据：task_id是LOG-20250520-003,task_type是2,goods_id是3,target_x是113.270000,target_y是23.130000,require_time是2025-12-15 20:00:47,status是0,create_time是2025-12-06 20:00:47,complete_time是NULL。\n第4个数据：task_id是LOG-20250520-004,task_type是1,goods_id是4,target_x是114.060000,target_y是22.550000,require_time是2025-12-15 20:00:47,status是2,create_time是2025-12-07 20:00:47,complete_time是2025-12-08 20:00:47。\n第5个数据：task_id是LOG-20250520-005,task_type是1,goods_id是5,target_x是104.070000,target_y是30.660000,require_time是2025-12-16 20:00:47,status是1,create_time是2025-12-08 20:00:47,complete_time是NULL。\n第6个数据：task_id是LOG-20250520-006,task_type是2,goods_id是6,target_x是120.160000,target_y是30.290000,require_time是2025-12-15 20:00:47,status是3,create_time是2025-12-09 20:00:47,complete_time是2025-12-10 20:00:47。\n第7个数据：task_id是LOG-20250520-007,task_type是1,goods_id是7,target_x是114.310000,target_y是30.600000,require_time是2025-12-15 20:00:47,status是2,create_time是2025-12-10 20:00:47,complete_time是2025-12-11 20:00:47。\n第8个数据：task_id是LOG-20250520-008,task_type是1,goods_id是8,target_x是108.950000,target_y是34.270000,require_time是2025-12-16 20:00:47,status是0,create_time是2025-12-11 20:00:47,complete_time是NULL。\n第9个数据：task_id是LOG-20250520-009,task_type是1,goods_id是9,target_x是106.560000,target_y是29.570000,require_time是2025-12-16 20:00:47,status是1,create_time是2025-12-12 20:00:47,complete_time是NULL。\n第10个数据：task_id是LOG-20250520-010,task_type是2,goods_id是10,target_x是118.795000,target_y是32.060000,require_time是2025-12-15 20:00:47,status是0,create_time是2025-12-13 20:00:47,complete_time是NULL。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "4",
+    "text": "第1个数据：task_id是LOG-20250520-001,task_type是1,goods_id是1,target_x是116.410000,target_y是39.920000,require_time是2025-12-15 20:00:47,status是2,create_time是2025-12-04 20:00:47,complete_time是2025-12-05 20:00:47。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "5",
+    "text": "第2个数据：task_id是LOG-20250520-002,task_type是1,goods_id是2,target_x是121.480000,target_y是31.240000,require_time是2025-12-16 20:00:47,status是1,create_time是2025-12-05 20:00:47,complete_time是NULL。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "6",
+    "text": "第3个数据：task_id是LOG-20250520-003,task_type是2,goods_id是3,target_x是113.270000,target_y是23.130000,require_time是2025-12-15 20:00:47,status是0,create_time是2025-12-06 20:00:47,complete_time是NULL。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "7",
+    "text": "第4个数据：task_id是LOG-20250520-004,task_type是1,goods_id是4,target_x是114.060000,target_y是22.550000,require_time是2025-12-15 20:00:47,status是2,create_time是2025-12-07 20:00:47,complete_time是2025-12-08 20:00:47。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "8",
+    "text": "第5个数据：task_id是LOG-20250520-005,task_type是1,goods_id是5,target_x是104.070000,target_y是30.660000,require_time是2025-12-16 20:00:47,status是1,create_time是2025-12-08 20:00:47,complete_time是NULL。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "9",
+    "text": "第6个数据：task_id是LOG-20250520-006,task_type是2,goods_id是6,target_x是120.160000,target_y是30.290000,require_time是2025-12-15 20:00:47,status是3,create_time是2025-12-09 20:00:47,complete_time是2025-12-10 20:00:47。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "10",
+    "text": "第7个数据：task_id是LOG-20250520-007,task_type是1,goods_id是7,target_x是114.310000,target_y是30.600000,require_time是2025-12-15 20:00:47,status是2,create_time是2025-12-10 20:00:47,complete_time是2025-12-11 20:00:47。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "11",
+    "text": "第8个数据：task_id是LOG-20250520-008,task_type是1,goods_id是8,target_x是108.950000,target_y是34.270000,require_time是2025-12-16 20:00:47,status是0,create_time是2025-12-11 20:00:47,complete_time是NULL。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "12",
+    "text": "第9个数据：task_id是LOG-20250520-009,task_type是1,goods_id是9,target_x是106.560000,target_y是29.570000,require_time是2025-12-16 20:00:47,status是1,create_time是2025-12-12 20:00:47,complete_time是NULL。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "13",
+    "text": "第10个数据：task_id是LOG-20250520-010,task_type是2,goods_id是10,target_x是118.795000,target_y是32.060000,require_time是2025-12-15 20:00:47,status是0,create_time是2025-12-13 20:00:47,complete_time是NULL。",
+    "source_file": "task_main_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "14",
+    "text": "====================================================================================================\nGraphRAG初始化TXT文件汇总\n生成时间：2025-12-16 21:59:07\n数据库：hma_llm\n生成表数量：8\n====================================================================================================",
+    "source_file": "文件汇总说明.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "15",
+    "text": "【文件列表】\n1. warehouse_base → warehouse_base_init.txt\n   备注：仓储基础信息表：存储仓库的基础属性，如仓库名称、位置、容量等\n2. warehouse_goods → warehouse_goods_init.txt\n   备注：货架与物品表：存储仓库内货架、物品的关联信息，如物品名称、货架编号、数量等\n3. agent_base → agent_base_init.txt\n   备注：Agent基础信息表：存储各类Agent的基础属性，如Agent名称、类型、状态等\n4. task_main → task_main_init.txt\n   备注：任务主表：存储任务的核心信息，如任务名称、描述、创建时间、状态等\n5. task_agent_rel → task_agent_rel_init.txt\n   备注：任务-Agent关联表：存储任务与Agent的绑定关系，如任务ID、Agent ID、分配时间等\n6. agent_uav_sensor → agent_uav_sensor_init.txt\n   备注：UAV无人机传感器表：存储UAV无人机传感器和经纬度数据\n7. agent_TRUCK_sensor → agent_TRUCK_sensor_init.txt\n   备注：TRUCK卡车传感器表：存储TRUCK卡车的传感器和经纬度数据\n8. agent_ROBOTS_sensor → agent_ROBOTS_sensor_init.txt\n   备注：ROBOTS仓储机器人传感器表：存储ROBOTS仓储机器人传感器和经纬度数据\n9. uav_landing_points → uav_landing_points_init.txt\n   备注：uav起降点基础信息表：存储uav起降点的经纬度数据",
+    "source_file": "文件汇总说明.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "16",
+    "text": "【使用说明】\n1. 所有TXT文件采用自然语言描述格式，可直接作为GraphRAG的输入数据源\n2. 执行GraphRAG索引构建命令时，可指定输入目录为：./graphrag_init_txt\n3. 建议保留此汇总文件，便于后续维护",
+    "source_file": "文件汇总说明.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "17",
+    "text": "====================================================================================================\n表名：agent_ROBOTS_sensor\n备注：ROBOTS仓储机器人传感器表：存储ROBOTS仓储机器人传感器数据\n生成时间：2025-12-16 21:59:07\n数据记录数：10\n====================================================================================================",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "18",
+    "text": "【表结构】\n表结构中，有以下字段名，它们的属性如下：\n1. 字段名：sensor_id，类型为bigint，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为auto_increment。\n2. 字段名：warehouse_id，类型为varchar(20)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n3. 字段名：task_id，类型为varchar(30)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n4. 字段名：shelf_nav_x，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n5. 字段名：shelf_nav_y，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n6. 字段名：grip_force，类型为decimal(6,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n7. 字段名：goods_weight，类型为decimal(8,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n8. 字段名：warehouse_temp，类型为decimal(4,1)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n9. 字段名：battery_remaining，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n10. 字段名：collect_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "19",
+    "text": "----------------------------------------------------------------------------------------------------",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "20",
+    "text": "【表数据】\n表数据记录为：\n第1个数据：sensor_id是1,warehouse_id是1,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是50.50,goods_weight是1.80,warehouse_temp是25.5,battery_remaining是80,collect_time是2025-12-06 22:00:47。\n第2个数据：sensor_id是2,warehouse_id是1,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是48.20,goods_weight是1.80,warehouse_temp是25.6,battery_remaining是78,collect_time是2025-12-06 23:00:47。\n第3个数据：sensor_id是3,warehouse_id是2,task_id是LOG-20250520-006,shelf_nav_x是120.15,shelf_nav_y是30.29,grip_force是60.30,goods_weight是3.80,warehouse_temp是26.2,battery_remaining是90,collect_time是2025-12-09 22:00:47。\n第4个数据：sensor_id是4,warehouse_id是2,task_id是LOG-20250520-006,shelf_nav_x是120.16,shelf_nav_y是30.29,grip_force是58.70,goods_weight是3.80,warehouse_temp是26.3,battery_remaining是88,collect_time是2025-12-09 23:00:47。\n第5个数据：sensor_id是5,warehouse_id是3,task_id是LOG-20250520-009,shelf_nav_x是106.55,shelf_nav_y是29.57,grip_force是45.80,goods_weight是1.20,warehouse_temp是24.8,battery_remaining是85,collect_time是2025-12-12 22:00:47。\n第6个数据：sensor_id是6,warehouse_id是3,task_id是LOG-20250520-009,shelf_nav_x是106.55,shelf_nav_y是29.57,grip_force是47.20,goods_weight是1.20,warehouse_temp是24.9,battery_remaining是83,collect_time是2025-12-12 23:00:47。\n第7个数据：sensor_id是7,warehouse_id是9,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是49.10,goods_weight是1.80,warehouse_temp是25.7,battery_remaining是76,collect_time是2025-12-07 00:00:47。\n第8个数据：sensor_id是8,warehouse_id是2,task_id是LOG-20250520-006,shelf_nav_x是120.16,shelf_nav_y是30.29,grip_force是59.50,goods_weight是3.80,warehouse_temp是26.4,battery_remaining是86,collect_time是2025-12-10 00:00:47。\n第9个数据：sensor_id是9,warehouse_id是3,task_id是LOG-20250520-009,shelf_nav_x是106.55,shelf_nav_y是29.57,grip_force是46.50,goods_weight是1.20,warehouse_temp是25.0,battery_remaining是81,collect_time是2025-12-13 00:00:47。\n第10个数据：sensor_id是10,warehouse_id是1,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是47.80,goods_weight是1.80,warehouse_temp是25.8,battery_remaining是74,collect_time是2025-12-07 01:00:47。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "21",
+    "text": "第1个数据：sensor_id是1,warehouse_id是1,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是50.50,goods_weight是1.80,warehouse_temp是25.5,battery_remaining是80,collect_time是2025-12-06 22:00:47。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "22",
+    "text": "第2个数据：sensor_id是2,warehouse_id是1,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是48.20,goods_weight是1.80,warehouse_temp是25.6,battery_remaining是78,collect_time是2025-12-06 23:00:47。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "23",
+    "text": "第3个数据：sensor_id是3,warehouse_id是2,task_id是LOG-20250520-006,shelf_nav_x是120.15,shelf_nav_y是30.29,grip_force是60.30,goods_weight是3.80,warehouse_temp是26.2,battery_remaining是90,collect_time是2025-12-09 22:00:47。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "24",
+    "text": "第4个数据：sensor_id是4,warehouse_id是2,task_id是LOG-20250520-006,shelf_nav_x是120.16,shelf_nav_y是30.29,grip_force是58.70,goods_weight是3.80,warehouse_temp是26.3,battery_remaining是88,collect_time是2025-12-09 23:00:47。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "25",
+    "text": "第5个数据：sensor_id是5,warehouse_id是3,task_id是LOG-20250520-009,shelf_nav_x是106.55,shelf_nav_y是29.57,grip_force是45.80,goods_weight是1.20,warehouse_temp是24.8,battery_remaining是85,collect_time是2025-12-12 22:00:47。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "26",
+    "text": "第6个数据：sensor_id是6,warehouse_id是3,task_id是LOG-20250520-009,shelf_nav_x是106.55,shelf_nav_y是29.57,grip_force是47.20,goods_weight是1.20,warehouse_temp是24.9,battery_remaining是83,collect_time是2025-12-12 23:00:47。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "27",
+    "text": "第7个数据：sensor_id是7,warehouse_id是9,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是49.10,goods_weight是1.80,warehouse_temp是25.7,battery_remaining是76,collect_time是2025-12-07 00:00:47。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "28",
+    "text": "第8个数据：sensor_id是8,warehouse_id是2,task_id是LOG-20250520-006,shelf_nav_x是120.16,shelf_nav_y是30.29,grip_force是59.50,goods_weight是3.80,warehouse_temp是26.4,battery_remaining是86,collect_time是2025-12-10 00:00:47。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "29",
+    "text": "第9个数据：sensor_id是9,warehouse_id是3,task_id是LOG-20250520-009,shelf_nav_x是106.55,shelf_nav_y是29.57,grip_force是46.50,goods_weight是1.20,warehouse_temp是25.0,battery_remaining是81,collect_time是2025-12-13 00:00:47。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "30",
+    "text": "第10个数据：sensor_id是10,warehouse_id是1,task_id是LOG-20250520-003,shelf_nav_x是113.27,shelf_nav_y是23.13,grip_force是47.80,goods_weight是1.80,warehouse_temp是25.8,battery_remaining是74,collect_time是2025-12-07 01:00:47。",
+    "source_file": "agent_ROBOTS_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "31",
+    "text": "====================================================================================================\n表名：task_agent_rel\n备注：任务-Agent关联表：存储任务与Agent的绑定关系，如任务ID、Agent ID、分配时间等\n生成时间：2025-12-16 21:59:07\n数据记录数：10\n====================================================================================================",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "32",
+    "text": "【表结构】\n表结构中，有以下字段名，它们的属性如下：\n1. 字段名：rel_id，类型为bigint，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为auto_increment。\n2. 字段名：task_id，类型为varchar(30)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n3. 字段名：agent_id，类型为varchar(20)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n4. 字段名：agent_role，类型为varchar(20)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n5. 字段名：start_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n6. 字段名：end_time，类型为datetime，是否可以为空为是，是否是主键为否，默认值为NULL，额外属性为为空。\n7. 字段名：status，类型为tinyint，是否可以为空为否，是否是主键为否，默认值为0，额外属性为为空。\n8. 字段名：feedback_info，类型为varchar(200)，是否可以为空为是，是否是主键为否，默认值为NULL，额外属性为为空。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "33",
+    "text": "----------------------------------------------------------------------------------------------------",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "34",
+    "text": "【表数据】\n表数据记录为：\n第1个数据：rel_id是1,task_id是LOG-20250520-001,agent_id是UAV-001,agent_role是空中投递,start_time是2025-12-04 20:00:47,end_time是2025-12-05 20:00:47,status是2,feedback_info是投递完成，无异常。\n第2个数据：rel_id是2,task_id是LOG-20250520-002,agent_id是GROUND-001,agent_role是地面运输,start_time是2025-12-05 20:00:47,end_time是NULL,status是1,feedback_info是运输中，路况良好。\n第3个数据：rel_id是3,task_id是LOG-20250520-003,agent_id是WARE-001,agent_role是取货,start_time是2025-12-06 20:00:47,end_time是NULL,status是0,feedback_info是NULL。\n第4个数据：rel_id是4,task_id是LOG-20250520-004,agent_id是UAV-002,agent_role是空中投递,start_time是2025-12-07 20:00:47,end_time是2025-12-08 20:00:47,status是2,feedback_info是投递完成，信号稳定。\n第5个数据：rel_id是5,task_id是LOG-20250520-005,agent_id是GROUND-002,agent_role是地面运输,start_time是2025-12-08 20:00:47,end_time是NULL,status是1,feedback_info是运输中，接近目标点。\n第6个数据：rel_id是6,task_id是LOG-20250520-006,agent_id是WARE-002,agent_role是取货,start_time是2025-12-09 20:00:47,end_time是2025-12-10 20:00:47,status是2,feedback_info是取货失败，物品缺货。\n第7个数据：rel_id是7,task_id是LOG-20250520-007,agent_id是UAV-003,agent_role是空中巡检,start_time是2025-12-10 20:00:47,end_time是2025-12-11 20:00:47,status是2,feedback_info是巡检完成，无异常。\n第8个数据：rel_id是8,task_id是LOG-20250520-008,agent_id是GROUND-003,agent_role是地面运输,start_time是2025-12-11 20:00:47,end_time是NULL,status是0,feedback_info是NULL。\n第9个数据：rel_id是9,task_id是LOG-20250520-009,agent_id是WARE-003,agent_role是取货,start_time是2025-12-12 20:00:47,end_time是NULL,status是1,feedback_info是取货中，货架定位准确。\n第10个数据：rel_id是10,task_id是LOG-20250520-010,agent_id是UAV-004,agent_role是空中投递,start_time是2025-12-13 20:00:47,end_time是NULL,status是0,feedback_info是NULL。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "35",
+    "text": "第1个数据：rel_id是1,task_id是LOG-20250520-001,agent_id是UAV-001,agent_role是空中投递,start_time是2025-12-04 20:00:47,end_time是2025-12-05 20:00:47,status是2,feedback_info是投递完成，无异常。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "36",
+    "text": "第2个数据：rel_id是2,task_id是LOG-20250520-002,agent_id是GROUND-001,agent_role是地面运输,start_time是2025-12-05 20:00:47,end_time是NULL,status是1,feedback_info是运输中，路况良好。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "37",
+    "text": "第3个数据：rel_id是3,task_id是LOG-20250520-003,agent_id是WARE-001,agent_role是取货,start_time是2025-12-06 20:00:47,end_time是NULL,status是0,feedback_info是NULL。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "38",
+    "text": "第4个数据：rel_id是4,task_id是LOG-20250520-004,agent_id是UAV-002,agent_role是空中投递,start_time是2025-12-07 20:00:47,end_time是2025-12-08 20:00:47,status是2,feedback_info是投递完成，信号稳定。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "39",
+    "text": "第5个数据：rel_id是5,task_id是LOG-20250520-005,agent_id是GROUND-002,agent_role是地面运输,start_time是2025-12-08 20:00:47,end_time是NULL,status是1,feedback_info是运输中，接近目标点。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "40",
+    "text": "第6个数据：rel_id是6,task_id是LOG-20250520-006,agent_id是WARE-002,agent_role是取货,start_time是2025-12-09 20:00:47,end_time是2025-12-10 20:00:47,status是2,feedback_info是取货失败，物品缺货。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "41",
+    "text": "第7个数据：rel_id是7,task_id是LOG-20250520-007,agent_id是UAV-003,agent_role是空中巡检,start_time是2025-12-10 20:00:47,end_time是2025-12-11 20:00:47,status是2,feedback_info是巡检完成，无异常。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "42",
+    "text": "第8个数据：rel_id是8,task_id是LOG-20250520-008,agent_id是GROUND-003,agent_role是地面运输,start_time是2025-12-11 20:00:47,end_time是NULL,status是0,feedback_info是NULL。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "43",
+    "text": "第9个数据：rel_id是9,task_id是LOG-20250520-009,agent_id是WARE-003,agent_role是取货,start_time是2025-12-12 20:00:47,end_time是NULL,status是1,feedback_info是取货中，货架定位准确。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "44",
+    "text": "第10个数据：rel_id是10,task_id是LOG-20250520-010,agent_id是UAV-004,agent_role是空中投递,start_time是2025-12-13 20:00:47,end_time是NULL,status是0,feedback_info是NULL。",
+    "source_file": "task_agent_rel_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "45",
+    "text": "====================================================================================================\n表名：warehouse_base\n备注：仓储基础信息表：存储仓库的基础属性，如仓库名称、位置、容量等\n生成时间：2026-02-07 17:30:43\n数据记录数：236\n====================================================================================================",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "46",
+    "text": "【表结构】\n表结构中，有以下字段名，它们的属性如下：\n1. 字段名：warehouse_id，类型为int，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为auto_increment。\n2. 字段名：warehouse_name，类型为varchar(50)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n3. 字段名：location_x，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n4. 字段名：location_y，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n5. 字段名：max_capacity，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n6. 字段名：status，类型为tinyint，是否可以为空为否，是否是主键为否，默认值为1，额外属性为为空。\n7. 字段名：create_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED。\n8. 字段名：update_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED on update CURRENT_TIMESTAMP。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "47",
+    "text": "----------------------------------------------------------------------------------------------------",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "48",
+    "text": "【表数据】\n表数据记录为：\n第1个数据：warehouse_id是1,warehouse_name是京东快递深圳文锦营业部,location_x是114.13,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第2个数据：warehouse_id是2,warehouse_name是京东快递深圳莲塘营业部,location_x是114.17,location_y是22.56,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第3个数据：warehouse_id是3,warehouse_name是京东快递深圳金稻田营业部,location_x是114.12,location_y是22.58,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第4个数据：warehouse_id是4,warehouse_name是京东快递深圳清水河营业部,location_x是114.10,location_y是22.57,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第5个数据：warehouse_id是5,warehouse_name是京东快递深圳国贸营业部,location_x是114.12,location_y是22.54,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第6个数据：warehouse_id是6,warehouse_name是京东快递深圳湖贝营业部,location_x是114.12,location_y是22.55,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第7个数据：warehouse_id是7,warehouse_name是京东快递深圳新秀营业部,location_x是114.15,location_y是22.55,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第8个数据：warehouse_id是8,warehouse_name是京东快递深圳南湖营业部,location_x是116.28,location_y是39.99,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第9个数据：warehouse_id是9,warehouse_name是京东快递深圳东门营业部,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第10个数据：warehouse_id是10,warehouse_name是京东快递深圳水贝揽收营业点,location_x是114.13,location_y是22.57,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第11个数据：warehouse_id是11,warehouse_name是京东快递深圳罗湖集配站,location_x是114.13,location_y是22.55,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第12个数据：warehouse_id是12,warehouse_name是京东快递深圳望桐配送营业点,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第13个数据：warehouse_id是13,warehouse_name是京东快递海口保税揽收营业点,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第14个数据：warehouse_id是14,warehouse_name是京东快递深圳新秀配送营业点,location_x是114.15,location_y是22.55,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第15个数据：warehouse_id是15,warehouse_name是京东快递深圳文锦水贝揽收营业点,location_x是114.13,location_y是22.57,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第16个数据：warehouse_id是16,warehouse_name是京东快递深圳莲塘口岸项目营业点,location_x是114.06,location_y是22.51,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第17个数据：warehouse_id是17,warehouse_name是京东快递深圳罗湖口岸项目营业点,location_x是114.12,location_y是22.53,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第18个数据：warehouse_id是18,warehouse_name是京东快递深圳福田营业部,location_x是114.06,location_y是22.52,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第19个数据：warehouse_id是19,warehouse_name是京东快递深圳皇岗营业部,location_x是114.07,location_y是22.54,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第20个数据：warehouse_id是20,warehouse_name是京东快递深圳梅林营业部,location_x是114.05,location_y是22.57,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第21个数据：warehouse_id是21,warehouse_name是京东快递深圳竹子林营业部,location_x是114.01,location_y是22.53,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第22个数据：warehouse_id是22,warehouse_name是京东快递深圳车公庙营业部,location_x是114.03,location_y是22.53,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第23个数据：warehouse_id是23,warehouse_name是京东快递深圳中康营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第24个数据：warehouse_id是24,warehouse_name是京东快递深圳岗厦营业部,location_x是114.07,location_y是22.53,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第25个数据：warehouse_id是25,warehouse_name是京东快递深圳振兴营业部,location_x是113.96,location_y是22.69,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第26个数据：warehouse_id是26,warehouse_name是京东快递深圳保税区营业部,location_x是114.05,location_y是22.51,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第27个数据：warehouse_id是27,warehouse_name是京东快递深圳华强南营业部,location_x是114.08,location_y是22.54,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第28个数据：warehouse_id是28,warehouse_name是京东快递深圳上步营业部,location_x是114.06,location_y是22.54,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第29个数据：warehouse_id是29,warehouse_name是京东快递深圳彩田营业部,location_x是114.06,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第30个数据：warehouse_id是30,warehouse_name是京东快递深圳景鹏营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第31个数据：warehouse_id是31,warehouse_name是京东快递深圳侨城营业部,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第32个数据：warehouse_id是32,warehouse_name是京东快递深圳福强营业部,location_x是114.04,location_y是22.53,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第33个数据：warehouse_id是33,warehouse_name是京东快递深圳福民营业部,location_x是114.38,location_y是22.69,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第34个数据：warehouse_id是34,warehouse_name是京东快递深圳振华营业部,location_x是121.38,location_y是37.54,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第35个数据：warehouse_id是35,warehouse_name是京东快递深圳石厦营业部,location_x是114.06,location_y是22.52,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第36个数据：warehouse_id是36,warehouse_name是京东快递深圳竹子林中件虚营业部,location_x是114.01,location_y是22.53,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第37个数据：warehouse_id是37,warehouse_name是京东快递深圳下沙营业部,location_x是114.29,location_y是22.66,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第38个数据：warehouse_id是38,warehouse_name是京东快递深圳梅林农批揽收营业点,location_x是114.05,location_y是22.57,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第39个数据：warehouse_id是39,warehouse_name是京东快递深圳新兴营业部,location_x是116.37,location_y是39.80,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第40个数据：warehouse_id是40,warehouse_name是京东快递深圳八卦岭营业部,location_x是114.10,location_y是22.56,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第41个数据：warehouse_id是41,warehouse_name是京东快递深圳新兴营业厅,location_x是116.37,location_y是39.80,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第42个数据：warehouse_id是42,warehouse_name是京东快递深圳地王营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第43个数据：warehouse_id是43,warehouse_name是京东快递深圳景鹏荔枝虚拟营业点,location_x是107.39,location_y是29.70,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第44个数据：warehouse_id是44,warehouse_name是京东快递深圳沙嘴营业部,location_x是114.04,location_y是22.52,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第45个数据：warehouse_id是45,warehouse_name是京东快递深圳福田口岸荔枝虚拟营业点,location_x是114.06,location_y是22.51,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第46个数据：warehouse_id是46,warehouse_name是京东快递深圳廊桥揽收营业点,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第47个数据：warehouse_id是47,warehouse_name是京东快递深圳福田保税仓揽收营业点,location_x是114.06,location_y是22.52,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第48个数据：warehouse_id是48,warehouse_name是京东快递深圳福田口岸揽收营业点,location_x是114.06,location_y是22.51,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第49个数据：warehouse_id是49,warehouse_name是京东快递深圳华瑞驻场营业点,location_x是114.12,location_y是22.58,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第50个数据：warehouse_id是50,warehouse_name是京东快递深圳华强南揽收营业点,location_x是114.08,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第51个数据：warehouse_id是51,warehouse_name是京东快递深圳车公庙集配站,location_x是114.03,location_y是22.53,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第52个数据：warehouse_id是52,warehouse_name是京东快递深圳多丽揽收营业点,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第53个数据：warehouse_id是53,warehouse_name是京东快递深圳海外大厦揽收营业点,location_x是115.95,location_y是28.69,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第54个数据：warehouse_id是54,warehouse_name是京东快递深圳-岗厦村项目接驳点,location_x是114.07,location_y是22.54,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第55个数据：warehouse_id是55,warehouse_name是京东快递深圳福田口岸项目营业点,location_x是114.06,location_y是22.51,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第56个数据：warehouse_id是56,warehouse_name是京东快递深圳南山营业部,location_x是113.93,location_y是22.53,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第57个数据：warehouse_id是57,warehouse_name是京东快递深圳蛇口营业部,location_x是113.93,location_y是22.49,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第58个数据：warehouse_id是58,warehouse_name是京东快递深圳龙井营业部,location_x是113.97,location_y是22.56,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第59个数据：warehouse_id是59,warehouse_name是京东快递深圳桂庙营业部,location_x是113.93,location_y是22.53,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第60个数据：warehouse_id是60,warehouse_name是京东快递深圳九祥岭营业部,location_x是113.96,location_y是22.58,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第61个数据：warehouse_id是61,warehouse_name是京东快递深圳科技园营业部,location_x是113.95,location_y是22.54,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第62个数据：warehouse_id是62,warehouse_name是京东快递深圳南头营业部,location_x是113.92,location_y是22.55,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第63个数据：warehouse_id是63,warehouse_name是京东快递深圳塘朗营业部,location_x是113.99,location_y是22.59,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第64个数据：warehouse_id是64,warehouse_name是京东快递深圳后海营业部,location_x是113.94,location_y是22.51,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第65个数据：warehouse_id是65,warehouse_name是京东快递深圳红花岭营业部,location_x是114.35,location_y是22.64,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第66个数据：warehouse_id是66,warehouse_name是京东快递深圳东角头营业部,location_x是113.94,location_y是22.49,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第67个数据：warehouse_id是67,warehouse_name是京东快递深圳前海营业部,location_x是114.06,location_y是22.54,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第68个数据：warehouse_id是68,warehouse_name是京东快递深圳龙珠营业部,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第69个数据：warehouse_id是69,warehouse_name是京东快递深圳珠光营业部,location_x是113.96,location_y是22.57,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第70个数据：warehouse_id是70,warehouse_name是京东快递深圳前海保税区驻场营业点,location_x是113.90,location_y是22.53,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第71个数据：warehouse_id是71,warehouse_name是京东快递深圳南油营业部,location_x是113.93,location_y是22.52,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第72个数据：warehouse_id是72,warehouse_name是京东快递深圳红树湾营业部,location_x是113.97,location_y是22.53,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第73个数据：warehouse_id是73,warehouse_name是京东快递深圳高新营业部,location_x是126.54,location_y是43.82,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第74个数据：warehouse_id是74,warehouse_name是京东快递深圳大冲营业部,location_x是111.95,location_y是26.74,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第75个数据：warehouse_id是75,warehouse_name是京东快递深圳科技园虚营业部,location_x是113.95,location_y是22.54,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第76个数据：warehouse_id是76,warehouse_name是京东快递深圳建功营业部,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第77个数据：warehouse_id是77,warehouse_name是京东快递深圳立业营业部,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第78个数据：warehouse_id是78,warehouse_name是京东快递深圳东滨营业部,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第79个数据：warehouse_id是79,warehouse_name是京东快递深圳登良营业部,location_x是113.94,location_y是22.51,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第80个数据：warehouse_id是80,warehouse_name是京东快递深圳大学配送营业点,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第81个数据：warehouse_id是81,warehouse_name是京东快递深圳赤湾营业部,location_x是113.89,location_y是22.48,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第82个数据：warehouse_id是82,warehouse_name是京东快递深圳战区备用库,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第83个数据：warehouse_id是83,warehouse_name是京东快递深圳登丰揽收营业点,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第84个数据：warehouse_id是84,warehouse_name是京东快递深圳衣拾贰驻场营业点,location_x是105.72,location_y是29.70,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第85个数据：warehouse_id是85,warehouse_name是京东快递深圳蛇口集配站,location_x是113.93,location_y是22.49,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第86个数据：warehouse_id是86,warehouse_name是京东快递深圳腾飞配送营业点,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第87个数据：warehouse_id是87,warehouse_name是京东快递深圳宝安营业部,location_x是113.88,location_y是22.55,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第88个数据：warehouse_id是88,warehouse_name是京东快递深圳福永营业部,location_x是113.82,location_y是22.68,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第89个数据：warehouse_id是89,warehouse_name是京东快递深圳西乡营业部,location_x是113.88,location_y是22.58,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第90个数据：warehouse_id是90,warehouse_name是京东快递深圳沙井营业部,location_x是113.83,location_y是22.72,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第91个数据：warehouse_id是91,warehouse_name是京东快递深圳松岗营业部,location_x是113.84,location_y是22.78,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第92个数据：warehouse_id是92,warehouse_name是京东快递深圳新桥营业部,location_x是119.96,location_y是31.86,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第93个数据：warehouse_id是93,warehouse_name是京东快递深圳和平营业部,location_x是120.31,location_y是31.58,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第94个数据：warehouse_id是94,warehouse_name是京东快递深圳宝民营业部,location_x是114.06,location_y是22.54,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第95个数据：warehouse_id是95,warehouse_name是京东快递深圳劳动营业部,location_x是113.87,location_y是22.57,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第96个数据：warehouse_id是96,warehouse_name是京东快递深圳塘头营业部,location_x是113.92,location_y是22.66,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第97个数据：warehouse_id是97,warehouse_name是京东快递深圳燕川营业部,location_x是113.87,location_y是22.80,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第98个数据：warehouse_id是98,warehouse_name是京东快递深圳航城营业部,location_x是113.85,location_y是22.62,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第99个数据：warehouse_id是99,warehouse_name是京东快递深圳丽景营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第100个数据：warehouse_id是100,warehouse_name是京东快递深圳民主营业部,location_x是126.64,location_y是43.60,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第101个数据：warehouse_id是101,warehouse_name是京东快递深圳碧湾营业部,location_x是113.87,location_y是22.57,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第102个数据：warehouse_id是102,warehouse_name是京东快递深圳坪洲营业部,location_x是113.87,location_y是22.57,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第103个数据：warehouse_id是103,warehouse_name是京东快递深圳兴围网格仓营业部,location_x是113.83,location_y是22.64,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第104个数据：warehouse_id是104,warehouse_name是京东快递深圳水田营业部,location_x是113.95,location_y是22.69,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第105个数据：warehouse_id是105,warehouse_name是京东快递深圳九围营业部,location_x是113.86,location_y是22.65,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第106个数据：warehouse_id是106,warehouse_name是京东快递深圳海城营业部,location_x是113.86,location_y是22.56,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第107个数据：warehouse_id是107,warehouse_name是京东快递深圳百旺营业部,location_x是113.94,location_y是22.62,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第108个数据：warehouse_id是108,warehouse_name是京东快递深圳后瑞营业部,location_x是113.84,location_y是22.63,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第109个数据：warehouse_id是109,warehouse_name是京东快递深圳万丰营业部,location_x是114.10,location_y是22.71,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第110个数据：warehouse_id是110,warehouse_name是京东快递深圳万里营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第111个数据：warehouse_id是111,warehouse_name是京东快递深圳塘尾中件虚营业部,location_x是113.81,location_y是22.70,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第112个数据：warehouse_id是112,warehouse_name是京东快递深圳九围虚营业部,location_x是113.86,location_y是22.65,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第113个数据：warehouse_id是113,warehouse_name是京东快递深圳航城虚营业部,location_x是113.85,location_y是22.62,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第114个数据：warehouse_id是114,warehouse_name是京东快递深圳海城虚营业部,location_x是113.86,location_y是22.56,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第115个数据：warehouse_id是115,warehouse_name是京东快递深圳西乡虚营业部,location_x是113.88,location_y是22.58,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第116个数据：warehouse_id是116,warehouse_name是京东快递深圳松岗虚营业部,location_x是113.84,location_y是22.78,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第117个数据：warehouse_id是117,warehouse_name是京东快递深圳红星营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第118个数据：warehouse_id是118,warehouse_name是京东快递深圳华荣营业部,location_x是118.11,location_y是24.51,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第119个数据：warehouse_id是119,warehouse_name是京东快递深圳南山集配站,location_x是112.90,location_y是35.54,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第120个数据：warehouse_id是120,warehouse_name是京东快递深圳光明集配站,location_x是113.95,location_y是22.74,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第121个数据：warehouse_id是121,warehouse_name是京东快递深圳福永集配站,location_x是113.82,location_y是22.68,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第122个数据：warehouse_id是122,warehouse_name是京东快递深圳创业营业部,location_x是113.91,location_y是22.58,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第123个数据：warehouse_id是123,warehouse_name是京东快递深圳福永物资仓营业点,location_x是113.82,location_y是22.68,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第124个数据：warehouse_id是124,warehouse_name是京东快递深圳云烽揽收营业点,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第125个数据：warehouse_id是125,warehouse_name是京东快递深圳共乐营业部,location_x是113.86,location_y是22.59,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第126个数据：warehouse_id是126,warehouse_name是京东快递深圳沙井集配站,location_x是116.56,location_y是40.10,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第127个数据：warehouse_id是127,warehouse_name是京东快递深圳硅谷营业部,location_x是114.05,location_y是22.68,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第128个数据：warehouse_id是128,warehouse_name是京东快递深圳潭头营业部,location_x是113.84,location_y是22.75,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第129个数据：warehouse_id是129,warehouse_name是京东快递深圳车公庙揽收营业点,location_x是114.03,location_y是22.53,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第130个数据：warehouse_id是130,warehouse_name是京东快递深圳燕罗新中泰项目营业点,location_x是114.05,location_y是22.64,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第131个数据：warehouse_id是131,warehouse_name是京东快递深圳万丰当换驻场营业点,location_x是114.10,location_y是22.71,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第132个数据：warehouse_id是132,warehouse_name是京东快递深圳桃源虚拟营业点,location_x是113.98,location_y是22.56,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第133个数据：warehouse_id是133,warehouse_name是京东快递深圳宝励虚拟营业点,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第134个数据：warehouse_id是134,warehouse_name是京东快递深圳鹏达网格仓营业部,location_x是114.27,location_y是22.72,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第135个数据：warehouse_id是135,warehouse_name是京东快递深圳富文营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第136个数据：warehouse_id是136,warehouse_name是京东快递深圳坂田营业部,location_x是114.06,location_y是22.63,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第137个数据：warehouse_id是137,warehouse_name是京东快递深圳平湖营业部,location_x是114.14,location_y是22.69,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第138个数据：warehouse_id是138,warehouse_name是京东快递深圳坪地营业部,location_x是114.30,location_y是22.78,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第139个数据：warehouse_id是139,warehouse_name是京东快递深圳李朗营业部,location_x是114.12,location_y是22.65,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第140个数据：warehouse_id是140,warehouse_name是京东快递深圳龙城营业部,location_x是114.22,location_y是22.70,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第141个数据：warehouse_id是141,warehouse_name是京东快递深圳五和营业部,location_x是114.06,location_y是22.62,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第142个数据：warehouse_id是142,warehouse_name是京东快递深圳盛平营业部,location_x是114.26,location_y是22.73,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第143个数据：warehouse_id是143,warehouse_name是京东快递深圳水径营业部,location_x是114.11,location_y是22.61,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第144个数据：warehouse_id是144,warehouse_name是京东快递深圳荷坳营业部,location_x是114.23,location_y是22.67,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第145个数据：warehouse_id是145,warehouse_name是京东快递深圳岗头营业部,location_x是114.06,location_y是22.72,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第146个数据：warehouse_id是146,warehouse_name是京东快递深圳同乐营业部,location_x是113.92,location_y是22.57,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第147个数据：warehouse_id是147,warehouse_name是京东快递深圳新木营业部,location_x是114.13,location_y是22.66,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第148个数据：warehouse_id是148,warehouse_name是京东快递深圳大望营业部,location_x是114.17,location_y是22.60,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第149个数据：warehouse_id是149,warehouse_name是京东快递深圳大运营业部,location_x是114.22,location_y是22.70,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第150个数据：warehouse_id是150,warehouse_name是京东快递深圳雅园营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第151个数据：warehouse_id是151,warehouse_name是京东快递深圳三联营业部,location_x是114.12,location_y是22.62,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第152个数据：warehouse_id是152,warehouse_name是京东快递深圳五联营业部,location_x是114.23,location_y是22.74,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第153个数据：warehouse_id是153,warehouse_name是京东快递深圳大吉营业部,location_x是116.40,location_y是39.94,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第154个数据：warehouse_id是154,warehouse_name是京东快递深圳龙东营业部,location_x是114.29,location_y是22.73,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第155个数据：warehouse_id是155,warehouse_name是京东快递深圳安良营业部,location_x是114.22,location_y是22.63,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第156个数据：warehouse_id是156,warehouse_name是京东快递深圳秀峰营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第157个数据：warehouse_id是157,warehouse_name是京东快递深圳新生中件虚营业部,location_x是114.28,location_y是22.74,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第158个数据：warehouse_id是158,warehouse_name是京东快递深圳秀峰中件虚营业部,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第159个数据：warehouse_id是159,warehouse_name是京东快递深圳三联虚营业部,location_x是114.12,location_y是22.62,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第160个数据：warehouse_id是160,warehouse_name是京东快递深圳水径虚营业部,location_x是114.11,location_y是22.61,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第161个数据：warehouse_id是161,warehouse_name是京东快递深圳龙城虚营业部,location_x是114.22,location_y是22.70,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第162个数据：warehouse_id是162,warehouse_name是京东快递深圳吉祥营业部,location_x是114.24,location_y是22.71,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第163个数据：warehouse_id是163,warehouse_name是京东快递深圳吉华营业部,location_x是114.11,location_y是22.61,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第164个数据：warehouse_id是164,warehouse_name是京东快递深圳金源营业部,location_x是114.14,location_y是22.54,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第165个数据：warehouse_id是165,warehouse_name是京东快递深圳大芬集配站,location_x是114.14,location_y是22.61,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第166个数据：warehouse_id是166,warehouse_name是京东快递深圳雪象营业部,location_x是114.07,location_y是22.65,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第167个数据：warehouse_id是167,warehouse_name是京东快递深圳横岗网格仓营业部,location_x是114.20,location_y是22.64,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第168个数据：warehouse_id是168,warehouse_name是京东快递深圳长隆营业部,location_x是114.39,location_y是22.74,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第169个数据：warehouse_id是169,warehouse_name是京东快递深圳横岗集配站,location_x是114.20,location_y是22.64,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第170个数据：warehouse_id是170,warehouse_name是京东快递深圳华南城营业部,location_x是114.13,location_y是22.68,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第171个数据：warehouse_id是171,warehouse_name是京东快递深圳华南城集配站,location_x是114.13,location_y是22.68,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第172个数据：warehouse_id是172,warehouse_name是京东快递深圳大芬营业部,location_x是114.06,location_y是22.54,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第173个数据：warehouse_id是173,warehouse_name是京东快递深圳华雅营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第174个数据：warehouse_id是174,warehouse_name是京东快递深圳星光营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第175个数据：warehouse_id是175,warehouse_name是京东快递深圳新安揽收营业点,location_x是120.60,location_y是30.30,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第176个数据：warehouse_id是176,warehouse_name是京东快递深圳龙城揽收营业点,location_x是114.22,location_y是22.70,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第177个数据：warehouse_id是177,warehouse_name是京东快递深圳前海免税揽收营业点,location_x是113.90,location_y是22.53,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第178个数据：warehouse_id是178,warehouse_name是京东快递深圳中海配送营业点,location_x是116.39,location_y是39.92,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第179个数据：warehouse_id是179,warehouse_name是京东快递深圳展跃揽收营业点,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第180个数据：warehouse_id是180,warehouse_name是京东快递深圳苗三哥揽收营业点,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第181个数据：warehouse_id是181,warehouse_name是京东快递深圳阿诗顿驻场营业点,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第182个数据：warehouse_id是182,warehouse_name是京东快递深圳微微讯驻场营业点,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第183个数据：warehouse_id是183,warehouse_name是京东快递深圳品胜揽收营业点,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第184个数据：warehouse_id是184,warehouse_name是京东快递深圳龙华小米驻场营业点,location_x是114.03,location_y是22.65,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第185个数据：warehouse_id是185,warehouse_name是京东快递深圳小米越海项目营业点,location_x是116.42,location_y是39.92,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第186个数据：warehouse_id是186,warehouse_name是京东快递深圳明达丰配送营业点,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第187个数据：warehouse_id是187,warehouse_name是京东快递深圳富文揽收营业点,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第188个数据：warehouse_id是188,warehouse_name是京东快递深圳大芬伟雄揽收营业点,location_x是114.14,location_y是22.61,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第189个数据：warehouse_id是189,warehouse_name是京东快递深圳盐田营业部,location_x是114.24,location_y是22.56,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第190个数据：warehouse_id是190,warehouse_name是京东快递深圳沙头角营业部,location_x是114.23,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第191个数据：warehouse_id是191,warehouse_name是京东快递深圳奥特莱斯配送营业点,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第192个数据：warehouse_id是192,warehouse_name是京东快递深圳民治营业部,location_x是114.06,location_y是22.54,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第193个数据：warehouse_id是193,warehouse_name是京东快递深圳大浪网格仓营业部,location_x是114.00,location_y是22.67,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第194个数据：warehouse_id是194,warehouse_name是京东快递深圳观澜营业部,location_x是114.06,location_y是22.71,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第195个数据：warehouse_id是195,warehouse_name是京东快递深圳龙华网格仓营业部,location_x是114.03,location_y是22.65,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第196个数据：warehouse_id是196,warehouse_name是京东快递深圳松元营业部,location_x是114.07,location_y是22.72,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第197个数据：warehouse_id是197,warehouse_name是京东快递深圳龙胜营业部,location_x是114.01,location_y是22.66,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第198个数据：warehouse_id是198,warehouse_name是京东快递深圳油松营业部,location_x是114.04,location_y是22.64,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第199个数据：warehouse_id是199,warehouse_name是京东快递深圳塘前营业部,location_x是114.02,location_y是22.74,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第200个数据：warehouse_id是200,warehouse_name是京东快递深圳百丽营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第201个数据：warehouse_id是201,warehouse_name是京东快递深圳东边营业部,location_x是114.04,location_y是22.62,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第202个数据：warehouse_id是202,warehouse_name是京东快递深圳大和营业部,location_x是114.05,location_y是22.70,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第203个数据：warehouse_id是203,warehouse_name是京东快递深圳上塘营业部,location_x是114.06,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第204个数据：warehouse_id是204,warehouse_name是京东快递深圳皇嘉营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第205个数据：warehouse_id是205,warehouse_name是京东快递深圳百花营业部,location_x是113.27,location_y是23.24,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第206个数据：warehouse_id是206,warehouse_name是京东快递深圳民乐营业部,location_x是114.05,location_y是22.60,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第207个数据：warehouse_id是207,warehouse_name是京东快递深圳油松虚营业部,location_x是114.04,location_y是22.64,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第208个数据：warehouse_id是208,warehouse_name是京东快递深圳东泉营业部,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第209个数据：warehouse_id是209,warehouse_name是京东快递深圳油富营业部,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第210个数据：warehouse_id是210,warehouse_name是京东快递深圳龙华集配站,location_x是114.03,location_y是22.65,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第211个数据：warehouse_id是211,warehouse_name是京东快递深圳华旺营业部,location_x是114.04,location_y是22.60,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第212个数据：warehouse_id是212,warehouse_name是京东快递深圳新园营业部,location_x是114.06,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第213个数据：warehouse_id是213,warehouse_name是京东快递深圳园湖揽收营业点,location_x是114.24,location_y是22.68,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第214个数据：warehouse_id是214,warehouse_name是京东快递深圳民塘配送营业点,location_x是114.03,location_y是22.61,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第215个数据：warehouse_id是215,warehouse_name是京东快递深圳民宝配送营业点,location_x是114.03,location_y是22.62,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第216个数据：warehouse_id是216,warehouse_name是京东快递深圳观澜集配站,location_x是114.06,location_y是22.71,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第217个数据：warehouse_id是217,warehouse_name是京东快递深圳万众营业部,location_x是113.65,location_y是22.92,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第218个数据：warehouse_id是218,warehouse_name是京东快递深圳岗头揽收营业点,location_x是114.06,location_y是22.72,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第219个数据：warehouse_id是219,warehouse_name是京东快递深圳坪山网格仓营业部,location_x是114.35,location_y是22.71,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第220个数据：warehouse_id是220,warehouse_name是京东快递深圳坑梓营业部,location_x是114.37,location_y是22.74,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第221个数据：warehouse_id是221,warehouse_name是京东快递深圳金牛营业部,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第222个数据：warehouse_id是222,warehouse_name是京东快递深圳金牛虚营业部,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第223个数据：warehouse_id是223,warehouse_name是京东快递深圳坪山集配站,location_x是114.35,location_y是22.71,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第224个数据：warehouse_id是224,warehouse_name是京东快递深圳碧岭揽收营业点,location_x是114.28,location_y是22.67,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第225个数据：warehouse_id是225,warehouse_name是京东快递深圳中核海揽收营业点,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第226个数据：warehouse_id是226,warehouse_name是京东快递深圳平湖小美揽收营业点,location_x是114.14,location_y是22.69,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第227个数据：warehouse_id是227,warehouse_name是京东快递深圳金牛揽收营业点,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第228个数据：warehouse_id是228,warehouse_name是京东快递深圳公明营业部,location_x是113.90,location_y是22.78,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第229个数据：warehouse_id是229,warehouse_name是京东快递深圳光明营业部,location_x是113.95,location_y是22.74,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第230个数据：warehouse_id是230,warehouse_name是京东快递深圳凤新营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第231个数据：warehouse_id是231,warehouse_name是京东快递深圳马田营业部,location_x是113.87,location_y是22.78,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第232个数据：warehouse_id是232,warehouse_name是京东快递深圳蒋塘营业部,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第233个数据：warehouse_id是233,warehouse_name是京东快递深圳玉塘营业部,location_x是113.92,location_y是22.72,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第234个数据：warehouse_id是234,warehouse_name是京东快递深圳凤新虚营业部,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第235个数据：warehouse_id是235,warehouse_name是京东快递深圳兴发营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。\n第236个数据：warehouse_id是236,warehouse_name是京东快递深圳中大配送营业点,location_x是113.95,location_y是22.80,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "49",
+    "text": "第1个数据：warehouse_id是1,warehouse_name是京东快递深圳文锦营业部,location_x是114.13,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "50",
+    "text": "第2个数据：warehouse_id是2,warehouse_name是京东快递深圳莲塘营业部,location_x是114.17,location_y是22.56,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "51",
+    "text": "第3个数据：warehouse_id是3,warehouse_name是京东快递深圳金稻田营业部,location_x是114.12,location_y是22.58,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "52",
+    "text": "第4个数据：warehouse_id是4,warehouse_name是京东快递深圳清水河营业部,location_x是114.10,location_y是22.57,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "53",
+    "text": "第5个数据：warehouse_id是5,warehouse_name是京东快递深圳国贸营业部,location_x是114.12,location_y是22.54,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "54",
+    "text": "第6个数据：warehouse_id是6,warehouse_name是京东快递深圳湖贝营业部,location_x是114.12,location_y是22.55,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "55",
+    "text": "第7个数据：warehouse_id是7,warehouse_name是京东快递深圳新秀营业部,location_x是114.15,location_y是22.55,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "56",
+    "text": "第8个数据：warehouse_id是8,warehouse_name是京东快递深圳南湖营业部,location_x是116.28,location_y是39.99,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "57",
+    "text": "第9个数据：warehouse_id是9,warehouse_name是京东快递深圳东门营业部,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "58",
+    "text": "第10个数据：warehouse_id是10,warehouse_name是京东快递深圳水贝揽收营业点,location_x是114.13,location_y是22.57,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "59",
+    "text": "第11个数据：warehouse_id是11,warehouse_name是京东快递深圳罗湖集配站,location_x是114.13,location_y是22.55,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "60",
+    "text": "第12个数据：warehouse_id是12,warehouse_name是京东快递深圳望桐配送营业点,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "61",
+    "text": "第13个数据：warehouse_id是13,warehouse_name是京东快递海口保税揽收营业点,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "62",
+    "text": "第14个数据：warehouse_id是14,warehouse_name是京东快递深圳新秀配送营业点,location_x是114.15,location_y是22.55,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "63",
+    "text": "第15个数据：warehouse_id是15,warehouse_name是京东快递深圳文锦水贝揽收营业点,location_x是114.13,location_y是22.57,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "64",
+    "text": "第16个数据：warehouse_id是16,warehouse_name是京东快递深圳莲塘口岸项目营业点,location_x是114.06,location_y是22.51,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "65",
+    "text": "第17个数据：warehouse_id是17,warehouse_name是京东快递深圳罗湖口岸项目营业点,location_x是114.12,location_y是22.53,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "66",
+    "text": "第18个数据：warehouse_id是18,warehouse_name是京东快递深圳福田营业部,location_x是114.06,location_y是22.52,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "67",
+    "text": "第19个数据：warehouse_id是19,warehouse_name是京东快递深圳皇岗营业部,location_x是114.07,location_y是22.54,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "68",
+    "text": "第20个数据：warehouse_id是20,warehouse_name是京东快递深圳梅林营业部,location_x是114.05,location_y是22.57,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "69",
+    "text": "第21个数据：warehouse_id是21,warehouse_name是京东快递深圳竹子林营业部,location_x是114.01,location_y是22.53,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "70",
+    "text": "第22个数据：warehouse_id是22,warehouse_name是京东快递深圳车公庙营业部,location_x是114.03,location_y是22.53,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "71",
+    "text": "第23个数据：warehouse_id是23,warehouse_name是京东快递深圳中康营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "72",
+    "text": "第24个数据：warehouse_id是24,warehouse_name是京东快递深圳岗厦营业部,location_x是114.07,location_y是22.53,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "73",
+    "text": "第25个数据：warehouse_id是25,warehouse_name是京东快递深圳振兴营业部,location_x是113.96,location_y是22.69,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "74",
+    "text": "第26个数据：warehouse_id是26,warehouse_name是京东快递深圳保税区营业部,location_x是114.05,location_y是22.51,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "75",
+    "text": "第27个数据：warehouse_id是27,warehouse_name是京东快递深圳华强南营业部,location_x是114.08,location_y是22.54,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "76",
+    "text": "第28个数据：warehouse_id是28,warehouse_name是京东快递深圳上步营业部,location_x是114.06,location_y是22.54,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "77",
+    "text": "第29个数据：warehouse_id是29,warehouse_name是京东快递深圳彩田营业部,location_x是114.06,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "78",
+    "text": "第30个数据：warehouse_id是30,warehouse_name是京东快递深圳景鹏营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "79",
+    "text": "第31个数据：warehouse_id是31,warehouse_name是京东快递深圳侨城营业部,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "80",
+    "text": "第32个数据：warehouse_id是32,warehouse_name是京东快递深圳福强营业部,location_x是114.04,location_y是22.53,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "81",
+    "text": "第33个数据：warehouse_id是33,warehouse_name是京东快递深圳福民营业部,location_x是114.38,location_y是22.69,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "82",
+    "text": "第34个数据：warehouse_id是34,warehouse_name是京东快递深圳振华营业部,location_x是121.38,location_y是37.54,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "83",
+    "text": "第35个数据：warehouse_id是35,warehouse_name是京东快递深圳石厦营业部,location_x是114.06,location_y是22.52,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "84",
+    "text": "第36个数据：warehouse_id是36,warehouse_name是京东快递深圳竹子林中件虚营业部,location_x是114.01,location_y是22.53,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "85",
+    "text": "第37个数据：warehouse_id是37,warehouse_name是京东快递深圳下沙营业部,location_x是114.29,location_y是22.66,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "86",
+    "text": "第38个数据：warehouse_id是38,warehouse_name是京东快递深圳梅林农批揽收营业点,location_x是114.05,location_y是22.57,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "87",
+    "text": "第39个数据：warehouse_id是39,warehouse_name是京东快递深圳新兴营业部,location_x是116.37,location_y是39.80,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "88",
+    "text": "第40个数据：warehouse_id是40,warehouse_name是京东快递深圳八卦岭营业部,location_x是114.10,location_y是22.56,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "89",
+    "text": "第41个数据：warehouse_id是41,warehouse_name是京东快递深圳新兴营业厅,location_x是116.37,location_y是39.80,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "90",
+    "text": "第42个数据：warehouse_id是42,warehouse_name是京东快递深圳地王营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "91",
+    "text": "第43个数据：warehouse_id是43,warehouse_name是京东快递深圳景鹏荔枝虚拟营业点,location_x是107.39,location_y是29.70,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "92",
+    "text": "第44个数据：warehouse_id是44,warehouse_name是京东快递深圳沙嘴营业部,location_x是114.04,location_y是22.52,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "93",
+    "text": "第45个数据：warehouse_id是45,warehouse_name是京东快递深圳福田口岸荔枝虚拟营业点,location_x是114.06,location_y是22.51,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "94",
+    "text": "第46个数据：warehouse_id是46,warehouse_name是京东快递深圳廊桥揽收营业点,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "95",
+    "text": "第47个数据：warehouse_id是47,warehouse_name是京东快递深圳福田保税仓揽收营业点,location_x是114.06,location_y是22.52,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "96",
+    "text": "第48个数据：warehouse_id是48,warehouse_name是京东快递深圳福田口岸揽收营业点,location_x是114.06,location_y是22.51,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "97",
+    "text": "第49个数据：warehouse_id是49,warehouse_name是京东快递深圳华瑞驻场营业点,location_x是114.12,location_y是22.58,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "98",
+    "text": "第50个数据：warehouse_id是50,warehouse_name是京东快递深圳华强南揽收营业点,location_x是114.08,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "99",
+    "text": "第51个数据：warehouse_id是51,warehouse_name是京东快递深圳车公庙集配站,location_x是114.03,location_y是22.53,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "100",
+    "text": "第52个数据：warehouse_id是52,warehouse_name是京东快递深圳多丽揽收营业点,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "101",
+    "text": "第53个数据：warehouse_id是53,warehouse_name是京东快递深圳海外大厦揽收营业点,location_x是115.95,location_y是28.69,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "102",
+    "text": "第54个数据：warehouse_id是54,warehouse_name是京东快递深圳-岗厦村项目接驳点,location_x是114.07,location_y是22.54,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "103",
+    "text": "第55个数据：warehouse_id是55,warehouse_name是京东快递深圳福田口岸项目营业点,location_x是114.06,location_y是22.51,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "104",
+    "text": "第56个数据：warehouse_id是56,warehouse_name是京东快递深圳南山营业部,location_x是113.93,location_y是22.53,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "105",
+    "text": "第57个数据：warehouse_id是57,warehouse_name是京东快递深圳蛇口营业部,location_x是113.93,location_y是22.49,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "106",
+    "text": "第58个数据：warehouse_id是58,warehouse_name是京东快递深圳龙井营业部,location_x是113.97,location_y是22.56,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "107",
+    "text": "第59个数据：warehouse_id是59,warehouse_name是京东快递深圳桂庙营业部,location_x是113.93,location_y是22.53,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "108",
+    "text": "第60个数据：warehouse_id是60,warehouse_name是京东快递深圳九祥岭营业部,location_x是113.96,location_y是22.58,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "109",
+    "text": "第61个数据：warehouse_id是61,warehouse_name是京东快递深圳科技园营业部,location_x是113.95,location_y是22.54,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "110",
+    "text": "第62个数据：warehouse_id是62,warehouse_name是京东快递深圳南头营业部,location_x是113.92,location_y是22.55,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "111",
+    "text": "第63个数据：warehouse_id是63,warehouse_name是京东快递深圳塘朗营业部,location_x是113.99,location_y是22.59,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "112",
+    "text": "第64个数据：warehouse_id是64,warehouse_name是京东快递深圳后海营业部,location_x是113.94,location_y是22.51,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "113",
+    "text": "第65个数据：warehouse_id是65,warehouse_name是京东快递深圳红花岭营业部,location_x是114.35,location_y是22.64,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "114",
+    "text": "第66个数据：warehouse_id是66,warehouse_name是京东快递深圳东角头营业部,location_x是113.94,location_y是22.49,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "115",
+    "text": "第67个数据：warehouse_id是67,warehouse_name是京东快递深圳前海营业部,location_x是114.06,location_y是22.54,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "116",
+    "text": "第68个数据：warehouse_id是68,warehouse_name是京东快递深圳龙珠营业部,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "117",
+    "text": "第69个数据：warehouse_id是69,warehouse_name是京东快递深圳珠光营业部,location_x是113.96,location_y是22.57,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "118",
+    "text": "第70个数据：warehouse_id是70,warehouse_name是京东快递深圳前海保税区驻场营业点,location_x是113.90,location_y是22.53,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "119",
+    "text": "第71个数据：warehouse_id是71,warehouse_name是京东快递深圳南油营业部,location_x是113.93,location_y是22.52,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "120",
+    "text": "第72个数据：warehouse_id是72,warehouse_name是京东快递深圳红树湾营业部,location_x是113.97,location_y是22.53,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "121",
+    "text": "第73个数据：warehouse_id是73,warehouse_name是京东快递深圳高新营业部,location_x是126.54,location_y是43.82,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "122",
+    "text": "第74个数据：warehouse_id是74,warehouse_name是京东快递深圳大冲营业部,location_x是111.95,location_y是26.74,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "123",
+    "text": "第75个数据：warehouse_id是75,warehouse_name是京东快递深圳科技园虚营业部,location_x是113.95,location_y是22.54,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "124",
+    "text": "第76个数据：warehouse_id是76,warehouse_name是京东快递深圳建功营业部,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "125",
+    "text": "第77个数据：warehouse_id是77,warehouse_name是京东快递深圳立业营业部,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "126",
+    "text": "第78个数据：warehouse_id是78,warehouse_name是京东快递深圳东滨营业部,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "127",
+    "text": "第79个数据：warehouse_id是79,warehouse_name是京东快递深圳登良营业部,location_x是113.94,location_y是22.51,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "128",
+    "text": "第80个数据：warehouse_id是80,warehouse_name是京东快递深圳大学配送营业点,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "129",
+    "text": "第81个数据：warehouse_id是81,warehouse_name是京东快递深圳赤湾营业部,location_x是113.89,location_y是22.48,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "130",
+    "text": "第82个数据：warehouse_id是82,warehouse_name是京东快递深圳战区备用库,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "131",
+    "text": "第83个数据：warehouse_id是83,warehouse_name是京东快递深圳登丰揽收营业点,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "132",
+    "text": "第84个数据：warehouse_id是84,warehouse_name是京东快递深圳衣拾贰驻场营业点,location_x是105.72,location_y是29.70,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "133",
+    "text": "第85个数据：warehouse_id是85,warehouse_name是京东快递深圳蛇口集配站,location_x是113.93,location_y是22.49,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "134",
+    "text": "第86个数据：warehouse_id是86,warehouse_name是京东快递深圳腾飞配送营业点,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "135",
+    "text": "第87个数据：warehouse_id是87,warehouse_name是京东快递深圳宝安营业部,location_x是113.88,location_y是22.55,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "136",
+    "text": "第88个数据：warehouse_id是88,warehouse_name是京东快递深圳福永营业部,location_x是113.82,location_y是22.68,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "137",
+    "text": "第89个数据：warehouse_id是89,warehouse_name是京东快递深圳西乡营业部,location_x是113.88,location_y是22.58,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "138",
+    "text": "第90个数据：warehouse_id是90,warehouse_name是京东快递深圳沙井营业部,location_x是113.83,location_y是22.72,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "139",
+    "text": "第91个数据：warehouse_id是91,warehouse_name是京东快递深圳松岗营业部,location_x是113.84,location_y是22.78,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "140",
+    "text": "第92个数据：warehouse_id是92,warehouse_name是京东快递深圳新桥营业部,location_x是119.96,location_y是31.86,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "141",
+    "text": "第93个数据：warehouse_id是93,warehouse_name是京东快递深圳和平营业部,location_x是120.31,location_y是31.58,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "142",
+    "text": "第94个数据：warehouse_id是94,warehouse_name是京东快递深圳宝民营业部,location_x是114.06,location_y是22.54,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "143",
+    "text": "第95个数据：warehouse_id是95,warehouse_name是京东快递深圳劳动营业部,location_x是113.87,location_y是22.57,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "144",
+    "text": "第96个数据：warehouse_id是96,warehouse_name是京东快递深圳塘头营业部,location_x是113.92,location_y是22.66,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "145",
+    "text": "第97个数据：warehouse_id是97,warehouse_name是京东快递深圳燕川营业部,location_x是113.87,location_y是22.80,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "146",
+    "text": "第98个数据：warehouse_id是98,warehouse_name是京东快递深圳航城营业部,location_x是113.85,location_y是22.62,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "147",
+    "text": "第99个数据：warehouse_id是99,warehouse_name是京东快递深圳丽景营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "148",
+    "text": "第100个数据：warehouse_id是100,warehouse_name是京东快递深圳民主营业部,location_x是126.64,location_y是43.60,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "149",
+    "text": "第101个数据：warehouse_id是101,warehouse_name是京东快递深圳碧湾营业部,location_x是113.87,location_y是22.57,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "150",
+    "text": "第102个数据：warehouse_id是102,warehouse_name是京东快递深圳坪洲营业部,location_x是113.87,location_y是22.57,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "151",
+    "text": "第103个数据：warehouse_id是103,warehouse_name是京东快递深圳兴围网格仓营业部,location_x是113.83,location_y是22.64,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "152",
+    "text": "第104个数据：warehouse_id是104,warehouse_name是京东快递深圳水田营业部,location_x是113.95,location_y是22.69,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "153",
+    "text": "第105个数据：warehouse_id是105,warehouse_name是京东快递深圳九围营业部,location_x是113.86,location_y是22.65,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "154",
+    "text": "第106个数据：warehouse_id是106,warehouse_name是京东快递深圳海城营业部,location_x是113.86,location_y是22.56,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "155",
+    "text": "第107个数据：warehouse_id是107,warehouse_name是京东快递深圳百旺营业部,location_x是113.94,location_y是22.62,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "156",
+    "text": "第108个数据：warehouse_id是108,warehouse_name是京东快递深圳后瑞营业部,location_x是113.84,location_y是22.63,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "157",
+    "text": "第109个数据：warehouse_id是109,warehouse_name是京东快递深圳万丰营业部,location_x是114.10,location_y是22.71,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "158",
+    "text": "第110个数据：warehouse_id是110,warehouse_name是京东快递深圳万里营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "159",
+    "text": "第111个数据：warehouse_id是111,warehouse_name是京东快递深圳塘尾中件虚营业部,location_x是113.81,location_y是22.70,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "160",
+    "text": "第112个数据：warehouse_id是112,warehouse_name是京东快递深圳九围虚营业部,location_x是113.86,location_y是22.65,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "161",
+    "text": "第113个数据：warehouse_id是113,warehouse_name是京东快递深圳航城虚营业部,location_x是113.85,location_y是22.62,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "162",
+    "text": "第114个数据：warehouse_id是114,warehouse_name是京东快递深圳海城虚营业部,location_x是113.86,location_y是22.56,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "163",
+    "text": "第115个数据：warehouse_id是115,warehouse_name是京东快递深圳西乡虚营业部,location_x是113.88,location_y是22.58,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "164",
+    "text": "第116个数据：warehouse_id是116,warehouse_name是京东快递深圳松岗虚营业部,location_x是113.84,location_y是22.78,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "165",
+    "text": "第117个数据：warehouse_id是117,warehouse_name是京东快递深圳红星营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "166",
+    "text": "第118个数据：warehouse_id是118,warehouse_name是京东快递深圳华荣营业部,location_x是118.11,location_y是24.51,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "167",
+    "text": "第119个数据：warehouse_id是119,warehouse_name是京东快递深圳南山集配站,location_x是112.90,location_y是35.54,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "168",
+    "text": "第120个数据：warehouse_id是120,warehouse_name是京东快递深圳光明集配站,location_x是113.95,location_y是22.74,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "169",
+    "text": "第121个数据：warehouse_id是121,warehouse_name是京东快递深圳福永集配站,location_x是113.82,location_y是22.68,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "170",
+    "text": "第122个数据：warehouse_id是122,warehouse_name是京东快递深圳创业营业部,location_x是113.91,location_y是22.58,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "171",
+    "text": "第123个数据：warehouse_id是123,warehouse_name是京东快递深圳福永物资仓营业点,location_x是113.82,location_y是22.68,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "172",
+    "text": "第124个数据：warehouse_id是124,warehouse_name是京东快递深圳云烽揽收营业点,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "173",
+    "text": "第125个数据：warehouse_id是125,warehouse_name是京东快递深圳共乐营业部,location_x是113.86,location_y是22.59,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "174",
+    "text": "第126个数据：warehouse_id是126,warehouse_name是京东快递深圳沙井集配站,location_x是116.56,location_y是40.10,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "175",
+    "text": "第127个数据：warehouse_id是127,warehouse_name是京东快递深圳硅谷营业部,location_x是114.05,location_y是22.68,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "176",
+    "text": "第128个数据：warehouse_id是128,warehouse_name是京东快递深圳潭头营业部,location_x是113.84,location_y是22.75,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "177",
+    "text": "第129个数据：warehouse_id是129,warehouse_name是京东快递深圳车公庙揽收营业点,location_x是114.03,location_y是22.53,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "178",
+    "text": "第130个数据：warehouse_id是130,warehouse_name是京东快递深圳燕罗新中泰项目营业点,location_x是114.05,location_y是22.64,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "179",
+    "text": "第131个数据：warehouse_id是131,warehouse_name是京东快递深圳万丰当换驻场营业点,location_x是114.10,location_y是22.71,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "180",
+    "text": "第132个数据：warehouse_id是132,warehouse_name是京东快递深圳桃源虚拟营业点,location_x是113.98,location_y是22.56,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "181",
+    "text": "第133个数据：warehouse_id是133,warehouse_name是京东快递深圳宝励虚拟营业点,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "182",
+    "text": "第134个数据：warehouse_id是134,warehouse_name是京东快递深圳鹏达网格仓营业部,location_x是114.27,location_y是22.72,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "183",
+    "text": "第135个数据：warehouse_id是135,warehouse_name是京东快递深圳富文营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "184",
+    "text": "第136个数据：warehouse_id是136,warehouse_name是京东快递深圳坂田营业部,location_x是114.06,location_y是22.63,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "185",
+    "text": "第137个数据：warehouse_id是137,warehouse_name是京东快递深圳平湖营业部,location_x是114.14,location_y是22.69,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "186",
+    "text": "第138个数据：warehouse_id是138,warehouse_name是京东快递深圳坪地营业部,location_x是114.30,location_y是22.78,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "187",
+    "text": "第139个数据：warehouse_id是139,warehouse_name是京东快递深圳李朗营业部,location_x是114.12,location_y是22.65,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "188",
+    "text": "第140个数据：warehouse_id是140,warehouse_name是京东快递深圳龙城营业部,location_x是114.22,location_y是22.70,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "189",
+    "text": "第141个数据：warehouse_id是141,warehouse_name是京东快递深圳五和营业部,location_x是114.06,location_y是22.62,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "190",
+    "text": "第142个数据：warehouse_id是142,warehouse_name是京东快递深圳盛平营业部,location_x是114.26,location_y是22.73,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "191",
+    "text": "第143个数据：warehouse_id是143,warehouse_name是京东快递深圳水径营业部,location_x是114.11,location_y是22.61,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "192",
+    "text": "第144个数据：warehouse_id是144,warehouse_name是京东快递深圳荷坳营业部,location_x是114.23,location_y是22.67,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "193",
+    "text": "第145个数据：warehouse_id是145,warehouse_name是京东快递深圳岗头营业部,location_x是114.06,location_y是22.72,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "194",
+    "text": "第146个数据：warehouse_id是146,warehouse_name是京东快递深圳同乐营业部,location_x是113.92,location_y是22.57,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "195",
+    "text": "第147个数据：warehouse_id是147,warehouse_name是京东快递深圳新木营业部,location_x是114.13,location_y是22.66,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "196",
+    "text": "第148个数据：warehouse_id是148,warehouse_name是京东快递深圳大望营业部,location_x是114.17,location_y是22.60,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "197",
+    "text": "第149个数据：warehouse_id是149,warehouse_name是京东快递深圳大运营业部,location_x是114.22,location_y是22.70,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "198",
+    "text": "第150个数据：warehouse_id是150,warehouse_name是京东快递深圳雅园营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "199",
+    "text": "第151个数据：warehouse_id是151,warehouse_name是京东快递深圳三联营业部,location_x是114.12,location_y是22.62,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "200",
+    "text": "第152个数据：warehouse_id是152,warehouse_name是京东快递深圳五联营业部,location_x是114.23,location_y是22.74,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "201",
+    "text": "第153个数据：warehouse_id是153,warehouse_name是京东快递深圳大吉营业部,location_x是116.40,location_y是39.94,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "202",
+    "text": "第154个数据：warehouse_id是154,warehouse_name是京东快递深圳龙东营业部,location_x是114.29,location_y是22.73,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "203",
+    "text": "第155个数据：warehouse_id是155,warehouse_name是京东快递深圳安良营业部,location_x是114.22,location_y是22.63,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "204",
+    "text": "第156个数据：warehouse_id是156,warehouse_name是京东快递深圳秀峰营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "205",
+    "text": "第157个数据：warehouse_id是157,warehouse_name是京东快递深圳新生中件虚营业部,location_x是114.28,location_y是22.74,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "206",
+    "text": "第158个数据：warehouse_id是158,warehouse_name是京东快递深圳秀峰中件虚营业部,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "207",
+    "text": "第159个数据：warehouse_id是159,warehouse_name是京东快递深圳三联虚营业部,location_x是114.12,location_y是22.62,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "208",
+    "text": "第160个数据：warehouse_id是160,warehouse_name是京东快递深圳水径虚营业部,location_x是114.11,location_y是22.61,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "209",
+    "text": "第161个数据：warehouse_id是161,warehouse_name是京东快递深圳龙城虚营业部,location_x是114.22,location_y是22.70,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "210",
+    "text": "第162个数据：warehouse_id是162,warehouse_name是京东快递深圳吉祥营业部,location_x是114.24,location_y是22.71,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "211",
+    "text": "第163个数据：warehouse_id是163,warehouse_name是京东快递深圳吉华营业部,location_x是114.11,location_y是22.61,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "212",
+    "text": "第164个数据：warehouse_id是164,warehouse_name是京东快递深圳金源营业部,location_x是114.14,location_y是22.54,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "213",
+    "text": "第165个数据：warehouse_id是165,warehouse_name是京东快递深圳大芬集配站,location_x是114.14,location_y是22.61,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "214",
+    "text": "第166个数据：warehouse_id是166,warehouse_name是京东快递深圳雪象营业部,location_x是114.07,location_y是22.65,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "215",
+    "text": "第167个数据：warehouse_id是167,warehouse_name是京东快递深圳横岗网格仓营业部,location_x是114.20,location_y是22.64,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "216",
+    "text": "第168个数据：warehouse_id是168,warehouse_name是京东快递深圳长隆营业部,location_x是114.39,location_y是22.74,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "217",
+    "text": "第169个数据：warehouse_id是169,warehouse_name是京东快递深圳横岗集配站,location_x是114.20,location_y是22.64,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "218",
+    "text": "第170个数据：warehouse_id是170,warehouse_name是京东快递深圳华南城营业部,location_x是114.13,location_y是22.68,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "219",
+    "text": "第171个数据：warehouse_id是171,warehouse_name是京东快递深圳华南城集配站,location_x是114.13,location_y是22.68,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "220",
+    "text": "第172个数据：warehouse_id是172,warehouse_name是京东快递深圳大芬营业部,location_x是114.06,location_y是22.54,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "221",
+    "text": "第173个数据：warehouse_id是173,warehouse_name是京东快递深圳华雅营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "222",
+    "text": "第174个数据：warehouse_id是174,warehouse_name是京东快递深圳星光营业部,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "223",
+    "text": "第175个数据：warehouse_id是175,warehouse_name是京东快递深圳新安揽收营业点,location_x是120.60,location_y是30.30,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "224",
+    "text": "第176个数据：warehouse_id是176,warehouse_name是京东快递深圳龙城揽收营业点,location_x是114.22,location_y是22.70,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "225",
+    "text": "第177个数据：warehouse_id是177,warehouse_name是京东快递深圳前海免税揽收营业点,location_x是113.90,location_y是22.53,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "226",
+    "text": "第178个数据：warehouse_id是178,warehouse_name是京东快递深圳中海配送营业点,location_x是116.39,location_y是39.92,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "227",
+    "text": "第179个数据：warehouse_id是179,warehouse_name是京东快递深圳展跃揽收营业点,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "228",
+    "text": "第180个数据：warehouse_id是180,warehouse_name是京东快递深圳苗三哥揽收营业点,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "229",
+    "text": "第181个数据：warehouse_id是181,warehouse_name是京东快递深圳阿诗顿驻场营业点,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "230",
+    "text": "第182个数据：warehouse_id是182,warehouse_name是京东快递深圳微微讯驻场营业点,location_x是116.22,location_y是40.22,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "231",
+    "text": "第183个数据：warehouse_id是183,warehouse_name是京东快递深圳品胜揽收营业点,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "232",
+    "text": "第184个数据：warehouse_id是184,warehouse_name是京东快递深圳龙华小米驻场营业点,location_x是114.03,location_y是22.65,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "233",
+    "text": "第185个数据：warehouse_id是185,warehouse_name是京东快递深圳小米越海项目营业点,location_x是116.42,location_y是39.92,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "234",
+    "text": "第186个数据：warehouse_id是186,warehouse_name是京东快递深圳明达丰配送营业点,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "235",
+    "text": "第187个数据：warehouse_id是187,warehouse_name是京东快递深圳富文揽收营业点,location_x是116.22,location_y是40.22,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "236",
+    "text": "第188个数据：warehouse_id是188,warehouse_name是京东快递深圳大芬伟雄揽收营业点,location_x是114.14,location_y是22.61,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "237",
+    "text": "第189个数据：warehouse_id是189,warehouse_name是京东快递深圳盐田营业部,location_x是114.24,location_y是22.56,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "238",
+    "text": "第190个数据：warehouse_id是190,warehouse_name是京东快递深圳沙头角营业部,location_x是114.23,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "239",
+    "text": "第191个数据：warehouse_id是191,warehouse_name是京东快递深圳奥特莱斯配送营业点,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "240",
+    "text": "第192个数据：warehouse_id是192,warehouse_name是京东快递深圳民治营业部,location_x是114.06,location_y是22.54,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "241",
+    "text": "第193个数据：warehouse_id是193,warehouse_name是京东快递深圳大浪网格仓营业部,location_x是114.00,location_y是22.67,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "242",
+    "text": "第194个数据：warehouse_id是194,warehouse_name是京东快递深圳观澜营业部,location_x是114.06,location_y是22.71,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "243",
+    "text": "第195个数据：warehouse_id是195,warehouse_name是京东快递深圳龙华网格仓营业部,location_x是114.03,location_y是22.65,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "244",
+    "text": "第196个数据：warehouse_id是196,warehouse_name是京东快递深圳松元营业部,location_x是114.07,location_y是22.72,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "245",
+    "text": "第197个数据：warehouse_id是197,warehouse_name是京东快递深圳龙胜营业部,location_x是114.01,location_y是22.66,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "246",
+    "text": "第198个数据：warehouse_id是198,warehouse_name是京东快递深圳油松营业部,location_x是114.04,location_y是22.64,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "247",
+    "text": "第199个数据：warehouse_id是199,warehouse_name是京东快递深圳塘前营业部,location_x是114.02,location_y是22.74,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "248",
+    "text": "第200个数据：warehouse_id是200,warehouse_name是京东快递深圳百丽营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "249",
+    "text": "第201个数据：warehouse_id是201,warehouse_name是京东快递深圳东边营业部,location_x是114.04,location_y是22.62,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "250",
+    "text": "第202个数据：warehouse_id是202,warehouse_name是京东快递深圳大和营业部,location_x是114.05,location_y是22.70,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "251",
+    "text": "第203个数据：warehouse_id是203,warehouse_name是京东快递深圳上塘营业部,location_x是114.06,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "252",
+    "text": "第204个数据：warehouse_id是204,warehouse_name是京东快递深圳皇嘉营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "253",
+    "text": "第205个数据：warehouse_id是205,warehouse_name是京东快递深圳百花营业部,location_x是113.27,location_y是23.24,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "254",
+    "text": "第206个数据：warehouse_id是206,warehouse_name是京东快递深圳民乐营业部,location_x是114.05,location_y是22.60,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "255",
+    "text": "第207个数据：warehouse_id是207,warehouse_name是京东快递深圳油松虚营业部,location_x是114.04,location_y是22.64,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "256",
+    "text": "第208个数据：warehouse_id是208,warehouse_name是京东快递深圳东泉营业部,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "257",
+    "text": "第209个数据：warehouse_id是209,warehouse_name是京东快递深圳油富营业部,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "258",
+    "text": "第210个数据：warehouse_id是210,warehouse_name是京东快递深圳龙华集配站,location_x是114.03,location_y是22.65,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "259",
+    "text": "第211个数据：warehouse_id是211,warehouse_name是京东快递深圳华旺营业部,location_x是114.04,location_y是22.60,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "260",
+    "text": "第212个数据：warehouse_id是212,warehouse_name是京东快递深圳新园营业部,location_x是114.06,location_y是22.54,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "261",
+    "text": "第213个数据：warehouse_id是213,warehouse_name是京东快递深圳园湖揽收营业点,location_x是114.24,location_y是22.68,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "262",
+    "text": "第214个数据：warehouse_id是214,warehouse_name是京东快递深圳民塘配送营业点,location_x是114.03,location_y是22.61,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "263",
+    "text": "第215个数据：warehouse_id是215,warehouse_name是京东快递深圳民宝配送营业点,location_x是114.03,location_y是22.62,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "264",
+    "text": "第216个数据：warehouse_id是216,warehouse_name是京东快递深圳观澜集配站,location_x是114.06,location_y是22.71,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "265",
+    "text": "第217个数据：warehouse_id是217,warehouse_name是京东快递深圳万众营业部,location_x是113.65,location_y是22.92,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "266",
+    "text": "第218个数据：warehouse_id是218,warehouse_name是京东快递深圳岗头揽收营业点,location_x是114.06,location_y是22.72,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "267",
+    "text": "第219个数据：warehouse_id是219,warehouse_name是京东快递深圳坪山网格仓营业部,location_x是114.35,location_y是22.71,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "268",
+    "text": "第220个数据：warehouse_id是220,warehouse_name是京东快递深圳坑梓营业部,location_x是114.37,location_y是22.74,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "269",
+    "text": "第221个数据：warehouse_id是221,warehouse_name是京东快递深圳金牛营业部,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "270",
+    "text": "第222个数据：warehouse_id是222,warehouse_name是京东快递深圳金牛虚营业部,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "271",
+    "text": "第223个数据：warehouse_id是223,warehouse_name是京东快递深圳坪山集配站,location_x是114.35,location_y是22.71,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "272",
+    "text": "第224个数据：warehouse_id是224,warehouse_name是京东快递深圳碧岭揽收营业点,location_x是114.28,location_y是22.67,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "273",
+    "text": "第225个数据：warehouse_id是225,warehouse_name是京东快递深圳中核海揽收营业点,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "274",
+    "text": "第226个数据：warehouse_id是226,warehouse_name是京东快递深圳平湖小美揽收营业点,location_x是114.14,location_y是22.69,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "275",
+    "text": "第227个数据：warehouse_id是227,warehouse_name是京东快递深圳金牛揽收营业点,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "276",
+    "text": "第228个数据：warehouse_id是228,warehouse_name是京东快递深圳公明营业部,location_x是113.90,location_y是22.78,max_capacity是5000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "277",
+    "text": "第229个数据：warehouse_id是229,warehouse_name是京东快递深圳光明营业部,location_x是113.95,location_y是22.74,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "278",
+    "text": "第230个数据：warehouse_id是230,warehouse_name是京东快递深圳凤新营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "279",
+    "text": "第231个数据：warehouse_id是231,warehouse_name是京东快递深圳马田营业部,location_x是113.87,location_y是22.78,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "280",
+    "text": "第232个数据：warehouse_id是232,warehouse_name是京东快递深圳蒋塘营业部,location_x是116.22,location_y是40.22,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "281",
+    "text": "第233个数据：warehouse_id是233,warehouse_name是京东快递深圳玉塘营业部,location_x是113.92,location_y是22.72,max_capacity是6000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "282",
+    "text": "第234个数据：warehouse_id是234,warehouse_name是京东快递深圳凤新虚营业部,location_x是116.22,location_y是40.22,max_capacity是4000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "283",
+    "text": "第235个数据：warehouse_id是235,warehouse_name是京东快递深圳兴发营业部,location_x是116.22,location_y是40.22,max_capacity是3000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "284",
+    "text": "第236个数据：warehouse_id是236,warehouse_name是京东快递深圳中大配送营业点,location_x是113.95,location_y是22.80,max_capacity是8000,status是1,create_time是2026-02-07 17:30:37,update_time是2026-02-07 17:30:37。",
+    "source_file": "warehouse_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "285",
+    "text": "====================================================================================================\n表名：warehouse_goods\n备注：货架与物品表：存储仓库内货架、物品的关联信息，如物品名称、货架编号、数量等\n生成时间：2025-12-16 21:59:07\n数据记录数：10\n====================================================================================================",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "286",
+    "text": "【表结构】\n表结构中，有以下字段名，它们的属性如下：\n1. 字段名：goods_id，类型为int，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为auto_increment。\n2. 字段名：warehouse_id，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n3. 字段名：shelf_id，类型为varchar(20)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n4. 字段名：shelf_x，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n5. 字段名：shelf_y，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n6. 字段名：goods_name，类型为varchar(100)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n7. 字段名：goods_type，类型为varchar(30)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n8. 字段名：goods_weight，类型为decimal(8,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n9. 字段名：stock_quantity，类型为int，是否可以为空为否，是否是主键为否，默认值为0，额外属性为为空。\n10. 字段名：target_location，类型为varchar(50)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n11. 字段名：update_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED on update CURRENT_TIMESTAMP。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "287",
+    "text": "----------------------------------------------------------------------------------------------------",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "288",
+    "text": "【表数据】\n表数据记录为：\n第1个数据：goods_id是1,warehouse_id是1,shelf_id是A-01-01,shelf_x是116.40,shelf_y是39.92,goods_name是无人机锂电池,goods_type是电子配件,goods_weight是2.50,stock_quantity是197,target_location是北京朝阳区配送点,update_time是2025-12-16 20:12:34。\n第2个数据：goods_id是2,warehouse_id是2,shelf_id是B-02-03,shelf_x是121.47,shelf_y是31.23,goods_name是地面机器人轮胎,goods_type是机械配件,goods_weight是8.20,stock_quantity是150,target_location是上海浦东新区配送点,update_time是2025-12-05 20:00:47。\n第3个数据：goods_id是3,warehouse_id是3,shelf_id是C-03-05,shelf_x是113.26,shelf_y是23.13,goods_name是仓储机器人抓手,goods_type是机械配件,goods_weight是1.80,stock_quantity是80,target_location是广州天河区配送点,update_time是2025-12-06 20:00:47。\n第4个数据：goods_id是4,warehouse_id是4,shelf_id是D-04-02,shelf_x是114.06,shelf_y是22.54,goods_name是高精度GPS模块,goods_type是电子配件,goods_weight是0.30,stock_quantity是50,target_location是深圳南山区配送点,update_time是2025-12-07 20:00:47。\n第5个数据：goods_id是5,warehouse_id是5,shelf_id是E-05-08,shelf_x是104.07,shelf_y是30.66,goods_name是物流包装箱(大号),goods_type是包装材料,goods_weight是0.50,stock_quantity是500,target_location是成都武侯区配送点,update_time是2025-12-08 20:00:47。\n第6个数据：goods_id是6,warehouse_id是6,shelf_id是F-06-04,shelf_x是120.15,shelf_y是30.29,goods_name是机器人充电底座,goods_type是电子设备,goods_weight是3.80,stock_quantity是30,target_location是杭州西湖区配送点,update_time是2025-12-09 20:00:47。\n第7个数据：goods_id是7,warehouse_id是7,shelf_id是G-07-06,shelf_x是114.31,shelf_y是30.59,goods_name是数据传输线(3米),goods_type是电子配件,goods_weight是0.10,stock_quantity是120,target_location是武汉洪山区配送点,update_time是2025-12-10 20:00:47。\n第8个数据：goods_id是8,warehouse_id是8,shelf_id是H-08-09,shelf_x是108.95,shelf_y是34.26,goods_name是温湿度传感器,goods_type是传感设备,goods_weight是0.20,stock_quantity是40,target_location是西安雁塔区配送点,update_time是2025-12-11 20:00:47。\n第9个数据：goods_id是9,warehouse_id是9,shelf_id是I-09-07,shelf_x是106.55,shelf_y是29.56,goods_name是干粉灭火器,goods_type是安全设备,goods_weight是1.20,stock_quantity是20,target_location是重庆渝北区配送点,update_time是2025-12-12 20:00:47。\n第10个数据：goods_id是10,warehouse_id是10,shelf_id是J-10-10,shelf_x是118.79,shelf_y是32.06,goods_name是应急备用电源,goods_type是电子设备,goods_weight是5.60,stock_quantity是15,target_location是南京玄武区配送点,update_time是2025-12-13 20:00:47。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "289",
+    "text": "第1个数据：goods_id是1,warehouse_id是1,shelf_id是A-01-01,shelf_x是116.40,shelf_y是39.92,goods_name是无人机锂电池,goods_type是电子配件,goods_weight是2.50,stock_quantity是197,target_location是北京朝阳区配送点,update_time是2025-12-16 20:12:34。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "290",
+    "text": "第2个数据：goods_id是2,warehouse_id是2,shelf_id是B-02-03,shelf_x是121.47,shelf_y是31.23,goods_name是地面机器人轮胎,goods_type是机械配件,goods_weight是8.20,stock_quantity是150,target_location是上海浦东新区配送点,update_time是2025-12-05 20:00:47。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "291",
+    "text": "第3个数据：goods_id是3,warehouse_id是3,shelf_id是C-03-05,shelf_x是113.26,shelf_y是23.13,goods_name是仓储机器人抓手,goods_type是机械配件,goods_weight是1.80,stock_quantity是80,target_location是广州天河区配送点,update_time是2025-12-06 20:00:47。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "292",
+    "text": "第4个数据：goods_id是4,warehouse_id是4,shelf_id是D-04-02,shelf_x是114.06,shelf_y是22.54,goods_name是高精度GPS模块,goods_type是电子配件,goods_weight是0.30,stock_quantity是50,target_location是深圳南山区配送点,update_time是2025-12-07 20:00:47。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "293",
+    "text": "第5个数据：goods_id是5,warehouse_id是5,shelf_id是E-05-08,shelf_x是104.07,shelf_y是30.66,goods_name是物流包装箱(大号),goods_type是包装材料,goods_weight是0.50,stock_quantity是500,target_location是成都武侯区配送点,update_time是2025-12-08 20:00:47。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "294",
+    "text": "第6个数据：goods_id是6,warehouse_id是6,shelf_id是F-06-04,shelf_x是120.15,shelf_y是30.29,goods_name是机器人充电底座,goods_type是电子设备,goods_weight是3.80,stock_quantity是30,target_location是杭州西湖区配送点,update_time是2025-12-09 20:00:47。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "295",
+    "text": "第7个数据：goods_id是7,warehouse_id是7,shelf_id是G-07-06,shelf_x是114.31,shelf_y是30.59,goods_name是数据传输线(3米),goods_type是电子配件,goods_weight是0.10,stock_quantity是120,target_location是武汉洪山区配送点,update_time是2025-12-10 20:00:47。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "296",
+    "text": "第8个数据：goods_id是8,warehouse_id是8,shelf_id是H-08-09,shelf_x是108.95,shelf_y是34.26,goods_name是温湿度传感器,goods_type是传感设备,goods_weight是0.20,stock_quantity是40,target_location是西安雁塔区配送点,update_time是2025-12-11 20:00:47。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "297",
+    "text": "第9个数据：goods_id是9,warehouse_id是9,shelf_id是I-09-07,shelf_x是106.55,shelf_y是29.56,goods_name是干粉灭火器,goods_type是安全设备,goods_weight是1.20,stock_quantity是20,target_location是重庆渝北区配送点,update_time是2025-12-12 20:00:47。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "298",
+    "text": "第10个数据：goods_id是10,warehouse_id是10,shelf_id是J-10-10,shelf_x是118.79,shelf_y是32.06,goods_name是应急备用电源,goods_type是电子设备,goods_weight是5.60,stock_quantity是15,target_location是南京玄武区配送点,update_time是2025-12-13 20:00:47。",
+    "source_file": "warehouse_goods_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "299",
+    "text": "====================================================================================================\n表名：agent_base\n备注：Agent基础信息表：存储各类Agent的基础属性，如Agent名称、类型、状态等\n生成时间：2025-12-16 21:59:07\n数据记录数：10\n====================================================================================================",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "300",
+    "text": "【表结构】\n表结构中，有以下字段名，它们的属性如下：\n1. 字段名：agent_id，类型为varchar(20)，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为为空。\n2. 字段名：agent_type，类型为tinyint，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n3. 字段名：warehouse_id，类型为int，是否可以为空为是，是否是主键为否，默认值为NULL，额外属性为为空。\n4. 字段名：max_load，类型为decimal(8,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n5. 字段名：max_speed，类型为decimal(8,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n6. 字段名：battery_capacity，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n7. 字段名：status，类型为tinyint，是否可以为空为否，是否是主键为否，默认值为0，额外属性为为空。\n8. 字段名：last_maintain_time，类型为datetime，是否可以为空为是，是否是主键为否，默认值为NULL，额外属性为为空。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "301",
+    "text": "----------------------------------------------------------------------------------------------------",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "302",
+    "text": "【表数据】\n表数据记录为：\n第1个数据：agent_id是GROUND-001,agent_type是2,warehouse_id是2,max_load是50.00,max_speed是2.00,battery_capacity是20000,status是2,last_maintain_time是2025-11-19 20:00:47。\n第2个数据：agent_id是GROUND-002,agent_type是2,warehouse_id是5,max_load是60.00,max_speed是2.50,battery_capacity是25000,status是1,last_maintain_time是2025-12-04 20:00:47。\n第3个数据：agent_id是GROUND-003,agent_type是2,warehouse_id是8,max_load是55.00,max_speed是2.20,battery_capacity是22000,status是3,last_maintain_time是2025-11-16 20:00:47。\n第4个数据：agent_id是UAV-001,agent_type是1,warehouse_id是1,max_load是5.00,max_speed是15.00,battery_capacity是10000,status是1,last_maintain_time是2025-11-14 20:00:47。\n第5个数据：agent_id是UAV-002,agent_type是1,warehouse_id是4,max_load是8.00,max_speed是18.00,battery_capacity是12000,status是3,last_maintain_time是2025-11-29 20:00:47。\n第6个数据：agent_id是UAV-003,agent_type是1,warehouse_id是7,max_load是6.50,max_speed是16.00,battery_capacity是11000,status是1,last_maintain_time是2025-11-14 20:00:47。\n第7个数据：agent_id是UAV-004,agent_type是1,warehouse_id是10,max_load是7.20,max_speed是17.00,battery_capacity是11500,status是0,last_maintain_time是2025-11-26 20:00:47。\n第8个数据：agent_id是WARE-001,agent_type是3,warehouse_id是3,max_load是20.00,max_speed是1.00,battery_capacity是15000,status是0,last_maintain_time是2025-11-24 20:00:47。\n第9个数据：agent_id是WARE-002,agent_type是3,warehouse_id是6,max_load是25.00,max_speed是1.20,battery_capacity是18000,status是2,last_maintain_time是2025-12-09 20:00:47。\n第10个数据：agent_id是WARE-003,agent_type是3,warehouse_id是9,max_load是18.00,max_speed是0.80,battery_capacity是14000,status是1,last_maintain_time是2025-11-22 20:00:47。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "303",
+    "text": "第1个数据：agent_id是GROUND-001,agent_type是2,warehouse_id是2,max_load是50.00,max_speed是2.00,battery_capacity是20000,status是2,last_maintain_time是2025-11-19 20:00:47。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "304",
+    "text": "第2个数据：agent_id是GROUND-002,agent_type是2,warehouse_id是5,max_load是60.00,max_speed是2.50,battery_capacity是25000,status是1,last_maintain_time是2025-12-04 20:00:47。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "305",
+    "text": "第3个数据：agent_id是GROUND-003,agent_type是2,warehouse_id是8,max_load是55.00,max_speed是2.20,battery_capacity是22000,status是3,last_maintain_time是2025-11-16 20:00:47。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "306",
+    "text": "第4个数据：agent_id是UAV-001,agent_type是1,warehouse_id是1,max_load是5.00,max_speed是15.00,battery_capacity是10000,status是1,last_maintain_time是2025-11-14 20:00:47。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "307",
+    "text": "第5个数据：agent_id是UAV-002,agent_type是1,warehouse_id是4,max_load是8.00,max_speed是18.00,battery_capacity是12000,status是3,last_maintain_time是2025-11-29 20:00:47。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "308",
+    "text": "第6个数据：agent_id是UAV-003,agent_type是1,warehouse_id是7,max_load是6.50,max_speed是16.00,battery_capacity是11000,status是1,last_maintain_time是2025-11-14 20:00:47。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "309",
+    "text": "第7个数据：agent_id是UAV-004,agent_type是1,warehouse_id是10,max_load是7.20,max_speed是17.00,battery_capacity是11500,status是0,last_maintain_time是2025-11-26 20:00:47。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "310",
+    "text": "第8个数据：agent_id是WARE-001,agent_type是3,warehouse_id是3,max_load是20.00,max_speed是1.00,battery_capacity是15000,status是0,last_maintain_time是2025-11-24 20:00:47。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "311",
+    "text": "第9个数据：agent_id是WARE-002,agent_type是3,warehouse_id是6,max_load是25.00,max_speed是1.20,battery_capacity是18000,status是2,last_maintain_time是2025-12-09 20:00:47。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "312",
+    "text": "第10个数据：agent_id是WARE-003,agent_type是3,warehouse_id是9,max_load是18.00,max_speed是0.80,battery_capacity是14000,status是1,last_maintain_time是2025-11-22 20:00:47。",
+    "source_file": "agent_base_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "313",
+    "text": "====================================================================================================\n表名：agent_uav_sensor\n备注：无人机传感器表：存储无人机传感器数据，如传感器类型、采集值、采集时间等\n生成时间：2025-12-16 21:59:07\n数据记录数：10\n====================================================================================================",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "314",
+    "text": "【表结构】\n表结构中，有以下字段名，它们的属性如下：\n1. 字段名：sensor_id，类型为bigint，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为auto_increment。\n2. 字段名：agent_id，类型为varchar(20)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n3. 字段名：task_id，类型为varchar(30)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n4. 字段名：gps_x，类型为decimal(12,6)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n5. 字段名：gps_y，类型为decimal(12,6)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n6. 字段名：altitude，类型为decimal(8,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n7. 字段名：attitude_angle，类型为decimal(6,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n8. 字段名：obstacle_dist，类型为decimal(8,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n9. 字段名：battery_remaining，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n10. 字段名：signal_strength，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n11. 字段名：collect_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "315",
+    "text": "----------------------------------------------------------------------------------------------------",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "316",
+    "text": "【表数据】\n表数据记录为：\n第1个数据：sensor_id是1,agent_id是UAV-001,task_id是LOG-20250520-001,gps_x是116.405000,gps_y是39.916000,altitude是120.50,attitude_angle是0.00,obstacle_dist是5.20,battery_remaining是95,signal_strength是98,collect_time是2025-12-04 22:00:47。\n第2个数据：sensor_id是2,agent_id是UAV-001,task_id是LOG-20250520-001,gps_x是116.406000,gps_y是39.917000,altitude是115.30,attitude_angle是1.20,obstacle_dist是4.80,battery_remaining是90,signal_strength是97,collect_time是2025-12-04 23:00:47。\n第3个数据：sensor_id是3,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.059000,gps_y是22.544000,altitude是85.20,attitude_angle是0.80,obstacle_dist是3.50,battery_remaining是85,signal_strength是90,collect_time是2025-12-07 22:00:47。\n第4个数据：sensor_id是4,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.060000,gps_y是22.545000,altitude是80.70,attitude_angle是1.00,obstacle_dist是2.80,battery_remaining是80,signal_strength是88,collect_time是2025-12-07 23:00:47。\n第5个数据：sensor_id是5,agent_id是UAV-003,task_id是LOG-20250520-007,gps_x是114.306000,gps_y是30.594000,altitude是98.70,attitude_angle是0.50,obstacle_dist是4.20,battery_remaining是92,signal_strength是95,collect_time是2025-12-10 22:00:47。\n第6个数据：sensor_id是6,agent_id是UAV-003,task_id是LOG-20250520-007,gps_x是114.307000,gps_y是30.595000,altitude是95.40,attitude_angle是0.30,obstacle_dist是3.90,battery_remaining是88,signal_strength是94,collect_time是2025-12-10 23:00:47。\n第7个数据：sensor_id是7,agent_id是UAV-004,task_id是LOG-20250520-010,gps_x是118.792000,gps_y是32.059000,altitude是105.30,attitude_angle是1.50,obstacle_dist是6.10,battery_remaining是75,signal_strength是85,collect_time是2025-12-13 22:00:47。\n第8个数据：sensor_id是8,agent_id是UAV-004,task_id是LOG-20250520-010,gps_x是118.793000,gps_y是32.060000,altitude是100.80,attitude_angle是1.10,obstacle_dist是5.80,battery_remaining是70,signal_strength是83,collect_time是2025-12-13 23:00:47。\n第9个数据：sensor_id是9,agent_id是UAV-001,task_id是LOG-20250520-001,gps_x是116.407000,gps_y是39.918000,altitude是110.20,attitude_angle是0.70,obstacle_dist是4.50,battery_remaining是85,signal_strength是96,collect_time是2025-12-05 00:00:47。\n第10个数据：sensor_id是10,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.061000,gps_y是22.546000,altitude是75.90,attitude_angle是0.90,obstacle_dist是3.20,battery_remaining是75,signal_strength是87,collect_time是2025-12-08 00:00:47。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "317",
+    "text": "第1个数据：sensor_id是1,agent_id是UAV-001,task_id是LOG-20250520-001,gps_x是116.405000,gps_y是39.916000,altitude是120.50,attitude_angle是0.00,obstacle_dist是5.20,battery_remaining是95,signal_strength是98,collect_time是2025-12-04 22:00:47。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "318",
+    "text": "第2个数据：sensor_id是2,agent_id是UAV-001,task_id是LOG-20250520-001,gps_x是116.406000,gps_y是39.917000,altitude是115.30,attitude_angle是1.20,obstacle_dist是4.80,battery_remaining是90,signal_strength是97,collect_time是2025-12-04 23:00:47。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "319",
+    "text": "第3个数据：sensor_id是3,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.059000,gps_y是22.544000,altitude是85.20,attitude_angle是0.80,obstacle_dist是3.50,battery_remaining是85,signal_strength是90,collect_time是2025-12-07 22:00:47。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "320",
+    "text": "第4个数据：sensor_id是4,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.060000,gps_y是22.545000,altitude是80.70,attitude_angle是1.00,obstacle_dist是2.80,battery_remaining是80,signal_strength是88,collect_time是2025-12-07 23:00:47。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "321",
+    "text": "第5个数据：sensor_id是5,agent_id是UAV-003,task_id是LOG-20250520-007,gps_x是114.306000,gps_y是30.594000,altitude是98.70,attitude_angle是0.50,obstacle_dist是4.20,battery_remaining是92,signal_strength是95,collect_time是2025-12-10 22:00:47。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "322",
+    "text": "第6个数据：sensor_id是6,agent_id是UAV-003,task_id是LOG-20250520-007,gps_x是114.307000,gps_y是30.595000,altitude是95.40,attitude_angle是0.30,obstacle_dist是3.90,battery_remaining是88,signal_strength是94,collect_time是2025-12-10 23:00:47。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "323",
+    "text": "第7个数据：sensor_id是7,agent_id是UAV-004,task_id是LOG-20250520-010,gps_x是118.792000,gps_y是32.059000,altitude是105.30,attitude_angle是1.50,obstacle_dist是6.10,battery_remaining是75,signal_strength是85,collect_time是2025-12-13 22:00:47。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "324",
+    "text": "第8个数据：sensor_id是8,agent_id是UAV-004,task_id是LOG-20250520-010,gps_x是118.793000,gps_y是32.060000,altitude是100.80,attitude_angle是1.10,obstacle_dist是5.80,battery_remaining是70,signal_strength是83,collect_time是2025-12-13 23:00:47。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "325",
+    "text": "第9个数据：sensor_id是9,agent_id是UAV-001,task_id是LOG-20250520-001,gps_x是116.407000,gps_y是39.918000,altitude是110.20,attitude_angle是0.70,obstacle_dist是4.50,battery_remaining是85,signal_strength是96,collect_time是2025-12-05 00:00:47。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "326",
+    "text": "第10个数据：sensor_id是10,agent_id是UAV-002,task_id是LOG-20250520-004,gps_x是114.061000,gps_y是22.546000,altitude是75.90,attitude_angle是0.90,obstacle_dist是3.20,battery_remaining是75,signal_strength是87,collect_time是2025-12-08 00:00:47。",
+    "source_file": "agent_uav_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "327",
+    "text": "====================================================================================================\n表名：uav_landing_points\n备注：uav起降点基础信息表：存储uav的经纬度传感器数据\n生成时间：2026-02-06 23:14:42\n数据记录数：4\n====================================================================================================",
+    "source_file": "uav_landing_points_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "328",
+    "text": "【表结构】\n表结构中，有以下字段名，它们的属性如下：\n1. 字段名：id，类型为int，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为auto_increment。\n2. 字段名：name，类型为varchar(50)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n3. 字段名：location_x，类型为decimal(12,6)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n4. 字段名：location_y，类型为decimal(12,6)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n5. 字段名：description，类型为varchar(200)，是否可以为空为是，是否是主键为否，默认值为NULL，额外属性为为空。\n6. 字段名：created_at，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED。",
+    "source_file": "uav_landing_points_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "329",
+    "text": "----------------------------------------------------------------------------------------------------",
+    "source_file": "uav_landing_points_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "330",
+    "text": "【表数据】\n表数据记录为：\n第1个数据：id是1,name是中山大学深圳校区起降点,location_x是113.904500,location_y是22.770500,description是位于校区北门广场，适合接收医疗物资,created_at是2026-02-06 21:26:01。\n第2个数据：id是2,name是深圳北站起降点,location_x是114.029000,location_y是22.609000,description是交通枢纽中转站,created_at是2026-02-06 21:26:01。\n第3个数据：id是3,name是光明城站起降点,location_x是113.945000,location_y是22.735000,description是光明区重要节点,created_at是2026-02-06 21:26:01。\n第4个数据：id是4,name是宝安机场物流起降点,location_x是113.811000,location_y是22.639000,description是航空物流接驳点,created_at是2026-02-06 21:26:01。",
+    "source_file": "uav_landing_points_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "331",
+    "text": "第1个数据：id是1,name是中山大学深圳校区起降点,location_x是113.904500,location_y是22.770500,description是位于校区北门广场，适合接收医疗物资,created_at是2026-02-06 21:26:01。",
+    "source_file": "uav_landing_points_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "332",
+    "text": "第2个数据：id是2,name是深圳北站起降点,location_x是114.029000,location_y是22.609000,description是交通枢纽中转站,created_at是2026-02-06 21:26:01。",
+    "source_file": "uav_landing_points_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "333",
+    "text": "第3个数据：id是3,name是光明城站起降点,location_x是113.945000,location_y是22.735000,description是光明区重要节点,created_at是2026-02-06 21:26:01。",
+    "source_file": "uav_landing_points_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "334",
+    "text": "第4个数据：id是4,name是宝安机场物流起降点,location_x是113.811000,location_y是22.639000,description是航空物流接驳点,created_at是2026-02-06 21:26:01。",
+    "source_file": "uav_landing_points_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "335",
+    "text": "====================================================================================================\n表名：agent_ground_sensor\n备注：TRUCK地面运输机器人传感器表：存储TRUCK地面机器人传感器数据\n生成时间：2025-12-16 21:59:07\n数据记录数：10\n====================================================================================================",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "336",
+    "text": "【表结构】\n表结构中，有以下字段名，它们的属性如下：\n1. 字段名：sensor_id，类型为bigint，是否可以为空为否，是否是主键为是，默认值为NULL，额外属性为auto_increment。\n2. 字段名：agent_id，类型为varchar(20)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n3. 字段名：task_id，类型为varchar(30)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n4. 字段名：GPS_x，纬度，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n5. 字段名：GPS_y，经度，类型为decimal(10,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n6. 字段名：speed，类型为decimal(6,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n7. 字段名：obstacle_dist，类型为decimal(8,2)，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n8. 字段名：goods_status，类型为tinyint，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n9. 字段名：battery_remaining，类型为int，是否可以为空为否，是否是主键为否，默认值为NULL，额外属性为为空。\n10. 字段名：collect_time，类型为datetime，是否可以为空为否，是否是主键为否，默认值为CURRENT_TIMESTAMP，额外属性为DEFAULT_GENERATED。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "337",
+    "text": "----------------------------------------------------------------------------------------------------",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "338",
+    "text": "【表数据】\n表数据记录为：\n第1个数据：sensor_id是1,agent_id是GROUND-001,task_id是LOG-20250520-002,GPS_x是121.48,GPS_y是31.23,speed是1.20,obstacle_dist是2.50,goods_status是1,battery_remaining是88,collect_time是2025-12-05 22:00:47。\n第2个数据：sensor_id是2,agent_id是GROUND-001,task_id是LOG-20250520-002,GPS_x是121.48,GPS_y是31.23,speed是1.10,obstacle_dist是3.20,goods_status是1,battery_remaining是85,collect_time是2025-12-05 23:00:47。\n第3个数据：sensor_id是3,agent_id是GROUND-002,task_id是LOG-20250520-005,GPS_x是104.07,GPS_y是30.66,speed是0.80,obstacle_dist是1.80,goods_status是1,battery_remaining是75,collect_time是2025-12-08 22:00:47。\n第4个数据：sensor_id是4,agent_id是GROUND-002,task_id是LOG-20250520-005,GPS_x是104.07,GPS_y是30.66,speed是0.90,obstacle_dist是2.10,goods_status是1,battery_remaining是72,collect_time是2025-12-08 23:00:47。\n第5个数据：sensor_id是5,agent_id是GROUND-003,task_id是LOG-20250520-008,GPS_x是108.95,GPS_y是34.26,speed是0.00,obstacle_dist是0.00,goods_status是0,battery_remaining是50,collect_time是2025-12-11 22:00:47。\n第6个数据：sensor_id是6,agent_id是GROUND-003,task_id是LOG-20250520-008,GPS_x是108.95,GPS_y是34.26,speed是0.00,obstacle_dist是0.00,goods_status是0,battery_remaining是48,collect_time是2025-12-11 23:00:47。\n第7个数据：sensor_id是7,agent_id是GROUND-001,task_id是LOG-20250520-002,GPS_x是121.48,GPS_y是31.23,speed是1.00,obstacle_dist是2.80,goods_status是1,battery_remaining是82,collect_time是2025-12-06 00:00:47。\n第8个数据：sensor_id是8,agent_id是GROUND-002,task_id是LOG-20250520-005,GPS_x是104.07,GPS_y是30.66,speed是0.70,obstacle_dist是2.40,goods_status是1,battery_remaining是69,collect_time是2025-12-09 00:00:47。\n第9个数据：sensor_id是9,agent_id是GROUND-001,task_id是LOG-20250520-002,GPS_x是121.48,GPS_y是31.23,speed是1.10,obstacle_dist是3.00,goods_status是1,battery_remaining是79,collect_time是2025-12-06 01:00:47。\n第10个数据：sensor_id是10,agent_id是GROUND-002,task_id是LOG-20250520-005,GPS_x是104.07,GPS_y是30.66,speed是0.80,obstacle_dist是2.20,goods_status是1,battery_remaining是66,collect_time是2025-12-09 01:00:47。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "paragraph"
+  },
+  {
+    "id": "339",
+    "text": "第1个数据：sensor_id是1,agent_id是GROUND-001,task_id是LOG-20250520-002,GPS_x是121.48,GPS_y是31.23,speed是1.20,obstacle_dist是2.50,goods_status是1,battery_remaining是88,collect_time是2025-12-05 22:00:47。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "340",
+    "text": "第2个数据：sensor_id是2,agent_id是GROUND-001,task_id是LOG-20250520-002,GPS_x是121.48,GPS_y是31.23,speed是1.10,obstacle_dist是3.20,goods_status是1,battery_remaining是85,collect_time是2025-12-05 23:00:47。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "341",
+    "text": "第3个数据：sensor_id是3,agent_id是GROUND-002,task_id是LOG-20250520-005,GPS_x是104.07,GPS_y是30.66,speed是0.80,obstacle_dist是1.80,goods_status是1,battery_remaining是75,collect_time是2025-12-08 22:00:47。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "342",
+    "text": "第4个数据：sensor_id是4,agent_id是GROUND-002,task_id是LOG-20250520-005,GPS_x是104.07,GPS_y是30.66,speed是0.90,obstacle_dist是2.10,goods_status是1,battery_remaining是72,collect_time是2025-12-08 23:00:47。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "343",
+    "text": "第5个数据：sensor_id是5,agent_id是GROUND-003,task_id是LOG-20250520-008,GPS_x是108.95,GPS_y是34.26,speed是0.00,obstacle_dist是0.00,goods_status是0,battery_remaining是50,collect_time是2025-12-11 22:00:47。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "344",
+    "text": "第6个数据：sensor_id是6,agent_id是GROUND-003,task_id是LOG-20250520-008,GPS_x是108.95,GPS_y是34.26,speed是0.00,obstacle_dist是0.00,goods_status是0,battery_remaining是48,collect_time是2025-12-11 23:00:47。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "345",
+    "text": "第7个数据：sensor_id是7,agent_id是GROUND-001,task_id是LOG-20250520-002,GPS_x是121.48,GPS_y是31.23,speed是1.00,obstacle_dist是2.80,goods_status是1,battery_remaining是82,collect_time是2025-12-06 00:00:47。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "346",
+    "text": "第8个数据：sensor_id是8,agent_id是GROUND-002,task_id是LOG-20250520-005,GPS_x是104.07,GPS_y是30.66,speed是0.70,obstacle_dist是2.40,goods_status是1,battery_remaining是69,collect_time是2025-12-09 00:00:47。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "347",
+    "text": "第9个数据：sensor_id是9,agent_id是GROUND-001,task_id是LOG-20250520-002,GPS_x是121.48,GPS_y是31.23,speed是1.10,obstacle_dist是3.00,goods_status是1,battery_remaining是79,collect_time是2025-12-06 01:00:47。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "data_row"
+  },
+  {
+    "id": "348",
+    "text": "第10个数据：sensor_id是10,agent_id是GROUND-002,task_id是LOG-20250520-005,GPS_x是104.07,GPS_y是30.66,speed是0.80,obstacle_dist是2.20,goods_status是1,battery_remaining是66,collect_time是2025-12-09 01:00:47。",
+    "source_file": "agent_TRUCK_sensor_init.txt",
+    "chunk_type": "data_row"
+  }
+]
