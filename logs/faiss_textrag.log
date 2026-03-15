@@ -33,3 +33,7 @@ INFO:     127.0.0.1:47138 - "POST /v1/chat/completions HTTP/1.1" 200 OK
 2026-03-15 13:53:54,312 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
 2026-03-15 13:53:54,318 - __main__ - INFO - 返回 5 条相关文本
 INFO:     127.0.0.1:44112 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+2026-03-15 17:50:00,018 - __main__ - INFO - 查询文本: > 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院 与各无人机起降点的距离，找出最近的起降点坐标 计算 深...
+2026-03-15 17:50:00,068 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
+2026-03-15 17:50:00,080 - __main__ - INFO - 返回 5 条相关文本
+INFO:     127.0.0.1:56464 - "POST /v1/chat/completions HTTP/1.1" 200 OK
