@@ -103,15 +103,49 @@ def get_embedding(text: str) -> np.ndarray:
     return np.array(response.data[0].embedding, dtype=np.float32)
 
 
-def batch_get_embeddings(texts: List[str], batch_size: int = 16) -> np.ndarray:
+def batch_get_embeddings(texts: List[str], max_tokens_per_batch: int = 7000) -> np.ndarray:
+    """
+    批量获取embedding，基于token数量动态分批以避免超出模型限制
+    Args:
+        texts: 文本列表
+        max_tokens_per_batch: 每批次最大token数（保守估计，留出余量）
+    """
     client = get_embedding_client()
     all_embeddings = []
-    for i in range(0, len(texts), batch_size):
-        batch_texts = texts[i:i + batch_size]
+
+    # 简单的token估算：中文约1.5字符/token，英文约4字符/token
+    def estimate_tokens(text: str) -> int:
+        # 保守估计：字符数/2
+        return max(1, len(text) // 2)
+
+    i = 0
+    while i < len(texts):
+        batch_texts = []
+        current_tokens = 0
+        batch_start = i
+
+        # 动态构建批次，确保不超过token限制
+        while i < len(texts):
+            text_tokens = estimate_tokens(texts[i])
+            if current_tokens + text_tokens > max_tokens_per_batch and batch_texts:
+                # 当前批次已满，开始新批次
+                break
+            batch_texts.append(texts[i])
+            current_tokens += text_tokens
+            i += 1
+
+        # 如果单个文本就超过限制，需要截断
+        if len(batch_texts) == 1 and current_tokens > max_tokens_per_batch:
+            # 截断到大约max_tokens_per_batch * 2字符
+            max_chars = max_tokens_per_batch * 2
+            batch_texts[0] = batch_texts[0][:max_chars] + "...[截断]"
+            logger.warning(f"文本过长已截断，原估算token数: {current_tokens}")
+
         response = client.embeddings.create(model=EMBEDDING_MODEL, input=batch_texts)
         batch_embeddings = [np.array(item.embedding, dtype=np.float32) for item in response.data]
         all_embeddings.extend(batch_embeddings)
-        logger.info(f"已处理 {min(i + batch_size, len(texts))}/{len(texts)} 条文本的embedding")
+        logger.info(f"已处理 {i}/{len(texts)} 条文本的embedding (批次token数约: {current_tokens})")
+
     return np.array(all_embeddings, dtype=np.float32)
 
 
