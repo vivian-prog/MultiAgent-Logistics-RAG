@@ -1,0 +1,22 @@
+2026-03-15 13:09:58,537 - __main__ - INFO - 在端口 8016 上启动TextRAG FAISS服务
+INFO:     Started server process [2164001]
+INFO:     Waiting for application startup.
+2026-03-15 13:09:58,723 - __main__ - INFO - 正在初始化TextRAG服务...
+2026-03-15 13:09:58,723 - __main__ - INFO - 开始构建FAISS索引...
+2026-03-15 13:09:58,742 - __main__ - INFO - 从 /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/../GraphRag/inputs/artifacts/create_final_text_units.parquet 加载了 34 条text_units
+2026-03-15 13:09:58,750 - __main__ - INFO - 正在为 34 条文本生成embedding...
+2026-03-15 13:10:00,688 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
+2026-03-15 13:10:00,707 - __main__ - INFO - 已处理 16/34 条文本的embedding
+2026-03-15 13:10:03,166 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
+2026-03-15 13:10:03,180 - __main__ - INFO - 已处理 32/34 条文本的embedding
+2026-03-15 13:10:03,286 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
+2026-03-15 13:10:03,291 - __main__ - INFO - 已处理 34/34 条文本的embedding
+2026-03-15 13:10:03,291 - __main__ - INFO - 构建FAISS索引: 34个向量, 维度=4096
+2026-03-15 13:10:03,313 - __main__ - INFO - FAISS索引构建完成，共 34 个向量
+2026-03-15 13:10:03,314 - __main__ - INFO - FAISS索引已保存到: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_index/text_vectors.index
+2026-03-15 13:10:03,316 - __main__ - INFO - 元数据已保存到: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_index/text_metadata.json
+2026-03-15 13:10:03,316 - __main__ - INFO - FAISS索引初始化完成
+2026-03-15 13:10:03,316 - __main__ - INFO - TextRAG服务初始化完成
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8016 (Press CTRL+C to quit)
+INFO:     127.0.0.1:49544 - "GET /health HTTP/1.1" 200 OK

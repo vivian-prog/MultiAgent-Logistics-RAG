@@ -6,7 +6,7 @@
 set -e
 
 # ===================== 配置 =====================
-PROJECT_ROOT="/Users/bytedance/PycharmProjects/MultiAgent-Logistics-RAG"
+PROJECT_ROOT="/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG"
 LOG_DIR="$PROJECT_ROOT/logs"
 
 # 服务端口配置

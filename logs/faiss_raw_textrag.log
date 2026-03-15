@@ -1,0 +1,45 @@
+2026-03-15 13:10:00,906 - __main__ - INFO - 在端口 8017 上启动原始文本TextRAG FAISS服务
+INFO:     Started server process [2164174]
+INFO:     Waiting for application startup.
+2026-03-15 13:10:01,014 - __main__ - INFO - 正在初始化原始文本TextRAG服务...
+2026-03-15 13:10:01,014 - __main__ - INFO - 开始构建FAISS索引（原始文本）...
+2026-03-15 13:10:01,014 - __main__ - INFO - 加载文件: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/../GraphRag/input/task_main_init.txt
+2026-03-15 13:10:01,015 - __main__ - INFO - 加载文件: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/../GraphRag/input/文件汇总说明.txt
+2026-03-15 13:10:01,015 - __main__ - INFO - 加载文件: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/../GraphRag/input/agent_ROBOTS_sensor_init.txt
+2026-03-15 13:10:01,015 - __main__ - INFO - 加载文件: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/../GraphRag/input/task_agent_rel_init.txt
+2026-03-15 13:10:01,015 - __main__ - INFO - 加载文件: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/../GraphRag/input/warehouse_base_init.txt
+2026-03-15 13:10:01,015 - __main__ - INFO - 加载文件: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/../GraphRag/input/warehouse_goods_init.txt
+2026-03-15 13:10:01,016 - __main__ - INFO - 加载文件: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/../GraphRag/input/agent_base_init.txt
+2026-03-15 13:10:01,016 - __main__ - INFO - 加载文件: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/../GraphRag/input/agent_uav_sensor_init.txt
+2026-03-15 13:10:01,016 - __main__ - INFO - 加载文件: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/../GraphRag/input/uav_landing_points_init.txt
+2026-03-15 13:10:01,016 - __main__ - INFO - 加载文件: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/../GraphRag/input/agent_TRUCK_sensor_init.txt
+2026-03-15 13:10:01,016 - __main__ - INFO - 从原始文本文件加载了 349 个文本块
+2026-03-15 13:10:01,016 - __main__ - INFO - 正在为 349 条文本生成embedding...
+2026-03-15 13:10:03,167 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
+2026-03-15 13:10:03,233 - __main__ - INFO - 已处理 16/349 条文本的embedding
+2026-03-15 13:10:03,325 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
+2026-03-15 13:10:03,331 - __main__ - INFO - 已处理 32/349 条文本的embedding
+2026-03-15 13:10:03,394 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
+2026-03-15 13:10:03,409 - __main__ - INFO - 已处理 48/349 条文本的embedding
+2026-03-15 13:10:03,460 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 400 Bad Request"
+2026-03-15 13:10:03,462 - __main__ - ERROR - 初始化失败: Error code: 400 - {'error': {'message': "This model's maximum context length is 8192 tokens. However, your request has 23554 input tokens. Please reduce the length of the input messages.", 'type': 'BadRequestError', 'param': None, 'code': 400}}
+ERROR:    Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 732, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 258, in lifespan
+    await initialize_faiss_index(rebuild=False)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 246, in initialize_faiss_index
+    embeddings = batch_get_embeddings(texts)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 111, in batch_get_embeddings
+    response = client.embeddings.create(model=EMBEDDING_MODEL, input=batch_texts)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/resources/embeddings.py", line 132, in create
+    return self._post(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 1047, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': "This model's maximum context length is 8192 tokens. However, your request has 23554 input tokens. Please reduce the length of the input messages.", 'type': 'BadRequestError', 'param': None, 'code': 400}}
+
+ERROR:    Application startup failed. Exiting.
