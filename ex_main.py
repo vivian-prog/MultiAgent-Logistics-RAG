@@ -89,7 +89,7 @@ RAG_SYSTEM_PROMPT = prompt_config.RAG_session_init
 # ===================== 实验指标数据类 =====================
 @dataclass
 class ExperimentMetrics:
-    """实验指标数据结构"""
+    """实验指标数据结构（时间单位统一为秒）"""
     # RAG相关指标
     rag_enabled: bool = False
     rag_type: str = ""
@@ -98,13 +98,13 @@ class ExperimentMetrics:
 
     # LLM相关指标
     llm_total_time: float = 0.0           # LLM总思考耗时(秒)
-    llm_query_gen_time: float = 0.0       # LLM生成RAG查询的耗时
-    llm_command_gen_time: float = 0.0     # LLM生成指令的耗时
+    llm_query_gen_time: float = 0.0       # LLM生成RAG查询的耗时(秒)
+    llm_command_gen_time: float = 0.0     # LLM生成指令的耗时(秒)
 
-    # Agent仿真指标
+    # Agent仿真指标（单位统一为秒）
     robot_simulation_time: float = 0.0    # Robot仿真物理世界运行时间(秒)
     truck_simulation_time: float = 0.0    # Truck仿真物理世界运行时间(秒)
-    uav_simulation_time: float = 0.0      # UAV仿真物理世界运行时间(秒)
+    uav_simulation_time: float = 0.0      # UAV仿真物理世界运行时间(秒，由仿真步数转换)
 
     # 成功标志
     robot_success: bool = False
@@ -112,7 +112,7 @@ class ExperimentMetrics:
     uav_success: bool = False
 
     # 总耗时
-    total_time: float = 0.0
+    total_time: float = 0.0               # 总耗时(秒)
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -372,6 +372,7 @@ class ExperimentRunner:
                     result = await poll_task(client, task_id, "agentuav")
 
                     if result and "total_steps" in result:
+                        # UAV仿真步数转秒：假设1 step = 1 second（物理时间）
                         sim_time = float(result["total_steps"])
                     else:
                         sim_time = time.time() - t_start
@@ -389,14 +390,25 @@ class ExperimentRunner:
         return metrics
 
     def save_metrics_to_csv(self, metrics_list: List[ExperimentMetrics], filename: str):
-        """保存指标到CSV"""
+        """保存指标到CSV（字段名包含单位）"""
         filepath = os.path.join(self.output_dir, filename)
 
+        # 字段名包含单位说明
         fieldnames = [
-            "rag_enabled", "rag_type", "rag_search_time", "rag_query_generation_time",
-            "llm_total_time", "llm_query_gen_time", "llm_command_gen_time",
-            "robot_simulation_time", "truck_simulation_time", "uav_simulation_time",
-            "robot_success", "truck_success", "uav_success", "total_time"
+            "rag_enabled",
+            "rag_type",
+            "rag_search_time_s",           # RAG检索耗时(秒)
+            "rag_query_generation_time_s", # RAG查询生成耗时(秒)
+            "llm_total_time_s",            # LLM总思考耗时(秒)
+            "llm_query_gen_time_s",        # LLM生成RAG查询耗时(秒)
+            "llm_command_gen_time_s",      # LLM生成指令耗时(秒)
+            "robot_simulation_time_s",     # Robot仿真时间(秒)
+            "truck_simulation_time_s",     # Truck仿真时间(秒)
+            "uav_simulation_time_s",       # UAV仿真时间(秒)
+            "robot_success",
+            "truck_success",
+            "uav_success",
+            "total_time_s"                 # 总耗时(秒)
         ]
 
         write_header = not os.path.exists(filepath)
@@ -406,7 +418,24 @@ class ExperimentRunner:
             if write_header:
                 writer.writeheader()
             for m in metrics_list:
-                writer.writerow(m.to_dict())
+                # 转换字段名以匹配新格式
+                row = {
+                    "rag_enabled": m.rag_enabled,
+                    "rag_type": m.rag_type,
+                    "rag_search_time_s": m.rag_search_time,
+                    "rag_query_generation_time_s": m.rag_query_generation_time,
+                    "llm_total_time_s": m.llm_total_time,
+                    "llm_query_gen_time_s": m.llm_query_gen_time,
+                    "llm_command_gen_time_s": m.llm_command_gen_time,
+                    "robot_simulation_time_s": m.robot_simulation_time,
+                    "truck_simulation_time_s": m.truck_simulation_time,
+                    "uav_simulation_time_s": m.uav_simulation_time,
+                    "robot_success": m.robot_success,
+                    "truck_success": m.truck_success,
+                    "uav_success": m.uav_success,
+                    "total_time_s": m.total_time
+                }
+                writer.writerow(row)
 
         print(f"指标已保存至: {filepath}")
         return filepath
@@ -501,12 +530,17 @@ COMPARISON_CONFIGS = [
 ]
 
 # ===================== 默认测试数据 =====================
+# 基于GraphRag/input目录下的真实数据构造的运送任务
 DEFAULT_PROMPTS = [
-    "请指挥各个agent把干粉灭火器从所在仓库运到深圳市中山大学深圳校区(北纬 22.800884948488687°，东经 113.95443173232752°)",
-    "请调度无人机把急救药品从深圳仓库运到深圳市光明区人民医院",
-    "安排卡车运送500公斤生鲜从龙华仓储中心到南山配送站",
-    "协调机器人、卡车和无人机完成从福田仓库到宝安机场的快递配送",
-    "指挥仓储机器人分拣锂电池，并通过卡车运往龙岗区配送中心"
+
+    # 任务4: 多Agent协同任务 - 仓储机器人分拣+卡车运输
+    # "请协调仓储机器人和卡车，将数据传输线从仓库分拣后运往深圳福田区购物公园（114.054706,22.534678）",
+
+    # 任务5: 三Agent协同任务 - Robot抓取+Truck运输+UAV配送
+    # 场景：干粉灭火器(1.2kg)从深圳文锦仓库出发，卡车运至光明城站起降点，无人机完成最后配送
+    # 数据依据：WARE-003(18kg载重,待命)、GROUND-002(60kg载重,待命)、UAV-001(5kg载重,待命)
+    # 流程：Robot从货架抓取干粉灭火器 → Truck运至光明城站起降点 → UAV配送到光明区人民医院
+    "请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：配送到深圳光明区深理工大学医院(113.928589,22.769395)"
 ]
 
 
@@ -730,9 +764,9 @@ def print_summary_statistics(metrics_list: List[ExperimentMetrics], title: str):
     if not metrics_list:
         return
 
-    print("\n" + "="*60)
+    print("\n" + "="*70)
     print(f"{title} - 汇总统计")
-    print("="*60)
+    print("="*70)
 
     # 计算平均值
     avg_rag_search = sum(m.rag_search_time for m in metrics_list) / len(metrics_list)
@@ -761,12 +795,12 @@ def print_summary_statistics(metrics_list: List[ExperimentMetrics], title: str):
 
 def print_ablation_comparison(results: Dict[str, List[ExperimentMetrics]]):
     """打印消融实验对比"""
-    print("\n" + "="*60)
+    print("\n" + "="*80)
     print("消融实验对比结果")
-    print("="*60)
+    print("="*80)
 
     print(f"\n{'配置':<20} {'RAG耗时(s)':<15} {'LLM耗时(s)':<15} {'总耗时(s)':<15}")
-    print("-"*65)
+    print("-"*70)
 
     for config_name, metrics_list in results.items():
         if not metrics_list:
@@ -776,30 +810,34 @@ def print_ablation_comparison(results: Dict[str, List[ExperimentMetrics]]):
         avg_total = sum(m.total_time for m in metrics_list) / len(metrics_list)
         print(f"{config_name:<20} {avg_rag:<15.2f} {avg_llm:<15.2f} {avg_total:<15.2f}")
 
-    print("\n详细指标对比:")
+    print("\n详细仿真指标对比:")
+    print(f"  {'配置':<20} {'Robot(s)':<12} {'Truck(s)':<12} {'UAV(s)':<12}")
+    print("  " + "-"*58)
     for config_name, metrics_list in results.items():
         if not metrics_list:
             continue
-        avg_robot = sum(m.robot_simulation_time for m in metrics_list if m.robot_simulation_time > 0) / max(1, sum(1 for m in metrics_list if m.robot_simulation_time > 0))
-        avg_truck = sum(m.truck_simulation_time for m in metrics_list if m.truck_simulation_time > 0) / max(1, sum(1 for m in metrics_list if m.truck_simulation_time > 0))
-        avg_uav = sum(m.uav_simulation_time for m in metrics_list if m.uav_simulation_time > 0) / max(1, sum(1 for m in metrics_list if m.uav_simulation_time > 0))
-        print(f"\n  {config_name}:")
-        print(f"    Robot: {avg_robot:.2f}s | Truck: {avg_truck:.2f}s | UAV: {avg_uav:.2f}s")
+        robot_count = sum(1 for m in metrics_list if m.robot_simulation_time > 0)
+        truck_count = sum(1 for m in metrics_list if m.truck_simulation_time > 0)
+        uav_count = sum(1 for m in metrics_list if m.uav_simulation_time > 0)
+        avg_robot = sum(m.robot_simulation_time for m in metrics_list if m.robot_simulation_time > 0) / max(1, robot_count)
+        avg_truck = sum(m.truck_simulation_time for m in metrics_list if m.truck_simulation_time > 0) / max(1, truck_count)
+        avg_uav = sum(m.uav_simulation_time for m in metrics_list if m.uav_simulation_time > 0) / max(1, uav_count)
+        print(f"  {config_name:<20} {avg_robot:<12.2f} {avg_truck:<12.2f} {avg_uav:<12.2f}")
 
 
 def print_sensitivity_analysis(results: Dict[str, List[ExperimentMetrics]]):
     """打印敏感度分析"""
-    print("\n" + "="*60)
+    print("\n" + "="*70)
     print("敏感度分析结果")
-    print("="*60)
+    print("="*70)
 
     for param_key, metrics_list in results.items():
         if len(metrics_list) < 2:
             continue
 
         print(f"\n参数: {param_key}")
-        print(f"{'扰动比例':<15} {'仿真总时间':<15} {'变化率':<15}")
-        print("-"*45)
+        print(f"{'扰动比例':<15} {'仿真总时间(s)':<18} {'变化率':<15}")
+        print("-"*50)
 
         base_metrics = metrics_list[len(metrics_list)//2]  # 取中间作为基准
         base_total = base_metrics.robot_simulation_time + base_metrics.truck_simulation_time + base_metrics.uav_simulation_time
@@ -807,25 +845,28 @@ def print_sensitivity_analysis(results: Dict[str, List[ExperimentMetrics]]):
         for m in metrics_list:
             total_sim = m.robot_simulation_time + m.truck_simulation_time + m.uav_simulation_time
             change_rate = (total_sim - base_total) / base_total if base_total > 0 else 0
-            print(f"{m.rag_type:<15} {total_sim:<15.2f} {change_rate:<15.2%}")
+            print(f"{m.rag_type:<15} {total_sim:<18.2f} {change_rate:<15.2%}")
 
 
 def print_comparison_results(results: Dict[str, List[ExperimentMetrics]]):
     """打印对比实验结果"""
-    print("\n" + "="*60)
+    print("\n" + "="*90)
     print("算法对比实验结果")
-    print("="*60)
+    print("="*90)
 
-    print(f"\n{'算法':<25} {'LLM耗时':<12} {'Robot':<12} {'Truck':<12} {'UAV':<12} {'总耗时':<12}")
-    print("-"*85)
+    print(f"\n{'算法':<25} {'LLM耗时(s)':<12} {'Robot(s)':<12} {'Truck(s)':<12} {'UAV(s)':<12} {'总耗时(s)':<12}")
+    print("-"*90)
 
     for config_name, metrics_list in results.items():
         if not metrics_list:
             continue
         avg_llm = sum(m.llm_total_time for m in metrics_list) / len(metrics_list)
-        avg_robot = sum(m.robot_simulation_time for m in metrics_list if m.robot_simulation_time > 0) / max(1, sum(1 for m in metrics_list if m.robot_simulation_time > 0))
-        avg_truck = sum(m.truck_simulation_time for m in metrics_list if m.truck_simulation_time > 0) / max(1, sum(1 for m in metrics_list if m.truck_simulation_time > 0))
-        avg_uav = sum(m.uav_simulation_time for m in metrics_list if m.uav_simulation_time > 0) / max(1, sum(1 for m in metrics_list if m.uav_simulation_time > 0))
+        robot_count = sum(1 for m in metrics_list if m.robot_simulation_time > 0)
+        truck_count = sum(1 for m in metrics_list if m.truck_simulation_time > 0)
+        uav_count = sum(1 for m in metrics_list if m.uav_simulation_time > 0)
+        avg_robot = sum(m.robot_simulation_time for m in metrics_list if m.robot_simulation_time > 0) / max(1, robot_count)
+        avg_truck = sum(m.truck_simulation_time for m in metrics_list if m.truck_simulation_time > 0) / max(1, truck_count)
+        avg_uav = sum(m.uav_simulation_time for m in metrics_list if m.uav_simulation_time > 0) / max(1, uav_count)
         avg_total = sum(m.total_time for m in metrics_list) / len(metrics_list)
         print(f"{config_name:<25} {avg_llm:<12.2f} {avg_robot:<12.2f} {avg_truck:<12.2f} {avg_uav:<12.2f} {avg_total:<12.2f}")
 
@@ -968,6 +1009,13 @@ if __name__ == "__main__":
     # 确定运行哪些实验
     run_all = args.all or not (args.baseline or args.ablation or args.robustness or args.comparison)
 
+    # 记录程序开始时间
+    program_start_time = time.time()
+    print("\n" + "="*70)
+    print("多智能体物流调度系统 - 实验程序启动")
+    print(f"开始时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("="*70)
+
     # 执行实验
     if run_all:
         asyncio.run(run_all_experiments(
@@ -987,3 +1035,11 @@ if __name__ == "__main__":
             asyncio.run(run_robustness_experiments(agent_types=args.agents, prompt=prompts[0], output_dir=args.output))
         if args.comparison:
             asyncio.run(run_comparison_experiments(prompts=prompts[:3], repeat=args.repeat, output_dir=args.output))
+
+    # 计算并打印程序总耗时
+    program_total_time = time.time() - program_start_time
+    print("\n" + "="*70)
+    print("程序执行完毕")
+    print(f"结束时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"程序总耗时: {program_total_time:.2f} 秒 ({program_total_time/60:.2f} 分钟)")
+    print("="*70)
