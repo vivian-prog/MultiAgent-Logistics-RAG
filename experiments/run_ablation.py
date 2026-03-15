@@ -26,12 +26,15 @@ LLM_BASE_URL = "http://localhost:8080/v1"
 LLM_API_KEY = "sk-xxx"
 LLM_MODEL = "Qwen3-8B"
 
-RAG_URL = "http://localhost:8015/v1/chat/completions"
+# GraphRAG服务配置
 GRAPHRAG_URL = "http://localhost:8015/v1/chat/completions"
 RAG_HEADERS = {"Content-Type": "application/json"}
 RAG_MODEL_GLOBAL = "graphrag-global-search:latest"
 RAG_MODEL_LOCAL = "graphrag-local-search:latest"
-RAG_MODEL_FULL = "full-model:latest"
+
+# FAISS TextRAG服务配置 (新增)
+FAISS_TEXTRAG_URL = "http://localhost:8016/v1/chat/completions"
+FAISS_TEXTRAG_MODEL = "faiss-text-search:latest"
 
 API_BASE_URL = "http://localhost:8090"
 AGENT_API_MAP = {
@@ -74,16 +77,20 @@ DEFAULT_PROMPTS = [
 
 
 # ===================== 核心函数 =====================
-def rag_search(prompt: str, rag_model: str = RAG_MODEL_FULL, temperature: float = 0.7, rag_type: str = "graphrag") -> str:
+def rag_search(prompt: str, temperature: float = 0.7, rag_type: str = "graphrag") -> str:
     """执行RAG搜索"""
     import requests
     try:
         if rag_type == "graphrag":
             url = GRAPHRAG_URL
             model = RAG_MODEL_GLOBAL
+        elif rag_type == "rag":
+            # 使用FAISS文本检索服务
+            url = FAISS_TEXTRAG_URL
+            model = FAISS_TEXTRAG_MODEL
         else:
-            url = RAG_URL
-            model = rag_model
+            url = GRAPHRAG_URL
+            model = RAG_MODEL_GLOBAL
 
         rag_data = {
             "model": model,

@@ -56,6 +56,14 @@ RAG_MODEL_GLOBAL = "graphrag-global-search:latest"
 RAG_MODEL_LOCAL = "graphrag-local-search:latest"
 RAG_MODEL_FULL = "full-model:latest"
 
+# FAISS TextRAG服务配置 (用于消融实验的text_rag配置)
+FAISS_TEXTRAG_URL = "http://localhost:8016/v1/chat/completions"
+FAISS_TEXTRAG_MODEL = "faiss-text-search:latest"
+
+# FAISS Raw TextRAG服务配置 (使用原始文本，用于消融实验的raw_text_rag配置)
+FAISS_RAW_TEXTRAG_URL = "http://localhost:8017/v1/chat/completions"
+FAISS_RAW_TEXTRAG_MODEL = "faiss-raw-text-search:latest"
+
 # LLM模型配置
 LLM_BASE_URL = "http://localhost:8080/v1"
 LLM_API_KEY = "sk-xxx"
@@ -122,6 +130,14 @@ def rag_search(prompt: str, rag_model: str = RAG_MODEL_FULL,
         if rag_type == "graphrag":
             url = GRAPHRAG_URL
             model = RAG_MODEL_GLOBAL
+        elif rag_type == "rag":
+            # 使用FAISS文本检索服务 (GraphRAG预处理后的text_units)
+            url = FAISS_TEXTRAG_URL
+            model = FAISS_TEXTRAG_MODEL
+        elif rag_type == "raw_rag":
+            # 使用FAISS原始文本检索服务 (原始txt文件)
+            url = FAISS_RAW_TEXTRAG_URL
+            model = FAISS_RAW_TEXTRAG_MODEL
         else:
             url = RAG_URL
             model = rag_model
@@ -406,9 +422,15 @@ ABLATION_CONFIGS = [
     },
     {
         "name": "text_rag",
-        "display_name": "文本RAG",
+        "display_name": "Text RAG (GraphRAG预处理文本单元)",
         "enable_rag": True,
         "rag_type": "rag"
+    },
+    {
+        "name": "raw_text_rag",
+        "display_name": "Raw Text RAG (原始文本)",
+        "enable_rag": True,
+        "rag_type": "raw_rag"
     },
     {
         "name": "graphrag",

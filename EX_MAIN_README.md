@@ -39,16 +39,22 @@ python ex_main.py --baseline
 
 ### 2. 消融实验 (Ablation)
 
-对比不同RAG模式对系统性能的影响。
+对比不同RAG模式对系统性能的影响，特别关注语料来源（预处理文本 vs 原始文本）对检索效果的影响。
 
-| 配置名称 | RAG模式 | 说明 |
-|---------|--------|------|
-| `no_rag` | 无RAG | 仅使用LLM，无检索增强 |
-| `text_rag` | 文本RAG | 基于向量检索的RAG |
-| `graphrag` | GraphRAG | 基于知识图谱的RAG |
+| 配置名称 | RAG模式 | 服务端口 | 语料来源 | 说明 |
+|---------|--------|---------|---------|------|
+| `no_rag` | 无RAG | - | - | 仅使用LLM，无检索增强 |
+| `text_rag` | Text RAG | 8016 | GraphRAG预处理的text_units | 基于FAISS向量检索的预处理文本RAG |
+| `raw_text_rag` | Raw Text RAG | 8017 | 原始txt文件 | 基于FAISS向量检索的原始文本RAG |
+| `graphrag` | GraphRAG | 8015 | 知识图谱 | 基于知识图谱的RAG |
+
+**语料来源对比**：
+- **text_rag**: 使用GraphRAG预处理生成的文本单元，经过实体识别和关系抽取，语义单元完整
+- **raw_text_rag**: 使用原始txt文件，仅经过简单分块，包含表结构和数据记录
 
 **执行命令**:
 ```bash
+# 运行消融实验 (需要先启动所有RAG服务)
 python ex_main.py --ablation
 ```
 
@@ -184,7 +190,8 @@ python ex_main.py --baseline --repeat 3
 |-------|------|
 | `baseline_metrics.csv` | 基础实验组指标 |
 | `ablation_no_rag_metrics.csv` | 无RAG配置指标 |
-| `ablation_text_rag_metrics.csv` | 文本RAG配置指标 |
+| `ablation_text_rag_metrics.csv` | Text RAG配置指标 (预处理文本) |
+| `ablation_raw_text_rag_metrics.csv` | Raw Text RAG配置指标 (原始文本) |
 | `ablation_graphrag_metrics.csv` | GraphRAG配置指标 |
 | `robustness_uav_battery_drain_rate_metrics.csv` | UAV耗电速率鲁棒性指标 |
 | `robustness_robot_battery_drain_per_sec_metrics.csv` | Robot耗电速率鲁棒性指标 |
@@ -247,6 +254,7 @@ python ex_main.py --baseline --repeat 3
 -----------------------------------------------------------------
 no_rag              0.00            4.25            35.20
 text_rag            1.85            5.50            42.15
+raw_text_rag        2.10            5.35            43.50
 graphrag            2.35            5.82            45.32
 ```
 
@@ -254,13 +262,148 @@ graphrag            2.35            5.82            45.32
 
 ## 依赖服务
 
-运行实验前，请确保以下服务已启动：
+### ⚠️ 重要提示
 
-| 服务 | 地址 | 说明 |
-|-----|------|------|
-| LLM服务 | `http://localhost:8080` | Qwen3-8B模型 |
-| RAG服务 | `http://localhost:8015` | GraphRAG/文本RAG |
-| 仿真服务 | `http://localhost:8090` | Agent仿真API |
+**运行 `python ex_main.py --all` 或任何实验命令前，必须先启动所有依赖服务！**
+
+如果服务未启动，实验将失败并报错。
+
+### 服务列表
+
+| 服务 | 地址 | 必需性 | 说明 |
+|-----|------|-------|------|
+| LLM服务 | `http://localhost:8080` | **必需** | Qwen3-8B模型，所有实验依赖 |
+| Embedding服务 | `http://localhost:8021` | **必需** | Qwen3-Embedding-8B，FAISS服务依赖 |
+| GraphRAG服务 | `http://localhost:8015` | **必需** | 知识图谱检索，graphrag配置使用 |
+| Text RAG服务 | `http://localhost:8016` | **必需** | 预处理文本向量检索，text_rag配置使用 |
+| Raw Text RAG服务 | `http://localhost:8017` | **必需** | 原始文本向量检索，raw_text_rag配置使用 |
+| 仿真服务 | `http://localhost:8090` | **必需** | Agent仿真API，验证调度方案 |
+
+### 服务依赖关系
+
+```
+LLM服务 (8080) ←──────────────────────────────────── 所有实验
+     │
+     ↓
+Embedding服务 (8021) ←── FAISS服务依赖
+     │
+     ├──→ Text RAG服务 (8016) ←── text_rag配置
+     │
+     └──→ Raw Text RAG服务 (8017) ←── raw_text_rag配置
+
+GraphRAG服务 (8015) ←── graphrag配置
+
+仿真服务 (8090) ←── 所有实验的仿真验证
+```
+
+### 服务启动顺序
+
+**必须按以下顺序启动服务**：
+
+```bash
+# ========== 第一步：启动基础服务 ==========
+
+# 1. 启动LLM服务 (端口8080) - 所有实验的核心依赖
+# 根据你的LLM部署方式启动，例如：
+# python -m vllm.entrypoints.openai.api_server --model Qwen3-8B --port 8080
+
+# 2. 启动Embedding服务 (端口8021) - FAISS服务的前置依赖
+# 根据你的Embedding模型部署方式启动，例如：
+# python -m vllm.entrypoints.openai.api_server --model Qwen3-Embedding-8B --port 8021
+
+# ========== 第二步：等待基础服务就绪 ==========
+sleep 10
+
+# ========== 第三步：启动RAG服务 ==========
+
+# 3. 启动GraphRAG服务 (端口8015) - graphrag配置使用
+cd GraphRag/utils
+python main.py &
+
+# 4. 启动Text RAG服务 (端口8016) - text_rag配置使用
+cd ../../TextRAG
+python faiss_service.py &
+
+# 5. 启动Raw Text RAG服务 (端口8017) - raw_text_rag配置使用
+python faiss_service_raw.py &
+
+# ========== 第四步：启动仿真服务 ==========
+
+# 6. 启动仿真服务 (端口8090)
+# 根据你的仿真服务部署方式启动
+
+# ========== 第五步：等待所有服务就绪 ==========
+sleep 15
+
+# ========== 第六步：运行实验 ==========
+cd ..
+python ex_main.py --all
+```
+
+### 服务状态检查
+
+运行实验前，可以使用以下命令检查服务是否正常：
+
+```bash
+# 检查所有服务状态
+curl -s http://localhost:8080/v1/models && echo "✅ LLM服务正常" || echo "❌ LLM服务未启动"
+curl -s http://localhost:8021/v1/models && echo "✅ Embedding服务正常" || echo "❌ Embedding服务未启动"
+curl -s http://localhost:8015/v1/models && echo "✅ GraphRAG服务正常" || echo "❌ GraphRAG服务未启动"
+curl -s http://localhost:8016/health && echo "✅ Text RAG服务正常" || echo "❌ Text RAG服务未启动"
+curl -s http://localhost:8017/health && echo "✅ Raw Text RAG服务正常" || echo "❌ Raw Text RAG服务未启动"
+curl -s http://localhost:8090/health && echo "✅ 仿真服务正常" || echo "❌ 仿真服务未启动"
+```
+
+### 快速启动命令
+
+```bash
+#!/bin/bash
+# 一键启动所有RAG服务（假设LLM和Embedding服务已启动）
+
+cd /Users/bytedance/PycharmProjects/MultiAgent-Logistics-RAG
+
+# 创建日志目录
+mkdir -p logs
+
+# 启动GraphRAG (端口8015)
+nohup python GraphRag/utils/main.py > logs/graphrag.log 2>&1 &
+echo "GraphRAG服务启动中..."
+
+# 启动Text RAG (端口8016) - 预处理文本
+nohup python TextRAG/faiss_service.py > logs/faiss_textrag.log 2>&1 &
+echo "Text RAG服务启动中..."
+
+# 启动Raw Text RAG (端口8017) - 原始文本
+nohup python TextRAG/faiss_service_raw.py > logs/faiss_raw_textrag.log 2>&1 &
+echo "Raw Text RAG服务启动中..."
+
+# 等待服务启动
+echo "等待服务启动..."
+sleep 15
+
+# 检查服务状态
+echo "检查服务状态..."
+curl -s http://localhost:8015/v1/models > /dev/null && echo "✅ GraphRAG (8015) 正常" || echo "❌ GraphRAG (8015) 异常"
+curl -s http://localhost:8016/health > /dev/null && echo "✅ Text RAG (8016) 正常" || echo "❌ Text RAG (8016) 异常"
+curl -s http://localhost:8017/health > /dev/null && echo "✅ Raw Text RAG (8017) 正常" || echo "❌ Raw Text RAG (8017) 异常"
+
+echo "所有服务已启动，可以运行实验"
+```
+
+### 首次启动注意事项
+
+1. **Raw Text RAG服务首次启动**：
+   - 会自动从 `GraphRag/input/` 目录读取原始txt文件
+   - 首次启动会构建FAISS索引，需要额外等待时间（约1-3分钟）
+   - 索引构建完成后会缓存到 `TextRAG/faiss_index_raw/` 目录
+
+2. **Text RAG服务**：
+   - 需要先运行GraphRAG预处理，生成 `GraphRag/inputs/artifacts/create_final_text_units.parquet`
+   - 如果该文件不存在，text_rag配置会报错
+
+3. **服务端口冲突**：
+   - 确保端口 8015/8016/8017 未被其他服务占用
+   - 可以使用 `lsof -i :8015` 检查端口占用情况
 
 ---
 
@@ -287,10 +430,24 @@ MultiAgent-Logistics-RAG/
 │   ├── run_robustness.py         # 鲁棒性实验脚本
 │   └── results/                  # 实验结果输出目录
 │       ├── baseline_metrics.csv
-│       ├── ablation_*.csv
+│       ├── ablation_no_rag_metrics.csv
+│       ├── ablation_text_rag_metrics.csv
+│       ├── ablation_raw_text_rag_metrics.csv
+│       ├── ablation_graphrag_metrics.csv
 │       ├── robustness_*.csv
 │       ├── comparison_*.csv
 │       └── experiment_summary.txt
+├── TextRAG/                      # FAISS文本RAG服务
+│   ├── faiss_service.py          # Text RAG服务 (端口8016, 预处理文本)
+│   ├── faiss_service_raw.py      # Raw Text RAG服务 (端口8017, 原始文本)
+│   ├── faiss_index/              # Text RAG索引存储
+│   ├── faiss_index_raw/          # Raw Text RAG索引存储
+│   └── README.md                 # TextRAG说明文档
+├── GraphRag/                     # GraphRAG服务
+│   ├── utils/
+│   │   └── main.py               # GraphRAG服务主程序 (端口8015)
+│   ├── input/                    # 原始输入文本 (raw_text_rag使用)
+│   └── inputs/artifacts/         # GraphRAG预处理数据 (text_rag使用)
 ├── prompts/
 │   └── prompts.py                # Prompt模板
 ├── configs/
