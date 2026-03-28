@@ -375,6 +375,9 @@ class ExperimentRunner:
         # ========== 阶段4: Agent仿真执行 ==========
         agentuav_params = answer_dict.get("agentuav", {})
         agenttruck_params = answer_dict.get("agenttruck", {})
+        print("===========================================================")
+        print("agenttruck_params",agenttruck_params)
+        print("===========================================================")
         agentrobot_params = answer_dict.get("agentrobot", {})
 
         async with httpx.AsyncClient(timeout=60.0) as client:
@@ -619,7 +622,7 @@ DEFAULT_PROMPTS = [
     # 场景：干粉灭火器(1.2kg)从深圳文锦仓库出发，卡车运至光明城站起降点，无人机完成最后配送
     # 数据依据：WARE-003(18kg载重,待命)、GROUND-002(60kg载重,待命)、UAV-001(5kg载重,待命)
     # 流程：Robot从货架抓取干粉灭火器 → Truck运至光明城站起降点 → UAV配送到光明区人民医院
-    "请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：配送到深圳光明区深理工大学医院(113.928589,22.769395)"
+    "请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.054706,22.534678）配送到深圳光明区深理工大学医院(113.928589,22.769395)"
 ]
 
 

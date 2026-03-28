@@ -15,8 +15,12 @@ class MultiAgentLogisticRAGPrompt:
          "agenttruck": {{
            "type": "TRUCK",
            "tasks": ["任务描述1", "任务描述2"],
-           "start_location": "起点名称（如：深圳北站仓库）",
-           "end_location": "终点名称（如：光明城起降点）",
+           "start_location": "起点经纬度（如：（114.054706,22.534678））",
+           "end_location": "终点经纬度（如：（114.054706,22.534678））",
+           "start_lat": 22.123,   // 必填：起点纬度
+           "start_lng": 113.123,  // 必填：起点经度
+           "end_lat": 22.456,     // 必填：终点纬度
+           "end_lng": 113.456     // 必填：终点经度
            "truck_params": {{"load_weight": 5.0, "base_fuel": 30}}  // 可选：载重(吨)、基础油耗
          }},
          "agentuav": {{
@@ -38,7 +42,7 @@ class MultiAgentLogisticRAGPrompt:
          "instruction_summary": "对所有Agent指令的简短汇总"
        }}
     3. 参数生成规则：
-       - **agenttruck**：必须提取明确的起点和终点名称赋值给 `start_location` 和 `end_location`。
+       - **agenttruck**：必须提取明确的起点经纬度和终点经纬度名称赋值给 `start_location` 和 `end_location`，例如（114.054706,22.534678）。
        - **agentuav**：`Map_name`根据无人机数量需求选择（Map1为50架大规模，Map2为32架中规模）。
        - **agentrobot**：`goods_name`从用户需求中提取。
 
@@ -65,7 +69,7 @@ class MultiAgentLogisticRAGPrompt:
     4. **禁止UAV做全程跟随监控**（UAV应专注于末端配送）；
     5. 所有字符串使用中文。"""
     RAG_session_init: str = """# 角色定位
-    你是物流调度领域的实体关系提取专家，同时精通RAG检索Prompt构建逻辑。你的核心任务是：从用户输入的物流调度需求:{user_prompt} 中，精准提取关键实体（货物、地点、Agent类型），并基于数据库结构生成**语义化检索短句**，用于查询仓库位置、货物库存和空闲Agent信息。
+    你是物流调度领域的实体关系提取专家，同时精通RAG检索Prompt构建逻辑。你的核心任务是：从用户输入的物流调度需求:{user_prompt} 中，精准提取关键实体（货物、地点、Agent类型），并基于数据库结构生成**语义化检索短句**，用于查询仓库位置、货物库存和空闲Agent信息。所有的地点都要后面括号备注经纬度坐标。
 
     # 核心规则
     ## 1. 实体提取范围（必须提取）
