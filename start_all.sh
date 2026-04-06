@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 # file: start_all.sh
 set -euo pipefail
-
+# /home/sysuvis/huangw293/MultiAgent-Logistics-RAG/start_all.sh
+# 等待几十秒
+# tmux attach -t graph_main
+# 想退回主界面时，按 Ctrl + b 松开，再按 d
+# 关闭系统：tmux kill-server
 ##############################
 # 0. 基础配置
 ##############################
