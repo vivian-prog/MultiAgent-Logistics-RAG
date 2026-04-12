@@ -246,13 +246,35 @@ def call_llm_model(prompt: str, rag_context: str = "", temperature: float = 0.7)
             temperature=temperature,
         )
         content = completion.choices[0].message.content
-        content = re.sub(r'<think.*?</think','', content, flags=re.DOTALL).strip()
+        content = re.sub(r'<think\b[^>]*>[\s\S]*?</think\s*>', '', content, flags=re.DOTALL | re.IGNORECASE).strip()
         elapsed = time.time() - start_time
         return content, elapsed
 
     except Exception as e:
         log_print(f"调用LLM出错: {e}")
         return "", time.time() - start_time
+
+
+def call_llm_model_json(prompt: str, temperature: float = 0.0) -> Tuple[str, float]:
+    """
+    优先使用 JSON 输出模式调用 LLM；若后端不支持，则自动回退到普通调用。
+    """
+    start_time = time.time()
+    try:
+        client = OpenAI(base_url=LLM_BASE_URL, api_key=LLM_API_KEY)
+        completion = client.chat.completions.create(
+            model=LLM_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=temperature,
+            response_format={"type": "json_object"},
+        )
+        content = completion.choices[0].message.content
+        content = re.sub(r'<think\b[^>]*>[\s\S]*?</think\s*>', '', content, flags=re.DOTALL | re.IGNORECASE).strip()
+        elapsed = time.time() - start_time
+        return content, elapsed
+    except Exception as e:
+        log_print(f"JSON模式调用失败，回退普通模式: {e}")
+        return call_llm_model(prompt, "", temperature)
 
 
 def extract_and_parse_last_json(final_answer: str) -> dict:
@@ -470,6 +492,22 @@ def format_dispatch_candidates_for_llm(scenario: DispatchScenario) -> str:
     return "\n".join(lines)
 
 
+def format_dispatch_candidate_ids_for_retry(scenario: DispatchScenario) -> str:
+    """生成超短候选摘要，供严格资源选择重试时压缩上下文。"""
+    sections = [
+        ("warehouse", scenario.warehouse_candidates),
+        ("landing", scenario.landing_candidates),
+        ("truck", scenario.truck_candidates),
+        ("uav", scenario.uav_candidates),
+        ("robot", scenario.robot_candidates),
+    ]
+    lines = [f"goods={scenario.goods_name}", f"destination={scenario.destination.lng:.6f},{scenario.destination.lat:.6f}"]
+    for title, candidates in sections:
+        items = [f"{candidate.id}:{candidate.name}" for candidate in candidates]
+        lines.append(f"{title}={'; '.join(items)}")
+    return "\n".join(lines)
+
+
 def build_strict_baseline_selection_prompt(
     user_prompt: str,
     draft_plan: Dict[str, Any],
@@ -635,20 +673,32 @@ def select_strict_baseline_plan_with_llm(
         draft_plan=draft_plan,
         scenario=scenario,
     )
-    selection_answer, selection_time = call_llm_model(selection_prompt, "", 0.0)
+    selection_answer, selection_time = call_llm_model_json(selection_prompt, 0.0)
     try:
         selection_dict = extract_and_parse_last_json(selection_answer)
     except ValueError:
         first_preview = preview_text_for_log(selection_answer)
         log_print(f"严格资源选择首轮输出不可解析，准备重试。预览: {first_preview}")
-        retry_prompt = (
-            selection_prompt
-            + "\n\n上一次回答如下：\n"
-            + (selection_answer or "(empty)")
-            + "\n\n请删除上一次回答中的所有解释性文字，只保留一个合法 JSON 对象重新输出。"
-            + "\n再次强调：不要 markdown，不要代码块，不要额外句子。"
-        )
-        retry_answer, retry_time = call_llm_model(retry_prompt, "", 0.0)
+        retry_prompt = f"""
+你上一次没有按要求返回 JSON。
+现在重新选择，并且只输出一个 JSON 对象，不要解释，不要 markdown，不要 <think>。
+
+候选摘要：
+{format_dispatch_candidate_ids_for_retry(scenario)}
+
+输出格式：
+{{
+  "selected_resources": {{
+    "warehouse_id": "...",
+    "landing_id": "...",
+    "truck_id": "...",
+    "uav_id": "...",
+    "robot_id": "..."
+  }},
+  "selection_reason": "..."
+}}
+""".strip()
+        retry_answer, retry_time = call_llm_model_json(retry_prompt, 0.0)
         selection_time += retry_time
         try:
             selection_dict = extract_and_parse_last_json(retry_answer)
