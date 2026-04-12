@@ -35,15 +35,18 @@
 # from experiments.metrics import MetricsCalculator, SensitivityAnalyzer
 # from configs.loader import load_config, update_config, get_default_config
 # from experiments.optimization_algorithms import (
-#     AntColonyOptimization,
-#     GeneticAlgorithm,
+#     AntColonyDispatchOptimizer,
+#     GeneticDispatchOptimizer,
 #     Location,
-#     DeliveryTask,
-#     OptimizationAlgorithm,
-#     create_algorithm,
-#     create_default_locations,
-#     create_default_tasks
+#     DispatchScenario,
+#     ResourceCandidate,
 # )
+
+# AGENT_SIM_PATH = os.path.join(os.path.dirname(__file__), "agentSimulation")
+# if AGENT_SIM_PATH not in sys.path:
+#     sys.path.insert(0, AGENT_SIM_PATH)
+
+
 
 
 # # ===================== 日志配置 =====================
@@ -270,6 +273,200 @@
 #         raise ValueError(f"JSON解析失败：{e}") from e
 
 
+# def extract_destination_from_prompt(prompt: str) -> Optional[Tuple[float, float]]:
+#     """从 prompt 中提取最后一组经纬度，返回 (lat, lng)。"""
+#     matches = re.findall(r'([0-9]+\.[0-9]+)\s*,\s*([0-9]+\.[0-9]+)', prompt)
+#     if not matches:
+#         return None
+#     lng_str, lat_str = matches[-1]
+#     return float(lat_str), float(lng_str)
+
+
+# def build_dispatch_scenario_from_db(
+#     prompt: str,
+#     answer_dict: Dict[str, Any],
+#     top_k: int = 3,
+# ) -> DispatchScenario:
+#     """
+#     基于当前项目数据库提取 GA 高层调度候选集。
+#     """
+#     robot_plan = answer_dict.get("agentrobot", {}) or {}
+#     uav_plan = answer_dict.get("agentuav", {}) or {}
+#     goods_name = robot_plan.get("goods_name", "通用货物")
+
+#     destination_coords = extract_destination_from_prompt(prompt)
+#     if destination_coords is None and uav_plan.get("end_lat") and uav_plan.get("end_lng"):
+#         destination_coords = (float(uav_plan["end_lat"]), float(uav_plan["end_lng"]))
+#     if destination_coords is None:
+#         raise ValueError("无法从 prompt 或基线计划中提取目标坐标，无法构造 GA 场景")
+
+#     destination = Location(
+#         id="DESTINATION",
+#         name="最终目的地",
+#         lat=destination_coords[0],
+#         lng=destination_coords[1],
+#     )
+
+#     from common.db import get_sync_db
+#     from common.models import WarehouseBase, WarehouseGoods, AgentBase, UavLandingPoint
+#     db = next(get_sync_db())
+#     try:
+#         warehouse_rows = (
+#             db.query(WarehouseGoods, WarehouseBase)
+#             .join(WarehouseBase, WarehouseGoods.warehouse_id == WarehouseBase.warehouse_id)
+#             .filter(WarehouseGoods.stock_quantity > 0)
+#             .filter(WarehouseBase.status == 1)
+#             .all()
+#         )
+
+#         filtered_warehouse_rows = [
+#             row for row in warehouse_rows
+#             if goods_name in row[0].goods_name or row[0].goods_name in goods_name
+#         ] or warehouse_rows
+
+#         warehouse_candidates: List[ResourceCandidate] = []
+#         for goods, warehouse in filtered_warehouse_rows:
+#             warehouse_candidates.append(
+#                 ResourceCandidate(
+#                     id=str(warehouse.warehouse_id),
+#                     name=warehouse.warehouse_name,
+#                     lat=float(warehouse.location_y),
+#                     lng=float(warehouse.location_x),
+#                     resource_type="warehouse",
+#                     metadata={
+#                         "goods_name": goods.goods_name,
+#                         "stock_quantity": goods.stock_quantity,
+#                     },
+#                 )
+#             )
+
+#         warehouse_candidates.sort(key=lambda item: item.as_location().distance_to(destination))
+#         warehouse_candidates = warehouse_candidates[:top_k]
+
+#         landing_candidates = [
+#             ResourceCandidate(
+#                 id=str(point.id),
+#                 name=point.name,
+#                 lat=float(point.location_y),
+#                 lng=float(point.location_x),
+#                 resource_type="landing",
+#                 metadata={"description": point.description},
+#             )
+#             for point in db.query(UavLandingPoint).all()
+#         ]
+#         landing_candidates.sort(key=lambda item: item.as_location().distance_to(destination))
+#         landing_candidates = landing_candidates[:top_k]
+
+#         warehouse_lookup: Dict[str, ResourceCandidate] = {candidate.id: candidate for candidate in warehouse_candidates}
+#         for _, warehouse in filtered_warehouse_rows:
+#             wid = str(warehouse.warehouse_id)
+#             if wid not in warehouse_lookup:
+#                 warehouse_lookup[wid] = ResourceCandidate(
+#                     id=wid,
+#                     name=warehouse.warehouse_name,
+#                     lat=float(warehouse.location_y),
+#                     lng=float(warehouse.location_x),
+#                     resource_type="warehouse",
+#                 )
+
+#         agent_rows = db.query(AgentBase).filter(AgentBase.status == 1).all()
+
+#         def build_agent_candidates(agent_type: int, label: str, speed_kmh: float) -> List[ResourceCandidate]:
+#             items: List[ResourceCandidate] = []
+#             for agent in agent_rows:
+#                 if agent.agent_type != agent_type:
+#                     continue
+#                 home = warehouse_lookup.get(str(agent.warehouse_id)) if agent.warehouse_id is not None else None
+#                 lat = home.lat if home else destination.lat
+#                 lng = home.lng if home else destination.lng
+#                 items.append(
+#                     ResourceCandidate(
+#                         id=str(agent.agent_id),
+#                         name=str(agent.agent_id),
+#                         lat=lat,
+#                         lng=lng,
+#                         resource_type=label,
+#                         metadata={
+#                             "warehouse_id": agent.warehouse_id,
+#                             "max_load": float(agent.max_load),
+#                             "battery_capacity": agent.battery_capacity,
+#                             "speed_kmh": speed_kmh,
+#                         },
+#                     )
+#                 )
+#             return items[:top_k]
+
+#         truck_candidates = build_agent_candidates(2, "truck", 45.0)
+#         uav_candidates = build_agent_candidates(1, "uav", 36.0)
+#         robot_candidates = build_agent_candidates(3, "robot", 3.6)
+
+#         if not warehouse_candidates or not landing_candidates or not truck_candidates or not uav_candidates or not robot_candidates:
+#             raise ValueError("数据库候选集不足，无法构造完整的 GA 调度场景")
+
+#         return DispatchScenario(
+#             goods_name=goods_name,
+#             destination=destination,
+#             warehouse_candidates=warehouse_candidates,
+#             landing_candidates=landing_candidates,
+#             truck_candidates=truck_candidates,
+#             uav_candidates=uav_candidates,
+#             robot_candidates=robot_candidates,
+#             source_prompt=prompt,
+#         )
+#     finally:
+#         db.close()
+
+
+# def build_ga_agent_plan(
+#     opt_result,
+#     scenario: DispatchScenario,
+#     baseline_plan: Dict[str, Any],
+# ) -> Dict[str, Any]:
+#     """把 GA 结果转换成与当前项目兼容的 agent 参数 JSON。"""
+#     meta = opt_result.metadata
+#     warehouse = meta["warehouse"]
+#     landing = meta["landing"]
+#     truck = meta["truck"]
+#     uav = meta["uav"]
+#     robot = meta["robot"]
+
+#     base_truck = copy.deepcopy(baseline_plan.get("agenttruck", {}) or {})
+#     base_uav = copy.deepcopy(baseline_plan.get("agentuav", {}) or {})
+
+#     return {
+#         "agenttruck": {
+#             "type": "TRUCK",
+#             "tasks": [f"从{warehouse['name']}运输到{landing['name']}"],
+#             "start_location": warehouse["name"],
+#             "end_location": landing["name"],
+#             "start_lat": warehouse["lat"],
+#             "start_lng": warehouse["lng"],
+#             "end_lat": landing["lat"],
+#             "end_lng": landing["lng"],
+#             "agent_id": truck["id"],
+#             "truck_params": base_truck.get("truck_params", {"load_weight": 5.0, "base_fuel": 30}),
+#         },
+#         "agentuav": {
+#             "type": "UAV",
+#             "tasks": [f"从{landing['name']}接驳配送到最终目的地"],
+#             "Map_name": base_uav.get("Map_name", "Map1"),
+#             "max_steps": base_uav.get("max_steps", 1000),
+#             "start_lat": landing["lat"],
+#             "start_lng": landing["lng"],
+#             "end_lat": scenario.destination.lat,
+#             "end_lng": scenario.destination.lng,
+#             "agent_id": uav["id"],
+#         },
+#         "agentrobot": {
+#             "type": "ROBOTS",
+#             "tasks": [f"在{warehouse['name']}内分拣并交接{scenario.goods_name}"],
+#             "agent_id": robot["id"],
+#             "goods_name": scenario.goods_name,
+#         },
+#         "instruction_summary": f"GA选择 {warehouse['name']} -> {landing['name']} 并分配 {robot['id']} / {truck['id']} / {uav['id']}",
+#     }
+
+
 # async def poll_task(client, task_id, agent_name) -> Optional[Dict]:
 #     """轮询任务结果"""
 #     max_retries = 120
@@ -311,6 +508,121 @@
 #         os.makedirs(self.output_dir, exist_ok=True)
 #         self.recorder = ExperimentRecorder(self.output_dir)
 
+#     def generate_instruction_plan(
+#         self,
+#         prompt: str,
+#         enable_rag: bool = True,
+#         rag_type: str = "graphrag",
+#     ) -> Tuple[ExperimentMetrics, Dict[str, Any]]:
+#         """
+#         仅生成 RAG / LLM 指令，不执行仿真。
+#         供 comparison 实验复用，用于把 GA 接入当前主链路。
+#         """
+#         metrics = ExperimentMetrics()
+#         metrics.rag_enabled = enable_rag
+#         metrics.rag_type = rag_type if enable_rag else "none"
+
+#         rag_context = ""
+#         if enable_rag:
+#             rag_query_prompt = RAG_SYSTEM_PROMPT.format(user_prompt=prompt)
+#             rag_query, query_gen_time = call_llm_model(rag_query_prompt, '', 0.7)
+#             metrics.llm_query_gen_time = query_gen_time
+#             metrics.rag_query_generation_time = query_gen_time
+
+#             rag_query_list = rag_query.split()
+#             rag_query = " ".join(rag_query_list)
+#             log_print(f"RAG查询关键词: {rag_query[:100]}...")
+
+#             rag_context, rag_search_time = rag_search(rag_query, RAG_MODEL_FULL, 0.7, rag_type)
+#             metrics.rag_search_time = rag_search_time
+
+#             log_print(f"RAG检索耗时: {rag_search_time:.2f}s")
+#             log_print(f"RAG查询生成耗时: {query_gen_time:.2f}s")
+
+#         cloudllm_prompt = CLOUDLLM_SYSTEM_PROMPT.format(user_prompt=prompt)
+#         final_answer, command_gen_time = call_llm_model(cloudllm_prompt, rag_context, 0.7)
+#         metrics.llm_command_gen_time = command_gen_time
+#         metrics.llm_total_time = metrics.llm_query_gen_time + command_gen_time
+
+#         log_print(f"LLM指令生成耗时: {command_gen_time:.2f}s")
+#         log_print(f"LLM总思考耗时: {metrics.llm_total_time:.2f}s")
+
+#         answer_dict = extract_and_parse_last_json(final_answer)
+#         log_print(f"解析指令成功: {list(answer_dict.keys())}")
+#         return metrics, answer_dict
+
+#     async def execute_agent_plan(
+#         self,
+#         answer_dict: Dict[str, Any],
+#         metrics: ExperimentMetrics,
+#     ) -> None:
+#         """执行已经生成好的 agent 任务计划，并把结果写回 metrics。"""
+#         agentuav_params = copy.deepcopy(answer_dict.get("agentuav", {}) or {})
+#         agenttruck_params = copy.deepcopy(answer_dict.get("agenttruck", {}) or {})
+#         agentrobot_params = copy.deepcopy(answer_dict.get("agentrobot", {}) or {})
+
+#         async with httpx.AsyncClient(timeout=60.0) as client:
+#             if agentrobot_params:
+#                 t_start = time.time()
+#                 try:
+#                     resp = await client.post(AGENT_API_MAP["agentrobot"], json=agentrobot_params)
+#                     resp.raise_for_status()
+#                     task_id = resp.json()["task_id"]
+#                     result = await poll_task(client, task_id, "agentrobot")
+#                     sim_time = (time.time() - t_start) * 10.0
+#                     metrics.robot_simulation_time = sim_time
+#                     metrics.robot_success = result is not None
+#                     log_print(f"Robot仿真时间: {sim_time:.2f}s (成功: {metrics.robot_success})")
+#                 except Exception as e:
+#                     log_print(f"Robot任务异常: {e}")
+#                     metrics.robot_simulation_time = -1
+
+#             if agenttruck_params:
+#                 t_start = time.time()
+#                 try:
+#                     if "end_lat" not in agenttruck_params and agentuav_params.get("start_lat"):
+#                         agenttruck_params["end_lat"] = agentuav_params["start_lat"]
+#                         agenttruck_params["end_lng"] = agentuav_params["start_lng"]
+
+#                     resp = await client.post(AGENT_API_MAP["agenttruck"], json=agenttruck_params)
+#                     resp.raise_for_status()
+#                     task_id = resp.json()["task_id"]
+#                     result = await poll_task(client, task_id, "agenttruck")
+
+#                     sim_data = result.get("simulation_data", result) if result else {}
+#                     if sim_data and "total_time" in sim_data:
+#                         sim_time = float(sim_data["total_time"]) * 3600
+#                     else:
+#                         sim_time = time.time() - t_start
+
+#                     metrics.truck_simulation_time = sim_time
+#                     metrics.truck_success = result is not None
+#                     log_print(f"Truck仿真时间: {sim_time:.2f}s (成功: {metrics.truck_success})")
+#                 except Exception as e:
+#                     log_print(f"Truck任务异常: {e}")
+#                     metrics.truck_simulation_time = -1
+
+#             if agentuav_params:
+#                 t_start = time.time()
+#                 try:
+#                     resp = await client.post(AGENT_API_MAP["agentuav_submit"], json=agentuav_params)
+#                     resp.raise_for_status()
+#                     task_id = resp.json()["task_id"]
+#                     result = await poll_task(client, task_id, "agentuav")
+
+#                     if result:
+#                         sim_data = result.get("simulation_data", result)
+#                         sim_time = float(sim_data.get("total_time_seconds", sim_data.get("total_steps", 0.0)))
+#                     else:
+#                         sim_time = time.time() - t_start
+
+#                     metrics.uav_simulation_time = sim_time
+#                     metrics.uav_success = result is not None
+#                     log_print(f"UAV仿真时间: {sim_time:.2f}s (成功: {metrics.uav_success})")
+#                 except Exception as e:
+#                     log_print(f"UAV任务异常: {e}")
+#                     metrics.uav_simulation_time = -1
+
 #     async def run_single_experiment(
 #         self,
 #         prompt: str,
@@ -333,119 +645,19 @@
 #         log_print(f"Prompt: {prompt[:50]}...")
 #         log_print(f"{'='*60}")
 
-#         # ========== 阶段1: RAG检索 ==========
-#         rag_context = ""
-#         if enable_rag:
-#             # 1.1 生成RAG查询
-#             rag_query_prompt = RAG_SYSTEM_PROMPT.format(user_prompt=prompt)
-#             rag_query, query_gen_time = call_llm_model(rag_query_prompt, '', 0.7)
-#             metrics.llm_query_gen_time = query_gen_time
-#             metrics.rag_query_generation_time = query_gen_time
-
-#             # 处理查询
-#             rag_query_list = rag_query.split()
-#             rag_query = " ".join(rag_query_list)
-#             log_print(f"RAG查询关键词: {rag_query[:100]}...")
-
-#             # 1.2 执行RAG搜索
-#             rag_context, rag_search_time = rag_search(rag_query, RAG_MODEL_FULL, 0.7, rag_type)
-#             metrics.rag_search_time = rag_search_time
-
-#             log_print(f"RAG检索耗时: {rag_search_time:.2f}s")
-#             log_print(f"RAG查询生成耗时: {query_gen_time:.2f}s")
-
-#         # ========== 阶段2: LLM指令生成 ==========
-#         cloudllm_prompt = CLOUDLLM_SYSTEM_PROMPT.format(user_prompt=prompt)
-#         final_answer, command_gen_time = call_llm_model(cloudllm_prompt, rag_context, 0.7)
-#         metrics.llm_command_gen_time = command_gen_time
-#         metrics.llm_total_time = metrics.llm_query_gen_time + command_gen_time
-
-#         log_print(f"LLM指令生成耗时: {command_gen_time:.2f}s")
-#         log_print(f"LLM总思考耗时: {metrics.llm_total_time:.2f}s")
-
-#         # ========== 阶段3: 解析指令 ==========
 #         try:
-#             answer_dict = extract_and_parse_last_json(final_answer)
-#             log_print(f"解析指令成功: {list(answer_dict.keys())}")
+#             plan_metrics, answer_dict = self.generate_instruction_plan(
+#                 prompt=prompt,
+#                 enable_rag=enable_rag,
+#                 rag_type=rag_type,
+#             )
+#             metrics = plan_metrics
 #         except ValueError as e:
 #             log_print(f"JSON解析失败: {e}")
 #             metrics.total_time = time.time() - total_start
 #             return metrics
 
-#         # ========== 阶段4: Agent仿真执行 ==========
-#         agentuav_params = answer_dict.get("agentuav", {})
-#         agenttruck_params = answer_dict.get("agenttruck", {})
-#         print("===========================================================")
-#         print("agenttruck_params",agenttruck_params)
-#         print("===========================================================")
-#         agentrobot_params = answer_dict.get("agentrobot", {})
-
-#         async with httpx.AsyncClient(timeout=60.0) as client:
-#             # 4.1 Robot仿真
-#             if agentrobot_params:
-#                 t_start = time.time()
-#                 try:
-#                     resp = await client.post(AGENT_API_MAP["agentrobot"], json=agentrobot_params)
-#                     resp.raise_for_status()
-#                     task_id = resp.json()["task_id"]
-#                     result = await poll_task(client, task_id, "agentrobot")
-
-#                     # Robot使用10倍速修正
-#                     sim_time = (time.time() - t_start) * 10.0
-#                     metrics.robot_simulation_time = sim_time
-#                     metrics.robot_success = result is not None
-#                     log_print(f"Robot仿真时间: {sim_time:.2f}s (成功: {metrics.robot_success})")
-#                 except Exception as e:
-#                     log_print(f"Robot任务异常: {e}")
-#                     metrics.robot_simulation_time = -1
-
-#             # 4.2 Truck仿真
-#             if agenttruck_params:
-#                 t_start = time.time()
-#                 try:
-#                     # GPS坐标兜底
-#                     if "end_lat" not in agenttruck_params and agentuav_params.get("start_lat"):
-#                         agenttruck_params["end_lat"] = agentuav_params["start_lat"]
-#                         agenttruck_params["end_lng"] = agentuav_params["start_lng"]
-
-#                     resp = await client.post(AGENT_API_MAP["agenttruck"], json=agenttruck_params)
-#                     resp.raise_for_status()
-#                     task_id = resp.json()["task_id"]
-#                     result = await poll_task(client, task_id, "agenttruck")
-
-#                     if result and "total_time" in result:
-#                         sim_time = float(result["total_time"]) * 3600  # 小时转秒
-#                     else:
-#                         sim_time = time.time() - t_start
-
-#                     metrics.truck_simulation_time = sim_time
-#                     metrics.truck_success = result is not None
-#                     log_print(f"Truck仿真时间: {sim_time:.2f}s (成功: {metrics.truck_success})")
-#                 except Exception as e:
-#                     log_print(f"Truck任务异常: {e}")
-#                     metrics.truck_simulation_time = -1
-
-#             # 4.3 UAV仿真
-#             if agentuav_params:
-#                 t_start = time.time()
-#                 try:
-#                     resp = await client.post(AGENT_API_MAP["agentuav_submit"], json=agentuav_params)
-#                     resp.raise_for_status()
-#                     task_id = resp.json()["task_id"]
-#                     result = await poll_task(client, task_id, "agentuav")
-
-#                     if result and "total_steps" in result:
-#                         # UAV仿真步数转秒：假设1 step = 1 second（物理时间）
-#                         sim_time = float(result["total_steps"])
-#                     else:
-#                         sim_time = time.time() - t_start
-
-#                     metrics.uav_simulation_time = sim_time
-#                     metrics.uav_success = result is not None
-#                     log_print(f"UAV仿真时间: {sim_time:.2f}s (成功: {metrics.uav_success})")
-#                 except Exception as e:
-#                     log_print(f"UAV任务异常: {e}")
-#                     metrics.uav_simulation_time = -1
+#         await self.execute_agent_plan(answer_dict, metrics)
 
 #         metrics.total_time = time.time() - total_start
 #         log_print(f"\n总耗时: {metrics.total_time:.2f}s")
@@ -588,6 +800,7 @@
 #         "rag_type": "graphrag",
 #         "algorithm": "ACO",
 #         "algorithm_params": {
+#             "candidate_top_k": 3,
 #             "num_ants": 20,
 #             "alpha": 1.0,
 #             "beta": 2.0,
@@ -602,6 +815,7 @@
 #         "rag_type": "graphrag",
 #         "algorithm": "GA",
 #         "algorithm_params": {
+#             "candidate_top_k": 3,
 #             "population_size": 50,
 #             "crossover_rate": 0.8,
 #             "mutation_rate": 0.1,
@@ -695,7 +909,7 @@
 #     for prompt_idx, prompt in enumerate(prompts):
 #         for config in ABLATION_CONFIGS:
 #             for rep in range(repeat):
-#                 log_log_print(f"\n[Prompt {prompt_idx+1}/{len(prompts)}] [{config['display_name']}] [重复 {rep+1}/{repeat}]")
+#                 log_print(f"\n[Prompt {prompt_idx+1}/{len(prompts)}] [{config['display_name']}] [重复 {rep+1}/{repeat}]")
 
 #                 metrics = await runner.run_single_experiment(
 #                     prompt=prompt,
@@ -807,68 +1021,124 @@
 #     for prompt_idx, prompt in enumerate(prompts):
 #         for config in COMPARISON_CONFIGS:
 #             for rep in range(repeat):
-#                 log_log_print(f"\n[Prompt {prompt_idx+1}/{len(prompts)}] [{config['display_name']}] [重复 {rep+1}/{repeat}]")
+#                 log_print(f"\n[Prompt {prompt_idx+1}/{len(prompts)}] [{config['display_name']}] [重复 {rep+1}/{repeat}]")
 
-#                 # Step 1: 运行基础实验获取初始指标
-#                 metrics = await runner.run_single_experiment(
-#                     prompt=prompt,
-#                     enable_rag=config["enable_rag"],
-#                     rag_type=config["rag_type"],
-#                     experiment_name=f"comparison_{config['name']}_p{prompt_idx+1}_r{rep+1}"
-#                 )
-
-#                 # Step 2: 对于优化算法，运行真正的优化过程
 #                 algorithm = config.get("algorithm", "baseline")
+#                 experiment_name = f"comparison_{config['name']}_p{prompt_idx+1}_r{rep+1}"
 
-#                 if algorithm in ["ACO", "GA"]:
-#                     # 获取优化算法参数
+#                 # ================= 1. 基线方案 (LLM + GraphRAG) =================
+#                 if algorithm == "standard":
+#                     total_start = time.time()
+#                     log_print(f"\n{'='*60}")
+#                     log_print(f"实验: {experiment_name}")
+#                     log_print(f"RAG模式: {'启用 (' + config['rag_type'] + ')' if config['enable_rag'] else '禁用'}")
+#                     log_print(f"Prompt: {prompt[:50]}...")
+#                     log_print(f"{'='*60}")
+                    
+#                     try:
+#                         # 仅生成计划，拦截输出
+#                         metrics, baseline_plan = runner.generate_instruction_plan(
+#                             prompt=prompt,
+#                             enable_rag=config["enable_rag"],
+#                             rag_type=config["rag_type"],
+#                         )
+                        
+#                         # 提取并打印大模型基线的选择结果
+#                         truck_plan = baseline_plan.get("agenttruck", {}) or {}
+#                         uav_plan = baseline_plan.get("agentuav", {}) or {}
+#                         robot_plan = baseline_plan.get("agentrobot", {}) or {}
+                        
+#                         w_name = truck_plan.get("start_location", "未知仓库")
+#                         l_name = truck_plan.get("end_location", "未知起降点")
+#                         t_id = truck_plan.get("agent_id", "未知卡车")
+#                         u_id = uav_plan.get("agent_id", "未知无人机")
+#                         r_id = robot_plan.get("agent_id", "未知机器人")
+                        
+#                         log_print(f"    {algorithm}选择结果: warehouse={w_name}, landing={l_name}, truck={t_id}, uav={u_id}, robot={r_id}")
+                        
+#                         # 执行计划
+#                         await runner.execute_agent_plan(baseline_plan, metrics)
+#                         metrics.total_time = time.time() - total_start
+#                     except Exception as e:
+#                         log_print(f"基线实验执行失败: {e}")
+#                         metrics = ExperimentMetrics(
+#                             rag_enabled=config["enable_rag"],
+#                             rag_type=f"{config['rag_type']}_baseline_failed",
+#                             total_time=time.time() - total_start,
+#                         )
+
+#                 # ================= 2. 传统启发式算法 (ACO / GA) =================
+#                 elif algorithm in ["ACO", "GA"]:
+#                     total_start = time.time()
 #                     algo_params = config.get("algorithm_params", {})
+#                     candidate_top_k = int(algo_params.get("candidate_top_k", 3))
 
-#                     log_print(f"\n>>> 运行 {algorithm} 优化算法...")
+#                     log_print(f"\n>>> 运行 {algorithm} 高层调度优化...")
 
-#                     # 创建优化算法实例
-#                     opt_algorithm = create_algorithm(
-#                         algorithm,
-#                         max_iterations=algo_params.get("max_iterations", 50),
-#                         random_seed=42,
-#                         **{k: v for k, v in algo_params.items() if k != "max_iterations"}
-#                     )
+#                     try:
+#                         metrics, baseline_plan = runner.generate_instruction_plan(
+#                             prompt=prompt,
+#                             enable_rag=config["enable_rag"],
+#                             rag_type=config["rag_type"],
+#                         )
 
-#                     # 准备优化问题的位置数据
-#                     # 使用默认位置或从配置中获取
-#                     locations = create_default_locations()
-#                     tasks = create_default_tasks(locations)
+#                         scenario = build_dispatch_scenario_from_db(
+#                             prompt=prompt,
+#                             answer_dict=baseline_plan,
+#                             top_k=candidate_top_k,
+#                         )
 
-#                     # 执行优化
-#                     opt_result = opt_algorithm.optimize(tasks, locations)
+#                         if algorithm == "GA":
+#                             optimizer = GeneticDispatchOptimizer(
+#                                 population_size=int(algo_params.get("population_size", 50)),
+#                                 generations=int(algo_params.get("max_iterations", 50)),
+#                                 crossover_rate=float(algo_params.get("crossover_rate", 0.8)),
+#                                 mutation_rate=float(algo_params.get("mutation_rate", 0.1)),
+#                                 elite_size=int(algo_params.get("elite_size", 5)),
+#                                 tournament_size=int(algo_params.get("tournament_size", 3)),
+#                                 random_seed=42,
+#                             )
+#                             opt_result = optimizer.optimize_dispatch(scenario)
+#                             dispatch_tag = "ga_dispatch"
+#                         else:
+#                             optimizer = AntColonyDispatchOptimizer(
+#                                 num_ants=int(algo_params.get("num_ants", 20)),
+#                                 iterations=int(algo_params.get("max_iterations", 50)),
+#                                 alpha=float(algo_params.get("alpha", 1.0)),
+#                                 beta=float(algo_params.get("beta", 2.0)),
+#                                 rho=float(algo_params.get("rho", 0.5)),
+#                                 q=float(algo_params.get("q", 100.0)),
+#                                 random_seed=42,
+#                             )
+#                             opt_result = optimizer.optimize_dispatch(scenario)
+#                             dispatch_tag = "aco_dispatch"
 
-#                     log_print(f"    最优路径: {' -> '.join(opt_result.best_route[:3])}... (共{len(opt_result.best_route)}个点)")
-#                     log_print(f"    最优距离: {opt_result.best_distance:.2f} km")
-#                     log_print(f"    改进比例: {opt_result.improvement_ratio:.2%}")
+#                         opt_plan = build_ga_agent_plan(opt_result, scenario, baseline_plan)
 
-#                     # Step 3: 根据优化结果调整仿真指标
-#                     improvement = max(0, opt_result.improvement_ratio)
+#                         log_print(
+#                             f"    {algorithm}选择结果: "
+#                             f"warehouse={opt_result.metadata['warehouse']['name']}, "
+#                             f"landing={opt_result.metadata['landing']['name']}, "
+#                             f"truck={opt_result.metadata['truck']['name']}, "
+#                             f"uav={opt_result.metadata['uav']['name']}, "
+#                             f"robot={opt_result.metadata['robot']['name']}"
+#                         )
+#                         log_print(f"    {algorithm}估计总代价: {opt_result.best_time:.2f}s")
+#                         log_print(f"    {algorithm}改进比例: {opt_result.improvement_ratio:.2%}")
 
-#                     if algorithm == "ACO":
-#                         # 蚁群算法：路径优化，显著减少仿真时间
-#                         if improvement > 0:
-#                             # 路径优化带来的时间节省
-#                             metrics.robot_simulation_time *= (1 - improvement * 0.7)
-#                             metrics.truck_simulation_time *= (1 - improvement * 0.8)
-#                             metrics.uav_simulation_time *= (1 - improvement * 0.6)
-#                             metrics.total_time *= (1 - improvement * 0.5)
-#                             log_print(f"    ACO优化后仿真时间减少: {improvement*50:.1f}%")
+#                         metrics.llm_command_gen_time = 0.0
+#                         metrics.llm_total_time = metrics.llm_query_gen_time
+#                         metrics.rag_type = f"{config['rag_type']}_{dispatch_tag}"
 
-#                     elif algorithm == "GA":
-#                         # 遗传算法：多阶段决策优化
-#                         if improvement > 0:
-#                             # 多阶段优化，LLM思考时间略增，但仿真更精确
-#                             metrics.llm_total_time *= 1.05  # 略微增加思考时间
-#                             metrics.robot_simulation_time *= (1 - improvement * 0.6)
-#                             metrics.truck_simulation_time *= (1 - improvement * 0.7)
-#                             metrics.uav_simulation_time *= (1 - improvement * 0.5)
-#                             metrics.total_time *= (1 - improvement * 0.4)
-#                             log_print(f"    GA优化后仿真时间减少: {improvement*40:.1f}%")
+#                         await runner.execute_agent_plan(opt_plan, metrics)
+#                         metrics.total_time = time.time() - total_start
+#                     except Exception as e:
+#                         log_print(f"{algorithm}对比实验执行失败: {e}")
+#                         metrics = ExperimentMetrics(
+#                             rag_enabled=config["enable_rag"],
+#                             rag_type=f"{config['rag_type']}_{algorithm.lower()}_dispatch_failed",
+#                             total_time=time.time() - total_start,
+#                         )
 
 #                 results[config["name"]].append(metrics)
 
@@ -983,6 +1253,7 @@
 #     log_print(f"\n{'算法':<25} {'LLM耗时(s)':<12} {'Robot(s)':<12} {'Truck(s)':<12} {'UAV(s)':<12} {'总耗时(s)':<12}")
 #     log_print("-"*90)
 
+#     success_summaries = []
 #     for config_name, metrics_list in results.items():
 #         if not metrics_list:
 #             continue
@@ -994,10 +1265,25 @@
 #         avg_truck = sum(m.truck_simulation_time for m in metrics_list if m.truck_simulation_time > 0) / max(1, truck_count)
 #         avg_uav = sum(m.uav_simulation_time for m in metrics_list if m.uav_simulation_time > 0) / max(1, uav_count)
 #         avg_total = sum(m.total_time for m in metrics_list) / len(metrics_list)
+#         robot_success_rate = sum(1 for m in metrics_list if m.robot_success) / len(metrics_list) * 100
+#         truck_success_rate = sum(1 for m in metrics_list if m.truck_success) / len(metrics_list) * 100
+#         uav_success_rate = sum(1 for m in metrics_list if m.uav_success) / len(metrics_list) * 100
+#         success_summaries.append(
+#             f"  {config_name}: Robot {robot_success_rate:.0f}%, Truck {truck_success_rate:.0f}%, UAV {uav_success_rate:.0f}%"
+#         )
 #         log_print(f"{config_name:<25} {avg_llm:<12.2f} {avg_robot:<12.2f} {avg_truck:<12.2f} {avg_uav:<12.2f} {avg_total:<12.2f}")
 
+#     log_print("\n指标说明:")
+#     log_print("  1. LLM耗时: baseline 显示 LLM 总思考时间；ACO/GA 当前仅保留任务解析与查询生成时间，不包含被传统算法替代的高层调度生成时间。")
+#     log_print("  2. Robot/Truck/UAV: 这三列是各智能体仿真执行时间，口径偏向业务/仿真时间，不是纯程序墙钟时间。")
+#     log_print("  3. 总耗时: 端到端真实耗时，包含 RAG、LLM、ACO/GA 优化、接口请求、轮询等待和仿真执行，因此不等于前面几列直接相加。")
+#     log_print("  4. 若某个 Agent 成功标记为 False，该行时间通常包含失败前的等待或超时，不能直接当成有效完成时间解读。")
 
-# # ===================== 综合实验入口 =====================
+#     log_print("\n成功率摘要:")
+#     for line in success_summaries:
+#         log_print(line)
+
+
 # async def run_all_experiments(
 #     output_dir: str = None,
 #     prompts: List[str] = None,
@@ -1451,6 +1737,16 @@ def extract_and_parse_last_json(final_answer: str) -> dict:
         raise ValueError(f"JSON解析失败：{e}") from e
 
 
+def preview_text_for_log(text: str, limit: int = 240) -> str:
+    """压缩 LLM 原始输出，便于日志里快速定位格式问题。"""
+    normalized = (text or "").replace("\r", "\n").replace("\n", "\\n").strip()
+    if not normalized:
+        return "(empty)"
+    if len(normalized) <= limit:
+        return normalized
+    return normalized[:limit] + "..."
+
+
 def extract_destination_from_prompt(prompt: str) -> Optional[Tuple[float, float]]:
     """从 prompt 中提取最后一组经纬度，返回 (lat, lng)。"""
     matches = re.findall(r'([0-9]+\.[0-9]+)\s*,\s*([0-9]+\.[0-9]+)', prompt)
@@ -1593,6 +1889,246 @@ def build_dispatch_scenario_from_db(
         )
     finally:
         db.close()
+
+
+def _format_dispatch_candidate_line(candidate: ResourceCandidate) -> str:
+    """格式化候选资源，供严格版 baseline 的二次 LLM 选择使用。"""
+    extras: List[str] = []
+    if candidate.resource_type == "warehouse":
+        if candidate.metadata.get("goods_name"):
+            extras.append(f"goods={candidate.metadata['goods_name']}")
+        if candidate.metadata.get("stock_quantity") is not None:
+            extras.append(f"stock={candidate.metadata['stock_quantity']}")
+    elif candidate.resource_type in {"truck", "uav", "robot"}:
+        if candidate.metadata.get("warehouse_id") is not None:
+            extras.append(f"home_warehouse_id={candidate.metadata['warehouse_id']}")
+        if candidate.metadata.get("max_load") is not None:
+            extras.append(f"max_load={candidate.metadata['max_load']}")
+        if candidate.metadata.get("battery_capacity") is not None:
+            extras.append(f"battery_capacity={candidate.metadata['battery_capacity']}")
+
+    extra_text = f", {', '.join(extras)}" if extras else ""
+    return (
+        f"- id={candidate.id}, name={candidate.name}, "
+        f"lat={candidate.lat:.6f}, lng={candidate.lng:.6f}{extra_text}"
+    )
+
+
+def format_dispatch_candidates_for_llm(scenario: DispatchScenario) -> str:
+    """将调度候选集序列化为紧凑文本，供 LLM 在固定候选中做选择。"""
+    sections = [
+        ("仓库候选", scenario.warehouse_candidates),
+        ("起降点候选", scenario.landing_candidates),
+        ("卡车候选", scenario.truck_candidates),
+        ("无人机候选", scenario.uav_candidates),
+        ("机器人候选", scenario.robot_candidates),
+    ]
+
+    lines = [
+        f"货物名称: {scenario.goods_name}",
+        f"最终目的地: {scenario.destination.name} ({scenario.destination.lng:.6f},{scenario.destination.lat:.6f})",
+    ]
+    for title, candidates in sections:
+        lines.append(f"{title}:")
+        lines.extend(_format_dispatch_candidate_line(candidate) for candidate in candidates)
+    return "\n".join(lines)
+
+
+def build_strict_baseline_selection_prompt(
+    user_prompt: str,
+    draft_plan: Dict[str, Any],
+    scenario: DispatchScenario,
+) -> str:
+    """构造严格版 baseline 二阶段 LLM 选站 prompt。"""
+    draft_truck = draft_plan.get("agenttruck", {}) or {}
+    draft_uav = draft_plan.get("agentuav", {}) or {}
+    draft_robot = draft_plan.get("agentrobot", {}) or {}
+    draft_hint = {
+        "goods_name": draft_robot.get("goods_name", scenario.goods_name),
+        "truck_start": [draft_truck.get("start_lng"), draft_truck.get("start_lat")],
+        "truck_end": [draft_truck.get("end_lng"), draft_truck.get("end_lat")],
+        "uav_start": [draft_uav.get("start_lng"), draft_uav.get("start_lat")],
+        "uav_end": [draft_uav.get("end_lng"), draft_uav.get("end_lat")],
+        "draft_robot_id": draft_robot.get("agent_id"),
+        "draft_truck_id": draft_truck.get("agent_id"),
+        "draft_uav_id": draft_uav.get("agent_id"),
+    }
+    draft_hint_json = json.dumps(draft_hint, ensure_ascii=False, indent=2)
+    candidate_summary = format_dispatch_candidates_for_llm(scenario)
+    return f"""
+你是多智能体物流调度系统中的资源选择器。
+你只负责在固定候选集中选择资源，不要重写执行计划。
+
+要求：
+1. 只能从候选集中各选择 1 个 warehouse、1 个 landing、1 个 truck、1 个 uav、1 个 robot。
+2. 所有 ID 必须与候选列表完全一致，不能发明新 ID、新名称、新坐标。
+3. warehouse 必须能提供当前货物。
+4. landing 必须同时满足 truck 的终点和 uav 的起点语义。
+5. 只输出一个 JSON 对象，不要解释，不要 markdown，不要代码块。
+
+用户需求：
+{user_prompt}
+
+第一阶段草案提示：
+{draft_hint_json}
+
+固定候选集：
+{candidate_summary}
+
+输出 JSON 的格式必须严格等于：
+{{
+  "selected_resources": {{
+    "warehouse_id": "...",
+    "landing_id": "...",
+    "truck_id": "...",
+    "uav_id": "...",
+    "robot_id": "..."
+  }},
+  "selection_reason": "..."
+}}
+
+现在直接输出 JSON，并且第一个字符必须是 {{，最后一个字符必须是 }}。
+""".strip()
+
+
+def _find_candidate_by_id(
+    candidates: List[ResourceCandidate],
+    resource_id: Any,
+    resource_label: str,
+) -> ResourceCandidate:
+    """按候选 ID 严格匹配，匹配失败直接报错。"""
+    normalized_id = str(resource_id).strip().lower()
+    for candidate in candidates:
+        if candidate.id.strip().lower() == normalized_id:
+            return candidate
+    raise ValueError(f"LLM选择的{resource_label}不在候选集中: {resource_id}")
+
+
+def build_strict_baseline_plan_from_selection(
+    selection_dict: Dict[str, Any],
+    scenario: DispatchScenario,
+    draft_plan: Dict[str, Any],
+) -> Tuple[Dict[str, Any], Dict[str, Dict[str, Any]]]:
+    """将 LLM 的严格选站结果物化为可执行 plan，并返回统一的选择结果元数据。"""
+    selected_resources = selection_dict.get("selected_resources") or selection_dict
+
+    warehouse = _find_candidate_by_id(
+        scenario.warehouse_candidates,
+        selected_resources.get("warehouse_id"),
+        "仓库",
+    )
+    landing = _find_candidate_by_id(
+        scenario.landing_candidates,
+        selected_resources.get("landing_id"),
+        "起降点",
+    )
+    truck = _find_candidate_by_id(
+        scenario.truck_candidates,
+        selected_resources.get("truck_id"),
+        "卡车",
+    )
+    uav = _find_candidate_by_id(
+        scenario.uav_candidates,
+        selected_resources.get("uav_id"),
+        "无人机",
+    )
+    robot = _find_candidate_by_id(
+        scenario.robot_candidates,
+        selected_resources.get("robot_id"),
+        "机器人",
+    )
+
+    draft_truck = copy.deepcopy(draft_plan.get("agenttruck", {}) or {})
+    draft_uav = copy.deepcopy(draft_plan.get("agentuav", {}) or {})
+    draft_robot = copy.deepcopy(draft_plan.get("agentrobot", {}) or {})
+
+    strict_plan = {
+        "agenttruck": {
+            "type": "TRUCK",
+            "tasks": [f"从{warehouse.name}运输到{landing.name}"],
+            "start_location": warehouse.name,
+            "end_location": landing.name,
+            "start_lat": warehouse.lat,
+            "start_lng": warehouse.lng,
+            "end_lat": landing.lat,
+            "end_lng": landing.lng,
+            "agent_id": truck.id,
+            "truck_params": draft_truck.get("truck_params", {"load_weight": 5.0, "base_fuel": 30}),
+        },
+        "agentuav": {
+            "type": "UAV",
+            "tasks": [f"从{landing.name}接驳配送到最终目的地"],
+            "Map_name": draft_uav.get("Map_name", "Map1"),
+            "max_steps": draft_uav.get("max_steps", 1000),
+            "start_lat": landing.lat,
+            "start_lng": landing.lng,
+            "end_lat": scenario.destination.lat,
+            "end_lng": scenario.destination.lng,
+            "agent_id": uav.id,
+        },
+        "agentrobot": {
+            "type": "ROBOTS",
+            "tasks": [f"在{warehouse.name}内分拣并交接{scenario.goods_name}"],
+            "agent_id": robot.id,
+            "goods_name": draft_robot.get("goods_name", scenario.goods_name),
+        },
+        "instruction_summary": (
+            selection_dict.get("selection_reason")
+            or f"LLM严格选择 {warehouse.name} -> {landing.name}，分配 {robot.id} / {truck.id} / {uav.id}"
+        ),
+    }
+
+    selection_metadata = {
+        "warehouse": {"id": warehouse.id, "name": warehouse.name, "lat": warehouse.lat, "lng": warehouse.lng},
+        "landing": {"id": landing.id, "name": landing.name, "lat": landing.lat, "lng": landing.lng},
+        "truck": {"id": truck.id, "name": truck.name, "lat": truck.lat, "lng": truck.lng},
+        "uav": {"id": uav.id, "name": uav.name, "lat": uav.lat, "lng": uav.lng},
+        "robot": {"id": robot.id, "name": robot.name, "lat": robot.lat, "lng": robot.lng},
+    }
+    return strict_plan, selection_metadata
+
+
+def select_strict_baseline_plan_with_llm(
+    user_prompt: str,
+    draft_plan: Dict[str, Any],
+    scenario: DispatchScenario,
+) -> Tuple[Dict[str, Any], Dict[str, Dict[str, Any]], float]:
+    """让 LLM 在固定候选集内做严格资源选择，并返回可执行 plan。"""
+    selection_prompt = build_strict_baseline_selection_prompt(
+        user_prompt=user_prompt,
+        draft_plan=draft_plan,
+        scenario=scenario,
+    )
+    selection_answer, selection_time = call_llm_model(selection_prompt, "", 0.0)
+    try:
+        selection_dict = extract_and_parse_last_json(selection_answer)
+    except ValueError:
+        first_preview = preview_text_for_log(selection_answer)
+        log_print(f"严格资源选择首轮输出不可解析，准备重试。预览: {first_preview}")
+        retry_prompt = (
+            selection_prompt
+            + "\n\n上一次回答如下：\n"
+            + (selection_answer or "(empty)")
+            + "\n\n请删除上一次回答中的所有解释性文字，只保留一个合法 JSON 对象重新输出。"
+            + "\n再次强调：不要 markdown，不要代码块，不要额外句子。"
+        )
+        retry_answer, retry_time = call_llm_model(retry_prompt, "", 0.0)
+        selection_time += retry_time
+        try:
+            selection_dict = extract_and_parse_last_json(retry_answer)
+        except ValueError as retry_error:
+            retry_preview = preview_text_for_log(retry_answer)
+            raise ValueError(
+                "严格资源选择未返回可解析JSON，"
+                f"首轮输出预览: {first_preview}，"
+                f"重试输出预览: {retry_preview}"
+            ) from retry_error
+    strict_plan, selection_metadata = build_strict_baseline_plan_from_selection(
+        selection_dict=selection_dict,
+        scenario=scenario,
+        draft_plan=draft_plan,
+    )
+    return strict_plan, selection_metadata, selection_time
 
 
 def build_ga_agent_plan(
@@ -1969,7 +2505,10 @@ COMPARISON_CONFIGS = [
         "display_name": "基线方案 (GraphRAG + LLM)",
         "enable_rag": True,
         "rag_type": "graphrag",
-        "algorithm": "standard"
+        "algorithm": "standard",
+        "algorithm_params": {
+            "candidate_top_k": 3
+        }
     },
     {
         "name": "ACO",
@@ -2204,46 +2743,58 @@ async def run_comparison_experiments(
                 algorithm = config.get("algorithm", "baseline")
                 experiment_name = f"comparison_{config['name']}_p{prompt_idx+1}_r{rep+1}"
 
-                # ================= 1. 基线方案 (LLM + GraphRAG) =================
                 if algorithm == "standard":
                     total_start = time.time()
+                    algo_params = config.get("algorithm_params", {})
+                    candidate_top_k = int(algo_params.get("candidate_top_k", 3))
+                    metrics = ExperimentMetrics(
+                        rag_enabled=config["enable_rag"],
+                        rag_type=config["rag_type"] if config["enable_rag"] else "none",
+                    )
                     log_print(f"\n{'='*60}")
                     log_print(f"实验: {experiment_name}")
                     log_print(f"RAG模式: {'启用 (' + config['rag_type'] + ')' if config['enable_rag'] else '禁用'}")
                     log_print(f"Prompt: {prompt[:50]}...")
                     log_print(f"{'='*60}")
-                    
+
                     try:
-                        # 仅生成计划，拦截输出
-                        metrics, baseline_plan = runner.generate_instruction_plan(
+                        metrics, draft_plan = runner.generate_instruction_plan(
                             prompt=prompt,
                             enable_rag=config["enable_rag"],
                             rag_type=config["rag_type"],
                         )
-                        
-                        # 提取并打印大模型基线的选择结果
-                        truck_plan = baseline_plan.get("agenttruck", {}) or {}
-                        uav_plan = baseline_plan.get("agentuav", {}) or {}
-                        robot_plan = baseline_plan.get("agentrobot", {}) or {}
-                        
-                        w_name = truck_plan.get("start_location", "未知仓库")
-                        l_name = truck_plan.get("end_location", "未知起降点")
-                        t_id = truck_plan.get("agent_id", "未知卡车")
-                        u_id = uav_plan.get("agent_id", "未知无人机")
-                        r_id = robot_plan.get("agent_id", "未知机器人")
-                        
-                        log_print(f"    {algorithm}选择结果: warehouse={w_name}, landing={l_name}, truck={t_id}, uav={u_id}, robot={r_id}")
-                        
-                        # 执行计划
-                        await runner.execute_agent_plan(baseline_plan, metrics)
+
+                        scenario = build_dispatch_scenario_from_db(
+                            prompt=prompt,
+                            answer_dict=draft_plan,
+                            top_k=candidate_top_k,
+                        )
+                        strict_plan, strict_selection, selection_time = select_strict_baseline_plan_with_llm(
+                            user_prompt=prompt,
+                            draft_plan=draft_plan,
+                            scenario=scenario,
+                        )
+
+                        metrics.llm_command_gen_time += selection_time
+                        metrics.llm_total_time += selection_time
+                        log_print(f"LLM严格资源选择耗时: {selection_time:.2f}s")
+                        log_print(f"LLM更新后总思考耗时: {metrics.llm_total_time:.2f}s")
+                        log_print(
+                            "    baseline选择结果: "
+                            f"warehouse={strict_selection['warehouse']['name']}, "
+                            f"landing={strict_selection['landing']['name']}, "
+                            f"truck={strict_selection['truck']['name']}, "
+                            f"uav={strict_selection['uav']['name']}, "
+                            f"robot={strict_selection['robot']['name']}"
+                        )
+
+                        await runner.execute_agent_plan(strict_plan, metrics)
                         metrics.total_time = time.time() - total_start
                     except Exception as e:
                         log_print(f"基线实验执行失败: {e}")
-                        metrics = ExperimentMetrics(
-                            rag_enabled=config["enable_rag"],
-                            rag_type=f"{config['rag_type']}_baseline_failed",
-                            total_time=time.time() - total_start,
-                        )
+                        metrics.rag_enabled = config["enable_rag"]
+                        metrics.rag_type = f"{config['rag_type']}_baseline_failed"
+                        metrics.total_time = time.time() - total_start
 
                 # ================= 2. 传统启发式算法 (ACO / GA) =================
                 elif algorithm in ["ACO", "GA"]:
