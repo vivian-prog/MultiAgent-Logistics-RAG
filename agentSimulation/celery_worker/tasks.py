@@ -20,7 +20,10 @@ from warehouse_robot.core import simulate_single_task, simulate_batch_tasks
 
 # 导入配置加载器
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
-from configs.loader import get_truck_config
+from configs.loader import get_truck_config, get_uav_config
+
+UAV_GRID_SIZE_METERS = 100.0
+DEFAULT_UAV_SPEED_MPS = 10.0
 
 # ---------------------- 辅助函数：确保任务在 task_main 中存在 ----------------------
 def ensure_task_exists(db, task_id, task_type_code, params):
@@ -77,6 +80,63 @@ def ensure_agent_exists(db, agent_id, agent_type_code):
     except Exception as e:
         print(f"ensure_agent_exists 警告: {e}")
         db.rollback()
+
+
+def resolve_uav_speed_mps(db, agent_id, params):
+    """
+    解析UAV真实速度（m/s）。
+    优先级：
+    1. 调用参数显式传入的速度
+    2. agent_base.max_speed
+    3. 默认值 10 m/s
+    """
+    speed_candidates = [
+        params.get("uav_speed_mps"),
+        params.get("speed_mps"),
+        params.get("uav_speed"),
+    ]
+    for candidate in speed_candidates:
+        if candidate is None:
+            continue
+        try:
+            speed = float(candidate)
+            if speed > 0:
+                return speed
+        except (TypeError, ValueError):
+            pass
+
+    agent = db.query(AgentBase).filter(AgentBase.agent_id == agent_id).first()
+    if agent and agent.max_speed is not None:
+        try:
+            speed = float(agent.max_speed)
+            if speed > 0:
+                return speed
+        except (TypeError, ValueError):
+            pass
+
+    return DEFAULT_UAV_SPEED_MPS
+
+
+def calculate_uav_trajectory_time_seconds(trajectory, speed_mps, grid_size_m=UAV_GRID_SIZE_METERS):
+    """
+    按轨迹累计距离 / 真实速度 计算总耗时（秒）。
+    trajectory 中的位置坐标仍是仿真 grid，需要先换算为米。
+    """
+    if not trajectory or len(trajectory) < 2 or speed_mps <= 0:
+        return 0.0
+
+    total_distance_m = 0.0
+    prev_x, prev_y, prev_z, _ = trajectory[0]
+    for x, y, z, _ in trajectory[1:]:
+        segment_distance_grid = math.sqrt(
+            (float(x) - float(prev_x)) ** 2 +
+            (float(y) - float(prev_y)) ** 2 +
+            (float(z) - float(prev_z)) ** 2
+        )
+        total_distance_m += segment_distance_grid * grid_size_m
+        prev_x, prev_y, prev_z = x, y, z
+
+    return total_distance_m / speed_mps
 
 # 核心：用@app.task装饰，将普通函数转为Celery异步任务
 @app.task(bind=True, name="run_simulation_task")  # name可选，指定任务名（方便查询）
@@ -414,6 +474,9 @@ def save_uav_sensor_data(db, task_id, uav_trajectories, params):
 
         # 确保 Agent 存在
         ensure_agent_exists(db, agent_id, 1) # UAV = 1
+        speed_mps = resolve_uav_speed_mps(db, agent_id, params)
+        elapsed_seconds = 0.0
+        prev_point = None
 
         for point in trajectory:
             # point: [x, y, z, t]
@@ -421,6 +484,16 @@ def save_uav_sensor_data(db, task_id, uav_trajectories, params):
 
             # 简单的电量模拟
             battery = max(0, 100 - int(t * 0.5))
+
+            if prev_point is not None:
+                prev_x, prev_y, prev_z, _ = prev_point
+                segment_distance_grid = math.sqrt(
+                    (float(x) - float(prev_x)) ** 2 +
+                    (float(y) - float(prev_y)) ** 2 +
+                    (float(z) - float(prev_z)) ** 2
+                )
+                elapsed_seconds += (segment_distance_grid * UAV_GRID_SIZE_METERS) / speed_mps
+            prev_point = point
 
             sensor_data = AgentUavSensor(
                 agent_id=agent_id,
@@ -432,7 +505,7 @@ def save_uav_sensor_data(db, task_id, uav_trajectories, params):
                 obstacle_dist=100.0, # 模拟值
                 battery_remaining=battery,
                 signal_strength=90,
-                collect_time=start_time + timedelta(seconds=t)
+                collect_time=start_time + timedelta(seconds=elapsed_seconds)
             )
             sensor_data_list.append(sensor_data)
 
@@ -466,6 +539,26 @@ def run_simulation_task_agent_uav(self, params: dict):
 
         # 3. 关键：调用导入的无人机仿真核心函数
         uav_sim_result = run_uav_simulation_core(params, self)
+        uav_speed_mps = None
+        uav_total_time_seconds = 0.0
+        if "uav_trajectories" in uav_sim_result:
+            try:
+                uav_speed_mps = float(
+                    params.get("uav_speed_mps")
+                    or params.get("speed_mps")
+                    or params.get("uav_speed")
+                    or get_uav_config().get("physical_speed_mps", DEFAULT_UAV_SPEED_MPS)
+                )
+            except (TypeError, ValueError):
+                uav_speed_mps = DEFAULT_UAV_SPEED_MPS
+
+            trajectory_times = [
+                calculate_uav_trajectory_time_seconds(trajectory, uav_speed_mps)
+                for trajectory in uav_sim_result["uav_trajectories"].values()
+            ]
+            uav_total_time_seconds = max(trajectory_times, default=0.0)
+            uav_sim_result["uav_speed_mps"] = round(uav_speed_mps, 2)
+            uav_sim_result["total_time_seconds"] = round(uav_total_time_seconds, 2)
 
         # --- 新增：保存轨迹数据到数据库 ---
         try:

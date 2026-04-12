@@ -1788,8 +1788,9 @@ class ExperimentRunner:
                     task_id = resp.json()["task_id"]
                     result = await poll_task(client, task_id, "agentuav")
 
-                    if result and "total_steps" in result:
-                        sim_time = float(result["total_steps"])
+                    if result:
+                        sim_data = result.get("simulation_data", result)
+                        sim_time = float(sim_data.get("total_time_seconds", sim_data.get("total_steps", 0.0)))
                     else:
                         sim_time = time.time() - t_start
 
@@ -2203,13 +2204,48 @@ async def run_comparison_experiments(
                 algorithm = config.get("algorithm", "baseline")
                 experiment_name = f"comparison_{config['name']}_p{prompt_idx+1}_r{rep+1}"
 
+                # ================= 1. 基线方案 (LLM + GraphRAG) =================
                 if algorithm == "standard":
-                    metrics = await runner.run_single_experiment(
-                        prompt=prompt,
-                        enable_rag=config["enable_rag"],
-                        rag_type=config["rag_type"],
-                        experiment_name=experiment_name
-                    )
+                    total_start = time.time()
+                    log_print(f"\n{'='*60}")
+                    log_print(f"实验: {experiment_name}")
+                    log_print(f"RAG模式: {'启用 (' + config['rag_type'] + ')' if config['enable_rag'] else '禁用'}")
+                    log_print(f"Prompt: {prompt[:50]}...")
+                    log_print(f"{'='*60}")
+                    
+                    try:
+                        # 仅生成计划，拦截输出
+                        metrics, baseline_plan = runner.generate_instruction_plan(
+                            prompt=prompt,
+                            enable_rag=config["enable_rag"],
+                            rag_type=config["rag_type"],
+                        )
+                        
+                        # 提取并打印大模型基线的选择结果
+                        truck_plan = baseline_plan.get("agenttruck", {}) or {}
+                        uav_plan = baseline_plan.get("agentuav", {}) or {}
+                        robot_plan = baseline_plan.get("agentrobot", {}) or {}
+                        
+                        w_name = truck_plan.get("start_location", "未知仓库")
+                        l_name = truck_plan.get("end_location", "未知起降点")
+                        t_id = truck_plan.get("agent_id", "未知卡车")
+                        u_id = uav_plan.get("agent_id", "未知无人机")
+                        r_id = robot_plan.get("agent_id", "未知机器人")
+                        
+                        log_print(f"    {algorithm}选择结果: warehouse={w_name}, landing={l_name}, truck={t_id}, uav={u_id}, robot={r_id}")
+                        
+                        # 执行计划
+                        await runner.execute_agent_plan(baseline_plan, metrics)
+                        metrics.total_time = time.time() - total_start
+                    except Exception as e:
+                        log_print(f"基线实验执行失败: {e}")
+                        metrics = ExperimentMetrics(
+                            rag_enabled=config["enable_rag"],
+                            rag_type=f"{config['rag_type']}_baseline_failed",
+                            total_time=time.time() - total_start,
+                        )
+
+                # ================= 2. 传统启发式算法 (ACO / GA) =================
                 elif algorithm in ["ACO", "GA"]:
                     total_start = time.time()
                     algo_params = config.get("algorithm_params", {})
@@ -2281,13 +2317,6 @@ async def run_comparison_experiments(
                             rag_type=f"{config['rag_type']}_{algorithm.lower()}_dispatch_failed",
                             total_time=time.time() - total_start,
                         )
-                else:
-                    metrics = await runner.run_single_experiment(
-                        prompt=prompt,
-                        enable_rag=config["enable_rag"],
-                        rag_type=config["rag_type"],
-                        experiment_name=experiment_name
-                    )
 
                 results[config["name"]].append(metrics)
 

@@ -1,8 +1,8 @@
 ====================================================================================================
 表名：uav_landing_points
 备注：uav起降点基础信息表：存储uav的经纬度传感器数据
-生成时间：2026-02-06 23:14:42
-数据记录数：4
+生成时间：2026-04-06 14:01:05
+数据记录数：37
 ====================================================================================================
 
 【表结构】
@@ -18,7 +18,40 @@
 
 【表数据】
 表数据记录为：
-第1个数据：id是1,name是中山大学深圳校区起降点,location_x是113.904500,location_y是22.770500,description是位于校区北门广场，适合接收医疗物资,created_at是2026-02-06 21:26:01。
-第2个数据：id是2,name是深圳北站起降点,location_x是114.029000,location_y是22.609000,description是交通枢纽中转站,created_at是2026-02-06 21:26:01。
-第3个数据：id是3,name是光明城站起降点,location_x是113.945000,location_y是22.735000,description是光明区重要节点,created_at是2026-02-06 21:26:01。
-第4个数据：id是4,name是宝安机场物流起降点,location_x是113.811000,location_y是22.639000,description是航空物流接驳点,created_at是2026-02-06 21:26:01。
+第1个数据：id是1,name是VTOL1,location_x是114.171862,location_y是22.651958,description是VTOL candidate site; grid_x=501815.5839, grid_y=2504992.533,created_at是2026-04-06 13:46:44。
+第2个数据：id是2,name是VTOL2,location_x是114.129455,location_y是22.677433,description是VTOL candidate site; grid_x=497459.0258, grid_y=2507812.673,created_at是2026-04-06 13:46:44。
+第3个数据：id是3,name是VTOL3,location_x是113.879985,location_y是22.751564,description是VTOL candidate site; grid_x=471847.7447, grid_y=2516044.433,created_at是2026-04-06 13:46:44。
+第4个数据：id是4,name是VTOL4,location_x是113.889091,location_y是22.697184,description是VTOL candidate site; grid_x=472771.8631, grid_y=2510023.053,created_at是2026-04-06 13:46:44。
+第5个数据：id是5,name是VTOL5,location_x是114.139747,location_y是22.572773,description是VTOL candidate site; grid_x=498515.1611, grid_y=2496227.233,created_at是2026-04-06 13:46:44。
+第6个数据：id是6,name是VTOL6,location_x是114.389187,location_y是22.753003,description是VTOL candidate site; grid_x=524126.4421, grid_y=2516196.873,created_at是2026-04-06 13:46:44。
+第7个数据：id是7,name是VTOL7,location_x是113.906952,location_y是22.771576,description是VTOL candidate site; grid_x=474620.0999, grid_y=2518254.813,created_at是2026-04-06 13:46:44。
+第8个数据：id是8,name是VTOL8,location_x是114.038189,location_y是22.700116,description是VTOL candidate site; grid_x=488085.825, grid_y=2510327.933,created_at是2026-04-06 13:46:44。
+第9个数据：id是9,name是VTOL9,location_x是114.306838,location_y是22.704905,description是VTOL candidate site; grid_x=515677.3597, grid_y=2510861.473,created_at是2026-04-06 13:46:44。
+第10个数据：id是10,name是VTOL10,location_x是114.066583,location_y是22.516976,description是VTOL candidate site; grid_x=490990.197, grid_y=2490053.413,created_at是2026-04-06 13:46:44。
+第11个数据：id是11,name是VTOL11,location_x是114.067830,location_y是22.575505,description是VTOL candidate site; grid_x=491122.2139, grid_y=2496532.113,created_at是2026-04-06 13:46:44。
+第12个数据：id是12,name是VTOL12,location_x是113.820910,location_y是22.721156,description是VTOL candidate site; grid_x=465774.9667, grid_y=2512690.753,created_at是2026-04-06 13:46:44。
+第13个数据：id是13,name是VTOL13,location_x是114.074212,location_y是22.643676,description是VTOL candidate site; grid_x=491782.2985, grid_y=2504077.893,created_at是2026-04-06 13:46:44。
+第14个数据：id是14,name是VTOL14,location_x是114.328562,location_y是22.603665,description是VTOL candidate site; grid_x=517921.6472, grid_y=2499657.133,created_at是2026-04-06 13:46:44。
+第15个数据：id是15,name是VTOL15,location_x是113.975429,location_y是22.527229,description是VTOL candidate site; grid_x=481616.9962, grid_y=2491196.713,created_at是2026-04-06 13:46:44。
+第16个数据：id是16,name是VTOL16,location_x是114.225811,location_y是22.617515,description是VTOL candidate site; grid_x=507360.2942, grid_y=2501181.533,created_at是2026-04-06 13:46:44。
+第17个数据：id是17,name是VTOL17,location_x是114.232305,location_y是22.742140,description是VTOL candidate site; grid_x=508020.3788, grid_y=2514977.353,created_at是2026-04-06 13:46:44。
+第18个数据：id是18,name是VTOL18,location_x是114.009877,location_y是22.731766,description是VTOL candidate site; grid_x=485181.4529, grid_y=2513834.053,created_at是2026-04-06 13:46:44。
+第19个数据：id是19,name是VTOL19,location_x是114.025462,location_y是22.563771,description是VTOL candidate site; grid_x=486765.6558, grid_y=2495236.373,created_at是2026-04-06 13:46:44。
+第20个数据：id是20,name是VTOL20,location_x是114.275885,location_y是22.587876,description是VTOL candidate site; grid_x=512508.9538, grid_y=2497904.073,created_at是2026-04-06 13:46:44。
+第21个数据：id是21,name是VTOL21,location_x是114.278522,location_y是22.663616,description是VTOL candidate site; grid_x=512772.9876, grid_y=2506288.273,created_at是2026-04-06 13:46:44。
+第22个数据：id是22,name是VTOL22,location_x是114.279889,location_y是22.753815,description是VTOL candidate site; grid_x=512905.0045, grid_y=2516273.093,created_at是2026-04-06 13:46:44。
+第23个数据：id是23,name是VTOL23,location_x是113.919013,location_y是22.485843,description是VTOL candidate site; grid_x=475808.2521, grid_y=2486623.513,created_at是2026-04-06 13:46:44。
+第24个数据：id是24,name是VTOL24,location_x是114.419936,location_y是22.695117,description是VTOL candidate site; grid_x=527294.848, grid_y=2509794.393,created_at是2026-04-06 13:46:44。
+第25个数据：id是25,name是VTOL25,location_x是114.421092,location_y是22.628326,description是VTOL candidate site; grid_x=527426.8649, grid_y=2502401.053,created_at是2026-04-06 13:46:44。
+第26个数据：id是26,name是VTOL26,location_x是113.941719,location_y是22.743395,description是VTOL candidate site; grid_x=478184.5565, grid_y=2515129.793,created_at是2026-04-06 13:46:44。
+第27个数据：id是27,name是VTOL27,location_x是113.942916,location_y是22.800546,description是VTOL candidate site; grid_x=478316.5734, grid_y=2521456.053,created_at是2026-04-06 13:46:44。
+第28个数据：id是28,name是VTOL28,location_x是113.953466,location_y是22.622914,description是VTOL candidate site; grid_x=479372.7087, grid_y=2501791.293,created_at是2026-04-06 13:46:44。
+第29个数据：id是29,name是VTOL29,location_x是113.963641,location_y是22.697290,description是VTOL candidate site; grid_x=480428.844, grid_y=2510023.053,created_at是2026-04-06 13:46:44。
+第30个数据：id是30,name是VTOL30,location_x是114.345395,location_y是22.700732,description是VTOL candidate site; grid_x=519637.8671, grid_y=2510404.153,created_at是2026-04-06 13:46:44。
+第31个数据：id是31,name是VTOL31,location_x是114.346633,location_y是22.666991,description是VTOL candidate site; grid_x=519769.884, grid_y=2506669.373,created_at是2026-04-06 13:46:44。
+第32个数据：id是32,name是VTOL32,location_x是114.098594,location_y是22.718739,description是VTOL candidate site; grid_x=494290.6199, grid_y=2512385.873,created_at是2026-04-06 13:46:44。
+第33个数据：id是33,name是VTOL33,location_x是113.865729,location_y是22.804556,description是VTOL candidate site; grid_x=470395.5587, grid_y=2521913.373,created_at是2026-04-06 13:46:44。
+第34个数据：id是34,name是VTOL34,location_x是114.116617,location_y是22.626478,description是VTOL candidate site; grid_x=496138.8566, grid_y=2502172.393,created_at是2026-04-06 13:46:44。
+第35个数据：id是35,name是VTOL35,location_x是114.182123,location_y是22.559689,description是VTOL candidate site; grid_x=502871.7192, grid_y=2494779.053,created_at是2026-04-06 13:46:44。
+第36个数据：id是36,name是VTOL36,location_x是114.212368,location_y是22.696966,description是VTOL candidate site; grid_x=505975.3522, grid_y=2509975.803,created_at是2026-04-06 13:46:44。
+第37个数据：id是37,name是VTOL37,location_x是114.024786,location_y是22.612920,description是VTOL candidate site; grid_x=486700.8829, grid_y=2500676.963,created_at是2026-04-06 13:46:44。

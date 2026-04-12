@@ -303,8 +303,9 @@ async def run_single_experiment(
                 task_id = resp.json()["task_id"]
                 result = await poll_task(client, task_id, "agentuav")
 
-                if result and "total_steps" in result:
-                    sim_time = float(result["total_steps"])
+                if result:
+                    sim_data = result.get("simulation_data", result)
+                    sim_time = float(sim_data.get("total_time_seconds", sim_data.get("total_steps", 0.0)))
                 else:
                     sim_time = time.time() - t_start
 

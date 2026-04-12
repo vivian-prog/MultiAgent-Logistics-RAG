@@ -446,8 +446,10 @@ async def extract_agent_commands_and_call_api(user_prompt: str, enable_rag: bool
 
                 # 修正：从 simulation_data 提取
                 sim_data = uav_result.get("simulation_data", uav_result) if uav_result else {}
-                if sim_data and "total_steps" in sim_data:
-                    timing_stats["UAV工作时间"] = float(sim_data["total_steps"])
+                if sim_data:
+                    timing_stats["UAV工作时间"] = float(
+                        sim_data.get("total_time_seconds", sim_data.get("total_steps", 0.0))
+                    )
                 else:
                     timing_stats["UAV工作时间"] = time.time() - t_start
             except Exception as e:
