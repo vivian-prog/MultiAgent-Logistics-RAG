@@ -138,3 +138,4 @@ Traceback (most recent call last):
   File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 1014, in request
     raise APIConnectionError(request=request) from err
 openai.APIConnectionError: Connection error.
+INFO:     127.0.0.1:60680 - "GET /health HTTP/1.1" 200 OK
