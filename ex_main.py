@@ -97,6 +97,26 @@ def log_print(message: str):
     get_logger().log(message)
 
 
+def render_progress_bar(progress: int, width: int = 30) -> str:
+    """渲染单行文本进度条。"""
+    clamped = max(0, min(100, int(progress)))
+    filled = int(width * clamped / 100)
+    return f"[{'#' * filled}{'-' * (width - filled)}] {clamped:3d}%"
+
+
+def print_console_progress(label: str, progress: int, status: str = ""):
+    """仅在主控制台输出单行刷新进度，不写入日志文件。"""
+    suffix = f" {status}" if status else ""
+    sys.stdout.write(f"\r{label}: {render_progress_bar(progress)}{suffix}")
+    sys.stdout.flush()
+
+
+def finish_console_progress():
+    """结束单行进度输出，避免后续日志覆盖同一行。"""
+    sys.stdout.write("\n")
+    sys.stdout.flush()
+
+
 # ===================== 实验类型枚举 =====================
 class ExperimentType(Enum):
     BASELINE = "baseline"           # 基础实验组
@@ -767,10 +787,12 @@ def build_ga_agent_plan(
     }
 
 
-async def poll_task(client, task_id, agent_name) -> Optional[Dict]:
+async def poll_task(client, task_id, agent_name, progress_label: Optional[str] = None) -> Optional[Dict]:
     """轮询任务结果"""
     max_retries = 120
     retry_interval = 1
+    last_progress = None
+    progress_active = False
 
     for _ in range(max_retries):
         try:
@@ -784,17 +806,37 @@ async def poll_task(client, task_id, agent_name) -> Optional[Dict]:
             resp.raise_for_status()
             data = resp.json()
             status = str(data.get("status", "")).upper()
+            progress = data.get("progress", 0)
 
             if status == "SUCCESS":
+                if progress_label and progress_active:
+                    print_console_progress(progress_label, 100, "SUCCESS")
+                    finish_console_progress()
                 return data.get("result") or data.get("simulation_data")
             elif status in ["FAILURE", "FAILED"]:
+                if progress_label and progress_active:
+                    fail_progress = progress if isinstance(progress, (int, float)) else (last_progress or 0)
+                    print_console_progress(progress_label, int(fail_progress), status)
+                    finish_console_progress()
                 return None
             else:
+                if progress_label:
+                    try:
+                        current_progress = int(progress)
+                    except (TypeError, ValueError):
+                        current_progress = last_progress if last_progress is not None else 0
+                    if last_progress != current_progress or not progress_active:
+                        print_console_progress(progress_label, current_progress, status or "RUNNING")
+                        last_progress = current_progress
+                        progress_active = True
                 await asyncio.sleep(retry_interval)
 
         except Exception:
             await asyncio.sleep(retry_interval)
 
+    if progress_label and progress_active:
+        print_console_progress(progress_label, last_progress or 0, "TIMEOUT")
+        finish_console_progress()
     return None
 
 
@@ -862,24 +904,30 @@ class ExperimentRunner:
         agentrobot_params = copy.deepcopy(answer_dict.get("agentrobot", {}) or {})
 
         async with httpx.AsyncClient(timeout=60.0) as client:
+            # ================= Robot 仿真 =================
             if agentrobot_params:
                 t_start = time.time()
                 try:
                     resp = await client.post(AGENT_API_MAP["agentrobot"], json=agentrobot_params)
                     resp.raise_for_status()
                     task_id = resp.json()["task_id"]
-                    result = await poll_task(client, task_id, "agentrobot")
-                    sim_time = (time.time() - t_start) * 10.0
+                    result = await poll_task(client, task_id, "agentrobot", progress_label="Robot仿真进度")
+                    
+                    # Robot 仿真时间通常较短，使用墙钟时间 * 系数或直接墙钟时间
+                    sim_time = (time.time() - t_start) * 10.0 
                     metrics.robot_simulation_time = sim_time
                     metrics.robot_success = result is not None
                     log_print(f"Robot仿真时间: {sim_time:.2f}s (成功: {metrics.robot_success})")
                 except Exception as e:
                     log_print(f"Robot任务异常: {e}")
                     metrics.robot_simulation_time = -1
+                    metrics.robot_success = False
 
+            # ================= Truck 仿真 =================
             if agenttruck_params:
                 t_start = time.time()
                 try:
+                    # 自动补全 Truck 终点为 UAV 起点（如果未指定）
                     if "end_lat" not in agenttruck_params and agentuav_params.get("start_lat"):
                         agenttruck_params["end_lat"] = agentuav_params["start_lat"]
                         agenttruck_params["end_lng"] = agentuav_params["start_lng"]
@@ -887,12 +935,14 @@ class ExperimentRunner:
                     resp = await client.post(AGENT_API_MAP["agenttruck"], json=agenttruck_params)
                     resp.raise_for_status()
                     task_id = resp.json()["task_id"]
-                    result = await poll_task(client, task_id, "agenttruck")
+                    result = await poll_task(client, task_id, "agenttruck", progress_label="Truck仿真进度")
 
                     sim_data = result.get("simulation_data", result) if result else {}
                     if sim_data and "total_time" in sim_data:
+                        # 假设后端返回的是小时，转换为秒
                         sim_time = float(sim_data["total_time"]) * 3600
                     else:
+                        # Fallback: 使用墙钟时间
                         sim_time = time.time() - t_start
 
                     metrics.truck_simulation_time = sim_time
@@ -901,28 +951,75 @@ class ExperimentRunner:
                 except Exception as e:
                     log_print(f"Truck任务异常: {e}")
                     metrics.truck_simulation_time = -1
+                    metrics.truck_success = False
 
+            # ================= UAV 仿真 =================
             if agentuav_params:
                 t_start = time.time()
                 try:
                     resp = await client.post(AGENT_API_MAP["agentuav_submit"], json=agentuav_params)
                     resp.raise_for_status()
                     task_id = resp.json()["task_id"]
-                    result = await poll_task(client, task_id, "agentuav")
+                    result = await poll_task(client, task_id, "agentuav", progress_label="UAV仿真进度")
 
                     if result:
                         sim_data = result.get("simulation_data", result)
-                        sim_time = float(sim_data.get("total_time_seconds", sim_data.get("total_steps", 0.0)))
-                    else:
-                        sim_time = time.time() - t_start
+                        
+                        # 1. 尝试获取精确的时间字段
+                        sim_time = sim_data.get("total_time_seconds")
+                        
+                        # 2. 如果没有总时间，尝试通过步数估算 (假设每步约 0.1s，可根据 core.py 中的实际耗时调整)
+                        if sim_time is None and "total_steps" in sim_data:
+                            steps = float(sim_data["total_steps"])
+                            # 注意：这里是一个估算值。如果 core.py 是纯计算无sleep，步数很快；
+                            # 如果有物理引擎步进，可能需要根据实际 benchmark 调整系数。
+                            # 此处暂定为 0.1s/step，若发现偏差大请修改此系数
+                            sim_time = steps * 0.1 
+                            
+                        # 3. 如果都没有，Fallback 到墙钟时间（包含网络等待，可能偏大）
+                        if sim_time is None:
+                            sim_time = time.time() - t_start
+                            log_print(f"Warning: UAV sim data missing time fields, using wall clock time: {sim_time:.2f}s")
+                        
+                        metrics.uav_simulation_time = float(sim_time)
 
-                    metrics.uav_simulation_time = sim_time
-                    metrics.uav_success = result is not None
-                    log_print(f"UAV仿真时间: {sim_time:.2f}s (成功: {metrics.uav_success})")
+                        # --- 修正成功判断逻辑：区分“真成功”和“假成功（0步）” ---
+                        arrived_ratio = sim_data.get("arrived_uav_ratio", 0)
+                        total_steps = sim_data.get("total_steps", 0)
+                        detailed_status = sim_data.get("detailed_uav_status", [])
+                        
+                        is_success = False
+                        
+                        # 1. 正常成功：到达率高 且 确实发生了移动
+                        if arrived_ratio > 0.9 and total_steps > 0:
+                            is_success = True
+                            
+                        # 2. 异常成功：到达率高 但 步数为0 (起点终点重合)
+                        elif arrived_ratio > 0.9 and total_steps == 0:
+                            log_print(f"Warning: UAV arrived instantly (0 steps). Likely start==end. Marking as success but anomalous.")
+                            is_success = True # 根据业务需求，也可以设为 False
+                            
+                        # 3. 失败：包括出界、超时等
+                        else:
+                            is_success = False
+                            # 记录具体失败原因以便调试
+                            if detailed_status:
+                                reason = detailed_status[0].get("reason", "Unknown")
+                                log_print(f"UAV Failed Reason: {reason}")
+
+                        metrics.uav_success = is_success
+                        log_print(f"UAV仿真时间: {metrics.uav_simulation_time:.2f}s (成功: {metrics.uav_success}, 到达率: {arrived_ratio}, 步数: {total_steps})")
+                    else:
+                        # 结果为 None，说明轮询失败或任务失败
+                        metrics.uav_simulation_time = time.time() - t_start
+                        metrics.uav_success = False
+                        log_print(f"UAV仿真失败: 未获取到有效结果 (成功: False)")
+
                 except Exception as e:
                     log_print(f"UAV任务异常: {e}")
                     metrics.uav_simulation_time = -1
-
+                    metrics.uav_success = False
+  
     async def run_single_experiment(
         self,
         prompt: str,

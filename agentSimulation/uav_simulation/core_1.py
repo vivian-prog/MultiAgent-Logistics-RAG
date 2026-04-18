@@ -8,31 +8,18 @@ import math
 import os
 import shapefile  # 需安装: pip install pyshp
 from typing import Tuple, List
-import logging
-import json
-import datetime
-# 新增导入 pyproj
-try:
-    from pyproj import Transformer, CRS
-    HAS_PYPROJ = True
-except ImportError:
-    HAS_PYPROJ = False
-    print("Warning: pyproj not installed. Coordinate transformation will fail for Lat/Lng inputs.")
 
 # -------------------------- SHP 解析工具 (从 uav_simulation_shp.py移植) --------------------------
-def parse_shp_file(shp_path: str, grid_resolution: float = 1.0, max_grid_size: int = 2000) -> Tuple[np.ndarray, int, int, float, float, float, object]:
+def parse_shp_file(shp_path: str, grid_resolution: float = 1.0) -> Tuple[np.ndarray, int, int, float, float]:
     """
     解析Shp文件，将地理坐标映射到网格坐标
     Args:
         shp_path: Shp文件路径
-        grid_resolution: 期望的网格分辨率（地理单位/网格），若超限会自动放大
-        max_grid_size: 网格最大边长，防止内存溢出
+        grid_resolution: 网格分辨率（米/网格）
     Returns:
         buildings_location: 2D数组 [grid_w, grid_h]
         grid_w, grid_h: 网格宽高
         min_x, min_y: 地理坐标偏移量原点
-        actual_resolution: 实际使用的网格分辨率
-        crs: 投影坐标系对象 (pyproj.CRS)，用于后续坐标转换
     """
     if not os.path.exists(shp_path):
         raise FileNotFoundError(f"SHP file not found: {shp_path}")
@@ -40,28 +27,11 @@ def parse_shp_file(shp_path: str, grid_resolution: float = 1.0, max_grid_size: i
     sf = shapefile.Reader(shp_path)
     shapes = sf.shapes()
     records = sf.records()
-
-    # 尝试获取 CRS
-    crs = None
-    if HAS_PYPROJ:
-        try:
-            # 尝试从 .prj 文件读取
-            prj_path = shp_path.replace('.shp', '.prj')
-            if os.path.exists(prj_path):
-                with open(prj_path, 'r') as f:
-                    prj_str = f.read()
-                    crs = CRS.from_string(prj_str)
-            else:
-                # 如果 pyproj 版本支持且 shapefile 包含 proj4 字符串
-                # 注意：pyshp 本身不直接提供 CRS 对象，通常依赖 .prj
-                pass
-        except Exception as e:
-            print(f"Warning: Could not load CRS from .prj file: {e}")
-
+    
     if len(shapes) == 0 or len(records) == 0:
         # 如果SHP为空，返回一个小的空地图，避免崩溃
-        return np.zeros((50, 50)), 50, 50, 0.0, 0.0, grid_resolution, crs
-
+        return np.zeros((50, 50)), 50, 50, 0.0, 0.0
+    
     # 1. 提取地理坐标范围
     all_x = []
     all_y = []
@@ -70,30 +40,24 @@ def parse_shp_file(shp_path: str, grid_resolution: float = 1.0, max_grid_size: i
         y = [p[1] for p in shape.points]
         all_x.extend(x)
         all_y.extend(y)
-
+    
     min_x, max_x = min(all_x), max(all_x)
     min_y, max_y = min(all_y), max(all_y)
-    range_x = max_x - min_x
-    range_y = max_y - min_y
-
-    # 2. 自动调整分辨率：确保网格尺寸不超过上限
-    raw_grid_w = int(range_x / grid_resolution) + 1
-    raw_grid_h = int(range_y / grid_resolution) + 1
-
-    if raw_grid_w > max_grid_size or raw_grid_h > max_grid_size:
-        actual_resolution = max(range_x, range_y) / max_grid_size
-        print(f"Info: Auto-adjusting grid resolution from {grid_resolution} to {actual_resolution:.4f} "
-              f"(raw grid {raw_grid_w}x{raw_grid_h} exceeds limit {max_grid_size})")
-    else:
-        actual_resolution = grid_resolution
-
-    grid_w = int(range_x / actual_resolution) + 1
-    grid_h = int(range_y / actual_resolution) + 1
-    grid_w = min(grid_w, max_grid_size)
-    grid_h = min(grid_h, max_grid_size)
+    
+    # 2. 计算网格尺寸
+    grid_w = int((max_x - min_x) / grid_resolution) + 1
+    grid_h = int((max_y - min_y) / grid_resolution) + 1
+    
+    # 限制最大尺寸防止内存溢出
+    max_grid_size = 2000 
+    if grid_w > max_grid_size or grid_h > max_grid_size:
+        print(f"Warning: Grid size too large ({grid_w}x{grid_h}). Limiting to {max_grid_size}.")
+        # 这里简单截断，实际生产环境可能需要更复杂的缩放逻辑
+        grid_w = min(grid_w, max_grid_size)
+        grid_h = min(grid_h, max_grid_size)
 
     buildings_location = np.zeros((grid_w, grid_h), dtype=np.float32)
-
+    
     # 3. 查找高度字段
     field_names = [f[0].lower() for f in sf.fields[1:]]
     height_field_idx = -1
@@ -101,7 +65,7 @@ def parse_shp_file(shp_path: str, grid_resolution: float = 1.0, max_grid_size: i
         if name in ["height", "高度", "h", "elev", "z"]:
             height_field_idx = idx
             break
-
+            
     # 4. 填充建筑高度
     for shape, record in zip(shapes, records):
         try:
@@ -114,40 +78,40 @@ def parse_shp_file(shp_path: str, grid_resolution: float = 1.0, max_grid_size: i
             if height < 0: height = 0.0
         except (ValueError, IndexError, TypeError):
             continue
-
+        
         bbox = shape.bbox # (xmin, ymin, xmax, ymax)
         xmin, ymin, xmax, ymax = bbox
-
-        # 转换为网格坐标（使用实际分辨率）
-        grid_xmin = int((xmin - min_x) / actual_resolution)
-        grid_ymin = int((ymin - min_y) / actual_resolution)
-        grid_xmax = int((xmax - min_x) / actual_resolution)
-        grid_ymax = int((ymax - min_y) / actual_resolution)
-
+        
+        # 转换为网格坐标
+        grid_xmin = int((xmin - min_x) / grid_resolution)
+        grid_ymin = int((ymin - min_y) / grid_resolution)
+        grid_xmax = int((xmax - min_x) / grid_resolution)
+        grid_ymax = int((ymax - min_y) / grid_resolution)
+        
         # 边界裁剪
         grid_xmin = max(0, min(grid_xmin, grid_w-1))
         grid_ymin = max(0, min(grid_ymin, grid_h-1))
         grid_xmax = max(0, min(grid_xmax, grid_w-1))
         grid_ymax = max(0, min(grid_ymax, grid_h-1))
-
+        
         # 填充
         for x in range(grid_xmin, grid_xmax + 1):
             for y in range(grid_ymin, grid_ymax + 1):
                 buildings_location[x][y] = max(buildings_location[x][y], height)
-
-    return buildings_location, grid_w, grid_h, min_x, min_y, actual_resolution, crs
+                
+    return buildings_location, grid_w, grid_h, min_x, min_y
 
 # -------------------------- 配置常量 --------------------------
 # 固定 SHP 文件路径
-SHP_FILE_PATH = os.path.join(os.path.dirname(__file__), "shpsimulation", "gis", "gis数据", "Export_Output.shp")
-GRID_RESOLUTION = 1.0  # 1米对应1个网格单位，或者根据SHP实际单位调整
+SHP_FILE_PATH = os.path.join(os.path.dirname(__file__), "shpsimulation", "gis", "gis数据", "selection_SZ_building_for_UAV_test.shp")
+GRID_RESOLUTION = 1.0  # 1米对应1个网格单位，或者根据SHP实际单位调整（如果是经纬度需要投影转换，这里假设SHP已是投影坐标或简化处理）
 
 # UAV 物理参数
 UAV_MAX_SPEED = 0.3    # 网格单位/步
 UAV_VOLATILITY = 0.02
 UAV_RADIUS = 0.3
 UAV_TOLERANCE = 0.1
-MAP_Z = 200             # 默认最大飞行高度
+MAP_Z = 20             # 默认最大飞行高度
 
 # -------------------------- 无人机环境类 --------------------------
 class UAVEnv(gym.Env):
@@ -255,15 +219,6 @@ class MvController:
         next_x = uav[0] + action[0]
         next_y = uav[1] + action[1]
         next_z = uav[2] + action[2]
-        
-        # 添加调试日志
-        if next_x < 0 or next_x >= self.map_w:
-            print(f"DEBUG: X out of bounds. Next X: {next_x}, Map W: {self.map_w}")
-        if next_y < 0 or next_y >= self.map_h:
-            print(f"DEBUG: Y out of bounds. Next Y: {next_y}, Map H: {self.map_h}")
-        if next_z < 0 or next_z >= self.map_z:
-            print(f"DEBUG: Z out of bounds. Next Z: {next_z}, Map Z: {self.map_z}")
-
         if next_x < 0 or next_x >= self.map_w or next_y < 0 or next_y >= self.map_h or next_z < 0 or next_z >= self.map_z:
             return True
         return False
@@ -273,49 +228,16 @@ def run_uav_simulation_core(params: dict, task_context):
     """
     无人机仿真核心函数（基于SHP地图）
     """
-    # 0. 配置日志
-    log_dir = "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/log/uav"
-    os.makedirs(log_dir, exist_ok=True)
-    
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file_path = os.path.join(log_dir, f"uav_sim_{timestamp}.log")
-    
-    logger = logging.getLogger("UAVSimCore")
-    logger.setLevel(logging.INFO)
-    
-    if not logger.handlers:
-        fh = logging.FileHandler(log_file_path, encoding='utf-8')
-        fh.setLevel(logging.INFO)
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
-        
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.INFO)
-        ch.setFormatter(formatter)
-        logger.addHandler(ch)
-
-    logger.info(f"Simulation started. Log file: {log_file_path}")
-    logger.info(f"Parameters: {params}")
-
     # 1. 解析参数
     max_steps = params.get("max_steps", 1000)
     
     # 2. 加载 SHP 地图 (固定路径)
     task_context.update_state(state="STARTED", meta={"progress": 5})
-    logger.info(f"Loading SHP map from: {SHP_FILE_PATH}")
-    actual_resolution = GRID_RESOLUTION
-    map_crs = None
+    print(f"Loading SHP map from: {SHP_FILE_PATH}")
     try:
-        # 注意：parse_shp_file 现在返回 crs 对象
-        buildings_location, map_w, map_h, min_x, min_y, actual_resolution, map_crs = parse_shp_file(SHP_FILE_PATH, GRID_RESOLUTION)
-        logger.info(f"Map loaded: Size {map_w}x{map_h}, Origin ({min_x}, {min_y}), Resolution {actual_resolution:.4f}")
-        if map_crs:
-            logger.info(f"Map CRS detected: {map_crs.to_string()}")
-        else:
-            logger.warning("No CRS detected for SHP file. Assuming coordinates are already projected or local.")
+        buildings_location, map_w, map_h, min_x, min_y = parse_shp_file(SHP_FILE_PATH, GRID_RESOLUTION)
+        print(f"Map loaded: Size {map_w}x{map_h}, Origin ({min_x}, {min_y})")
     except Exception as e:
-        logger.error(f"Error loading SHP: {e}. Using empty map.")
         print(f"Error loading SHP: {e}. Using empty map.")
         buildings_location = np.zeros((50, 50))
         map_w, map_h, min_x, min_y = 50, 50, 0, 0
@@ -332,54 +254,43 @@ def run_uav_simulation_core(params: dict, task_context):
     init_states = []
     match_pairs = []
     
+    # 坐标转换辅助函数 (假设 SHP 是投影坐标，或者这里简化处理直接作为Grid坐标)
+    # 注意：如果 SHP 是经纬度，parse_shp_file 内部已经做了归一化到 0-start 的网格映射。
+    # 这里的 start/end 如果是前端传来的经纬度，需要同样的映射逻辑。
+    # 为简化，假设前端传入的 start/end 已经是相对于 SHP 原点的网格坐标，或者 SHP 解析后的坐标系就是 Grid 系。
+    # 如果前端传的是真实经纬度，需要在这里减去 min_x/min_y 并除以 resolution。
+    
     is_single_task = all(v is not None for v in [raw_start_lng, raw_start_lat, raw_end_lng, raw_end_lat])
 
     if is_single_task:
+        # --- 单机任务模式 ---
+        # 假设传入的是 Grid 坐标 (如果传入的是经纬度，需在此处转换: (lng - min_x)/res)
+        # 这里为了兼容之前的逻辑，假设传入值可以直接使用，或者需要根据 min_x/min_y 偏移
+        # 修正：通常前端传经纬度，SHP解析后 min_x/min_y 是原始地理坐标最小值。
+        # 如果 SHP 是投影坐标(如UTM)，则直接减。如果是经纬度，这种线性映射误差大，但暂按线性处理。
+        
         try:
-            s_lng = float(raw_start_lng)
-            s_lat = float(raw_start_lat)
-            e_lng = float(raw_end_lng)
-            e_lat = float(raw_end_lat)
+            s_x = float(raw_start_lng)
+            s_y = float(raw_start_lat)
+            e_x = float(raw_end_lng)
+            e_y = float(raw_end_lat)
             
-            start_x, start_y = 0, 0
-            end_x, end_y = 0, 0
-
-            # 判断是否为经纬度 (简单 heuristic: lng > 100)
-            if s_lng > 100:
-                if not HAS_PYPROJ:
-                    raise ImportError("pyproj is required for Lat/Lng to Projected conversion.")
-                
-                if map_crs is None:
-                    # 如果无法检测 CRS，尝试常用投影，如 UTM Zone 50N (EPSG:32650) 适用于中国东部
-                    # 或者根据 min_x/min_y 的大致范围猜测。这里默认 EPSG:32650，如果不对需手动指定
-                    logger.warning("CRS not found in SHP. Defaulting to EPSG:32650 (UTM 50N). This might be incorrect.")
-                    target_crs = CRS.from_epsg(32650)
-                else:
-                    target_crs = map_crs
-                
-                # 创建转换器: WGS84 (EPSG:4326) -> Target Projected CRS
-                transformer = Transformer.from_crs("EPSG:4326", target_crs, always_xy=True)
-                
-                # 转换起点
-                proj_s_x, proj_s_y = transformer.transform(s_lng, s_lat)
-                # 转换终点
-                proj_e_x, proj_e_y = transformer.transform(e_lng, e_lat)
-                
-                logger.info(f"Projected Start: ({proj_s_x:.2f}, {proj_s_y:.2f})")
-                logger.info(f"Projected End: ({proj_e_x:.2f}, {proj_e_y:.2f})")
-                
-                # 转换为网格坐标 (相对于地图原点 min_x, min_y)
-                start_x = (proj_s_x - min_x) / actual_resolution
-                start_y = (proj_s_y - min_y) / actual_resolution
-                end_x = (proj_e_x - min_x) / actual_resolution
-                end_y = (proj_e_y - min_y) / actual_resolution
-                
+            # 如果传入的是地理坐标，需要转换为网格坐标
+            # 假设 parse_shp_file 中的 min_x/min_y 是地理坐标下限
+            # grid_x = (geo_x - min_x) / resolution
+            
+            # 检测数值大小，如果很大(如113.xxx)，则是经纬度，需要转换
+            if s_x > 100: 
+                start_x = (s_x - min_x) / GRID_RESOLUTION
+                start_y = (s_y - min_y) / GRID_RESOLUTION
+                end_x = (e_x - min_x) / GRID_RESOLUTION
+                end_y = (e_y - min_y) / GRID_RESOLUTION
             else:
                 # 假设已经是网格坐标
-                start_x, start_y = s_lng, s_lat
-                end_x, end_y = e_lng, e_lat
+                start_x, start_y = s_x, s_y
+                end_x, end_y = e_x, e_y
 
-            logger.info(f"Single Task: Grid Start({start_x:.2f}, {start_y:.2f}) -> Grid End({end_x:.2f}, {end_y:.2f})")
+            print(f"Single Task: Start({start_x:.2f}, {start_y:.2f}) -> End({end_x:.2f}, {end_y:.2f})")
             
             # 动态扩展地图如果需要
             curr_max_w = max(map_w, int(max(start_x, end_x) + 10))
@@ -390,7 +301,7 @@ def run_uav_simulation_core(params: dict, task_context):
                 new_bl[:map_w, :map_h] = buildings_location
                 buildings_location = new_bl
                 map_w, map_h = curr_max_w, curr_max_h
-                logger.info(f"Map expanded to {map_w}x{map_h}")
+                print(f"Map expanded to {map_w}x{map_h}")
 
             uav_num = 1
             init_state = np.zeros((1, 7))
@@ -401,16 +312,14 @@ def run_uav_simulation_core(params: dict, task_context):
             match_pairs.append([0, [0,0,0], [end_x, end_y, target_z]])
             
         except Exception as e:
-            logger.error(f"Error parsing single task coords: {e}")
-            import traceback
-            logger.error(traceback.format_exc())
+            print(f"Error parsing single task coords: {e}")
             #  fallback to random if error
             is_single_task = False
 
     if not is_single_task:
         # --- 批量/随机任务模式 (Map1 逻辑) ---
         uav_num = 10 # 默认少量无人机测试，避免过多
-        logger.info(f"Batch Mode: Generating {uav_num} random UAVs")
+        print(f"Batch Mode: Generating {uav_num} random UAVs")
         
         # 在地图范围内随机生成
         safe_w = max(1, map_w - 2)
@@ -432,7 +341,6 @@ def run_uav_simulation_core(params: dict, task_context):
     uav_num = len(match_pairs)
 
     if uav_num == 0:
-        logger.warning("No UAVs generated")
         return {"error": "No UAVs generated"}
 
     # 4. 初始化环境与控制器
@@ -514,7 +422,7 @@ def run_uav_simulation_core(params: dict, task_context):
     uav_trajectories = {f"uav_{i}": env.position_pool[i] for i in range(uav_num)}
     arrived_count = sum(flag)
 
-    result = {
+    return {
         "map_name": "SHP_Map",
         "uav_num": int(uav_num),
         "total_steps": int(env_t),
@@ -526,17 +434,3 @@ def run_uav_simulation_core(params: dict, task_context):
         "detailed_uav_status": list(uav_status_log.values()),
         "map_info": {"map_w": float(map_w), "map_h": float(map_h), "map_z": float(map_z)}
     }
-
-    # 7. 记录关键输出到日志
-    logger.info("=== Simulation Finished ===")
-    logger.info(f"Total UAVs: {result['uav_num']}")
-    logger.info(f"Total Steps: {result['total_steps']} / {result['max_steps']}")
-    logger.info(f"Arrived Count: {result['arrived_uav_count']}")
-    logger.info(f"Arrival Ratio: {result['arrived_uav_ratio']}")
-    
-    for i, status in enumerate(result['detailed_uav_status']):
-        logger.info(f"UAV {i}: Status={status['status']}, Reason={status['reason']}")
-        
-    logger.info(f"Log saved to: {log_file_path}")
-
-    return result

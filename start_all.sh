@@ -44,8 +44,8 @@ run_in_tmux api  gym_py38  /home/sysuvis/program/huangw293/MultiAgent-Logistics-
   "uvicorn main:app --host 127.0.0.1 --port 8090 --reload"
 
 # ④ Celery 异步任务
-# run_in_tmux celery  gym_py38  /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation \
-#   "celery -A celery_worker.app worker --concurrency=10 --max-memory-per-child=2048 --max-tasks-per-child=100 --loglevel=info"
+run_in_tmux celery  gym_py38  /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation \
+  "celery -A celery_worker.app worker --concurrency=10 --max-memory-per-child=2048 --max-tasks-per-child=100 --loglevel=info"
 
 # ⑤ GraphRag utils
 run_in_tmux graph_utils  GraphragTest  /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/GraphRag \
