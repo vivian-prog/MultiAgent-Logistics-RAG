@@ -311,3 +311,312 @@ INFO:     127.0.0.1:45088 - "POST /v1/chat/completions HTTP/1.1" 200 OK
 2026-04-22 16:38:01,070 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
 2026-04-22 16:38:01,088 - __main__ - INFO - 返回 5 条相关文本
 INFO:     127.0.0.1:43308 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+2026-04-22 21:17:05,110 - __main__ - INFO - 查询文本: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+2026-04-22 21:17:05,114 - openai._base_client - INFO - Retrying request to /embeddings in 0.425843 seconds
+2026-04-22 21:17:05,543 - openai._base_client - INFO - Retrying request to /embeddings in 0.905709 seconds
+INFO:     127.0.0.1:36226 - "POST /v1/chat/completions HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 982, in request
+    response = self._client.send(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/uvicorn/protocols/http/h11_impl.py", line 406, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 72, in app
+    response = await func(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/fastapi/routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/fastapi/routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 312, in chat_completions
+    results = search_similar_texts(query, top_k=TOP_K)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 250, in search_similar_texts
+    query_embedding = get_embedding(query).reshape(1, -1)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 102, in get_embedding
+    response = client.embeddings.create(model=EMBEDDING_MODEL, input=text)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/resources/embeddings.py", line 132, in create
+    return self._post(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 1014, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+2026-04-22 21:29:10,995 - __main__ - INFO - 查询文本: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+2026-04-22 21:29:10,998 - openai._base_client - INFO - Retrying request to /embeddings in 0.481884 seconds
+2026-04-22 21:29:11,482 - openai._base_client - INFO - Retrying request to /embeddings in 0.906894 seconds
+INFO:     127.0.0.1:44350 - "POST /v1/chat/completions HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 982, in request
+    response = self._client.send(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/uvicorn/protocols/http/h11_impl.py", line 406, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 72, in app
+    response = await func(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/fastapi/routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/fastapi/routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 312, in chat_completions
+    results = search_similar_texts(query, top_k=TOP_K)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 250, in search_similar_texts
+    query_embedding = get_embedding(query).reshape(1, -1)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 102, in get_embedding
+    response = client.embeddings.create(model=EMBEDDING_MODEL, input=text)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/resources/embeddings.py", line 132, in create
+    return self._post(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 1014, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+INFO:     127.0.0.1:41920 - "GET /health HTTP/1.1" 200 OK
+2026-04-22 21:36:36,500 - __main__ - INFO - 查询文本: ...
+2026-04-22 21:36:36,505 - openai._base_client - INFO - Retrying request to /embeddings in 0.405563 seconds
+2026-04-22 21:36:36,913 - openai._base_client - INFO - Retrying request to /embeddings in 0.946650 seconds
+INFO:     127.0.0.1:48140 - "POST /v1/chat/completions HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 982, in request
+    response = self._client.send(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/uvicorn/protocols/http/h11_impl.py", line 406, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/starlette/routing.py", line 72, in app
+    response = await func(request)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/fastapi/routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/fastapi/routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 312, in chat_completions
+    results = search_similar_texts(query, top_k=TOP_K)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 250, in search_similar_texts
+    query_embedding = get_embedding(query).reshape(1, -1)
+  File "/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/TextRAG/faiss_service_raw.py", line 102, in get_embedding
+    response = client.embeddings.create(model=EMBEDDING_MODEL, input=text)
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/resources/embeddings.py", line 132, in create
+    return self._post(
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "/home/sysuvis/program/miniconda/envs/GraphragTest/lib/python3.10/site-packages/openai/_base_client.py", line 1014, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+INFO:     127.0.0.1:48148 - "GET /health HTTP/1.1" 200 OK
+2026-04-22 21:39:37,087 - __main__ - INFO - 查询文本: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深理工大学医院 与各无人机起降点的距离，找出最近的起降点坐标 计算 深理工大学医院 ...
+2026-04-22 21:39:37,140 - httpx - INFO - HTTP Request: POST http://localhost:8021/v1/embeddings "HTTP/1.1 200 OK"
+2026-04-22 21:39:37,155 - __main__ - INFO - 返回 5 条相关文本
+INFO:     127.0.0.1:56166 - "POST /v1/chat/completions HTTP/1.1" 200 OK

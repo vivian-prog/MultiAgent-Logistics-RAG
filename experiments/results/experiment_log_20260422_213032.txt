@@ -1,0 +1,83 @@
+======================================================================
+实验日志 - 2026-04-22T21:30:32.260354
+======================================================================
+
+
+======================================================================
+多智能体物流调度系统 - 实验程序启动
+开始时间: 2026-04-22 21:30:32
+======================================================================
+
+============================================================
+消融实验开始
+测试Prompt数量: 1
+实验配置: ['no_rag', 'text_rag', 'raw_text_rag', 'graphrag']
+============================================================
+
+[Prompt 1/1] [无RAG (仅LLM)] [重复 1/1]
+
+============================================================
+实验: ablation_no_rag_p1_r1
+RAG模式: 禁用
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+LLM指令生成耗时: 47.08s
+LLM总思考耗时: 47.08s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.21s (成功: True)
+Truck仿真时间: 3060.00s (成功: True)
+UAV仿真时间: 1867.12s (成功: True, 到达率: 1.0, 步数: 625)
+
+总耗时: 349.78s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_no_rag_p1_r1_20260422_213622.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [Text RAG (GraphRAG预处理文本单元)] [重复 1/1]
+
+============================================================
+实验: ablation_text_rag_p1_r1
+RAG模式: 启用 (rag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+调用LLM出错: Connection error.
+RAG查询关键词: ...
+RAG搜索请求出错: 500 Server Error: Internal Server Error for url: http://localhost:8016/v1/chat/completions
+RAG检索耗时: 1.29s
+RAG查询生成耗时: 1.39s
+调用LLM出错: Connection error.
+首轮计划输出不可解析，准备重试。预览: (empty)
+JSON模式调用失败，回退普通模式: Connection error.
+调用LLM出错: Connection error.
+JSON解析失败: 计划输出未返回可解析JSON，首轮输出预览: (empty)，重试输出预览: (empty)
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_text_rag_p1_r1_20260422_213632.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [Raw Text RAG (原始文本)] [重复 1/1]
+
+============================================================
+实验: ablation_raw_text_rag_p1_r1
+RAG模式: 启用 (raw_rag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+调用LLM出错: Connection error.
+RAG查询关键词: ...
+RAG搜索请求出错: 500 Server Error: Internal Server Error for url: http://localhost:8017/v1/chat/completions
+RAG检索耗时: 1.37s
+RAG查询生成耗时: 1.43s
+调用LLM出错: Connection error.
+首轮计划输出不可解析，准备重试。预览: (empty)
+JSON模式调用失败，回退普通模式: Connection error.
+调用LLM出错: Connection error.
+JSON解析失败: 计划输出未返回可解析JSON，首轮输出预览: (empty)，重试输出预览: (empty)
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_raw_text_rag_p1_r1_20260422_213641.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [GraphRAG (知识图谱)] [重复 1/1]
+
+============================================================
+实验: ablation_graphrag_p1_r1
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+调用LLM出错: Connection error.
+RAG查询关键词: ...

@@ -13,6 +13,12 @@ CONDA_BASE="/home/sysuvis/program/miniconda"
 export PATH="$CONDA_BASE/bin:$PATH"
 source "$CONDA_BASE/etc/profile.d/conda.sh"
 
+
+PROJECT_ROOT="/home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG"
+TEXT_RAG_ENV="${TEXT_RAG_ENV:-vllmModel}"
+TEXT_RAG_DIR="$PROJECT_ROOT/TextRAG"
+
+
 ##############################
 # 1. 启动函数 (已修复)
 ##############################
@@ -29,15 +35,16 @@ run_in_tmux(){
 }
 
 ##############################
-# 2. 依次启动 6 个服务 (已修复)
+# 2. 依次启动 8 个服务 (已修复)
 ##############################
 # ① Qwen3-8B 生成模型
 run_in_tmux qwen3-8b  vllmModel  /home/sysuvis/program/huangw293/model \
   "env CUDA_VISIBLE_DEVICES=2,3 vllm serve /home/sysuvis/huangw293/model/qwen3-8b/tmp/Qwen/Qwen3-8B --served-model-name Qwen3-8B --max_model_len 8192 --port 8080 --trust-remote-code --gpu-memory-utilization 0.5 --tensor-parallel-size 2"
 
-# ② Qwen3-Embedding-8B 向量模型
+# ② Qwen3-Embedding-8B 向量模型 (改成0号GPU)
 run_in_tmux qwen3-emb vllmModel  /home/sysuvis/program/huangw293/model \
-  "env CUDA_VISIBLE_DEVICES=2,3 VLLM_USE_MODELSCOPE=true vllm serve Qwen/Qwen3-Embedding-8B --served-model-name Qwen3-Embedding-8B --port 8021 --max-model-len 8192 --gpu-memory-utilization 0.3 --tensor-parallel-size 2"
+  "env CUDA_VISIBLE_DEVICES=0 VLLM_USE_MODELSCOPE=true vllm serve Qwen/Qwen3-Embedding-8B --served-model-name Qwen3-Embedding-8B --port 8021 --max-model-len 4096 --gpu-memory-utilization 0.6 --tensor-parallel-size 1"
+
 
 # ③ FastAPI 主服务
 run_in_tmux api  gym_py38  /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation \
@@ -51,6 +58,17 @@ run_in_tmux celery  gym_py38  /home/sysuvis/program/huangw293/MultiAgent-Logisti
 run_in_tmux graph_utils  GraphragTest  /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/GraphRag \
   "python utils/main.py"
 
+
+
+# Text RAG (8016)
+run_in_tmux text_rag  "$TEXT_RAG_ENV"  "$TEXT_RAG_DIR" \
+  "python faiss_service.py"
+
+# Raw Text RAG (8017)
+run_in_tmux raw_text_rag  "$TEXT_RAG_ENV"  "$TEXT_RAG_DIR" \
+  "python faiss_service_raw.py"
+
+
 # ⑥ GraphRag 主程序 【修改点】延迟 45 秒启动，等待大模型加载完毕
 run_in_tmux graph_main  GraphragTest  /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG \
   "sleep 45 && python main.py"
@@ -59,5 +77,7 @@ run_in_tmux graph_main  GraphragTest  /home/sysuvis/program/huangw293/MultiAgent
 # 3. 查看命令提示
 ##############################
 echo "All services are starting in tmux sessions:"
+echo "  tmux attach -t text_rag      # Text RAG (8016)"
+echo "  tmux attach -t raw_text_rag  # Raw Text RAG (8017)"
 echo "  tmux ls               # 查看会话列表"
 echo "  tmux attach -t api    # 举例：attach 到 FastAPI 窗口"

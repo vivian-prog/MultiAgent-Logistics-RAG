@@ -1,0 +1,15 @@
+2026-04-22 21:38:46,155 - INFO - Simulation started. Log file: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/log/uav/uav_sim_20260422_213846.log
+2026-04-22 21:38:46,155 - INFO - Parameters: {'type': 'UAV', 'tasks': ['从光明天安云谷起降点接驳配送到深圳光明区深理工大学医院'], 'Map_name': 'Map1', 'max_steps': 1000, 'start_lat': 22.769395, 'start_lng': 113.928589, 'end_lat': 22.769395, 'end_lng': 113.928589}
+2026-04-22 21:38:46,156 - INFO - Loading SHP map from: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/uav_simulation/shpsimulation/gis/gis数据/Export_Output.shp
+2026-04-22 21:39:04,151 - INFO - Map loaded: Size 2000x1109, Origin (12663594.485688895, 2550151.728773174), Resolution 43.8503
+2026-04-22 21:39:04,159 - INFO - Map CRS detected: EPSG:3395
+2026-04-22 21:39:04,184 - INFO - Projected Start: (12682472.51, 2587624.07)
+2026-04-22 21:39:04,185 - INFO - Projected End: (12682472.51, 2587624.07)
+2026-04-22 21:39:04,185 - INFO - Single Task: Grid Start(430.51, 854.55) -> Grid End(430.51, 854.55)
+2026-04-22 21:39:04,189 - INFO - === Simulation Finished ===
+2026-04-22 21:39:04,189 - INFO - Total UAVs: 1
+2026-04-22 21:39:04,189 - INFO - Total Steps: 1 / 1000
+2026-04-22 21:39:04,189 - INFO - Arrived Count: 1
+2026-04-22 21:39:04,189 - INFO - Arrival Ratio: 1.0
+2026-04-22 21:39:04,189 - INFO - UAV 0: Status=arrived, Reason=Success
+2026-04-22 21:39:04,189 - INFO - Log saved to: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/log/uav/uav_sim_20260422_213846.log

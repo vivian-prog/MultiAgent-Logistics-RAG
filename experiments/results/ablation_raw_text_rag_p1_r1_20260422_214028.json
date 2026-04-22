@@ -1,0 +1,35 @@
+{
+  "saved_at": "2026-04-22T21:40:28.216902",
+  "experiment_name": "ablation_raw_text_rag_p1_r1",
+  "experiment_type": "ablation",
+  "prompt": "请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.054706,22.534678）配送到深圳光明区深理工大学医院(113.928589,22.769395)",
+  "prompt_preview": "请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.054706,22.534678）配送到深圳光明区深理工大学医院(113.928589,22.769395)",
+  "metrics": {
+    "experiment_name": "ablation_raw_text_rag_p1_r1",
+    "experiment_type": "ablation",
+    "record_status": "completed",
+    "error_message": "",
+    "rag_enabled": true,
+    "rag_type": "raw_rag",
+    "rag_search_time": 0.07929062843322754,
+    "rag_query_generation_time": 29.859541177749634,
+    "llm_total_time": 55.7199010848999,
+    "llm_query_gen_time": 29.859541177749634,
+    "llm_command_gen_time": 25.86035990715027,
+    "robot_simulation_time": 10.141513347625732,
+    "truck_simulation_time": 2880.0,
+    "uav_simulation_time": 1369.59,
+    "robot_success": true,
+    "truck_success": true,
+    "uav_success": true,
+    "total_time": 80.99872016906738
+  },
+  "extra": {
+    "prompt_index": 1,
+    "repeat_index": 1,
+    "config_name": "raw_text_rag",
+    "display_name": "Raw Text RAG (原始文本)",
+    "enable_rag": true,
+    "rag_type": "raw_rag"
+  }
+}
