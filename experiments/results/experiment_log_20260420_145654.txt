@@ -1,0 +1,104 @@
+======================================================================
+实验日志 - 2026-04-20T14:56:54.458065
+======================================================================
+
+
+======================================================================
+多智能体物流调度系统 - 实验程序启动
+开始时间: 2026-04-20 14:56:54
+======================================================================
+
+============================================================
+对比实验开始
+测试Prompt数量: 1
+算法配置: ['baseline', 'ACO', 'GA']
+============================================================
+
+[Prompt 1/1] [基线方案 (GraphRAG + LLM)] [重复 1/1]
+
+============================================================
+实验: comparison_baseline_p1_r1
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 3.75s
+RAG查询生成耗时: 15.84s
+LLM指令生成耗时: 21.52s
+LLM总思考耗时: 37.36s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+LLM严格资源选择耗时: 2.84s
+LLM更新后总思考耗时: 40.20s
+    baseline选择结果: warehouse=京东快递深圳水贝揽收营业点, landing=VTOL7, truck=truck_001, uav=uav_0_0218, robot=robot_001
+Robot仿真时间: 10.32s (成功: True)
+Truck仿真时间: 2700.00s (成功: True)
+UAV仿真时间: 702.05s (成功: True, 到达率: 1.0, 步数: 261)
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_baseline_p1_r1_20260420_145800.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [蚁群算法 (Ant Colony Optimization)] [重复 1/1]
+
+>>> 运行 ACO 高层调度优化...
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 4.99s
+RAG查询生成耗时: 31.12s
+LLM指令生成耗时: 21.72s
+LLM总思考耗时: 52.84s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+    ACO选择结果: warehouse=京东快递深圳清水河营业部, landing=VTOL26, truck=GROUND-002, uav=uav_0_02bc, robot=WARE-003
+    ACO估计总代价: 31531.52s
+    ACO改进比例: 0.00%
+Robot仿真时间: 10.19s (成功: True)
+Truck仿真时间: 2124.00s (成功: True)
+UAV仿真时间: 1007.18s (成功: True, 到达率: 1.0, 步数: 371)
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_ACO_p1_r1_20260420_145924.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [遗传算法 (Genetic Algorithm)] [重复 1/1]
+
+>>> 运行 GA 高层调度优化...
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院 与各无人机起降点的距离，找出最近的起降点坐标 计算 深圳光...
+RAG检索耗时: 4.65s
+RAG查询生成耗时: 23.04s
+LLM指令生成耗时: 29.12s
+LLM总思考耗时: 52.15s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+    GA选择结果: warehouse=京东快递深圳清水河营业部, landing=VTOL26, truck=GROUND-002, uav=uav_0_02bc, robot=robot_001
+    GA估计总代价: 31326.06s
+    GA改进比例: 0.00%
+Robot仿真时间: 10.18s (成功: True)
+Truck仿真时间: 2124.00s (成功: True)
+UAV仿真时间: 1005.11s (成功: True, 到达率: 1.0, 步数: 370)
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_GA_p1_r1_20260420_150045.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_baseline_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_ACO_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_GA_metrics.csv
+comparison 时间戳结果已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_20260420_150047.csv
+
+==========================================================================================
+算法对比实验结果
+==========================================================================================
+
+算法                        LLM耗时(s)     Robot(s)     Truck(s)     UAV(s)       总耗时(s)      
+------------------------------------------------------------------------------------------
+baseline                  40.20        10.32        2700.00      702.05       66.45       
+ACO                       31.12        10.19        2124.00      1007.18      82.07       
+GA                        23.04        10.18        2124.00      1005.11      78.04       
+
+指标说明:
+  1. LLM耗时: baseline 显示 LLM 总思考时间；ACO/GA 当前仅保留任务解析与查询生成时间，不包含被传统算法替代的高层调度生成时间。
+  2. Robot/Truck/UAV: 这三列是各智能体仿真执行时间，口径偏向业务/仿真时间，不是纯程序墙钟时间。
+  3. 总耗时: 端到端真实耗时，包含 RAG、LLM、ACO/GA 优化、接口请求、轮询等待和仿真执行，因此不等于前面几列直接相加。
+  4. 若某个 Agent 成功标记为 False，该行时间通常包含失败前的等待或超时，不能直接当成有效完成时间解读。
+
+成功率摘要:
+  baseline: Robot 100%, Truck 100%, UAV 100%
+  ACO: Robot 100%, Truck 100%, UAV 100%
+  GA: Robot 100%, Truck 100%, UAV 100%
+
+======================================================================
+程序执行完毕
+结束时间: 2026-04-20 15:00:47
+程序总耗时: 232.58 秒 (3.88 分钟)
+======================================================================

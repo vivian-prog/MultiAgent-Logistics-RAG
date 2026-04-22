@@ -1,0 +1,839 @@
+======================================================================
+实验日志 - 2026-04-18T14:14:48.700007
+======================================================================
+
+
+======================================================================
+多智能体物流调度系统 - 实验程序启动
+开始时间: 2026-04-18 14:14:48
+======================================================================
+
+######################################################################
+# 多智能体物流调度系统 - 综合实验
+# 开始时间: 2026-04-18T14:14:48.700427
+######################################################################
+
+
+======================================================================
+>>> 开始执行: 基础实验组
+======================================================================
+
+============================================================
+基础实验组开始
+测试Prompt数量: 1
+每Prompt重复次数: 1
+============================================================
+[Prompt 1/1] [重复 1/1]
+
+============================================================
+实验: baseline_p1_r1
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 4.51s
+RAG查询生成耗时: 8.82s
+LLM指令生成耗时: 40.12s
+LLM总思考耗时: 48.94s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.30s (成功: True)
+Truck仿真时间: 2304.00s (成功: True)
+UAV仿真时间: 2474.95s (成功: True, 到达率: 1.0, 步数: 907)
+
+总耗时: 74.66s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/baseline_p1_r1_20260418_141603.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/baseline_metrics.csv
+
+======================================================================
+基础实验组 - 汇总统计
+======================================================================
+
+【RAG指标】
+  平均RAG检索耗时: 4.51s
+
+【LLM指标】
+  平均LLM总思考耗时: 48.94s
+
+【Agent仿真指标】
+  平均Robot仿真时间: 10.30s (成功率: 100.0%)
+  平均Truck仿真时间: 2304.00s (成功率: 100.0%)
+  平均UAV仿真时间: 2474.95s (成功率: 100.0%)
+
+【总体指标】
+  平均总耗时: 74.66s
+
+
+======================================================================
+>>> 开始执行: 消融实验
+======================================================================
+
+============================================================
+消融实验开始
+测试Prompt数量: 1
+实验配置: ['no_rag', 'text_rag', 'raw_text_rag', 'graphrag']
+============================================================
+
+[Prompt 1/1] [无RAG (仅LLM)] [重复 1/1]
+
+============================================================
+实验: ablation_no_rag_p1_r1
+RAG模式: 禁用
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+LLM指令生成耗时: 20.82s
+LLM总思考耗时: 20.82s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.15s (成功: True)
+Truck仿真时间: 2448.00s (成功: True)
+UAV仿真时间: 18.20s (成功: True, 到达率: 1.0, 步数: 9)
+
+总耗时: 41.01s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_no_rag_p1_r1_20260418_141646.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [Text RAG (GraphRAG预处理文本单元)] [重复 1/1]
+
+============================================================
+实验: ablation_text_rag_p1_r1
+RAG模式: 启用 (rag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院（113.928589,22.769395） 与各无人机起降...
+RAG检索耗时: 0.10s
+RAG查询生成耗时: 69.53s
+LLM指令生成耗时: 15.26s
+LLM总思考耗时: 84.79s
+JSON解析失败: 未找到顶层JSON结构
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_text_rag_p1_r1_20260418_141814.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [Raw Text RAG (原始文本)] [重复 1/1]
+
+============================================================
+实验: ablation_raw_text_rag_p1_r1
+RAG模式: 启用 (raw_rag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 0.07s
+RAG查询生成耗时: 8.31s
+LLM指令生成耗时: 92.36s
+LLM总思考耗时: 100.67s
+JSON解析失败: JSON解析失败：Expecting ',' delimiter: line 22 column 4 (char 617)
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_raw_text_rag_p1_r1_20260418_141958.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [GraphRAG (知识图谱)] [重复 1/1]
+
+============================================================
+实验: ablation_graphrag_p1_r1
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.17s
+RAG查询生成耗时: 28.44s
+LLM指令生成耗时: 24.63s
+LLM总思考耗时: 53.07s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.20s (成功: True)
+Truck仿真时间: 1836.00s (成功: True)
+UAV仿真时间: 2022.39s (成功: True, 到达率: 1.0, 步数: 701)
+
+总耗时: 79.45s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_graphrag_p1_r1_20260418_142120.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_no_rag_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_text_rag_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_raw_text_rag_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_graphrag_metrics.csv
+
+================================================================================
+消融实验对比结果
+================================================================================
+
+配置                   RAG耗时(s)        LLM耗时(s)        总耗时(s)         
+----------------------------------------------------------------------
+no_rag               0.00            20.82           41.01          
+text_rag             0.00            0.00            84.89          
+raw_text_rag         0.00            0.00            100.74         
+graphrag             5.17            53.07           79.45          
+
+详细仿真指标对比:
+  配置                   Robot(s)     Truck(s)     UAV(s)      
+  ----------------------------------------------------------
+  no_rag               10.15        2448.00      18.20       
+  text_rag             0.00         0.00         0.00        
+  raw_text_rag         0.00         0.00         0.00        
+  graphrag             10.20        1836.00      2022.39     
+
+
+======================================================================
+>>> 开始执行: 鲁棒性实验
+======================================================================
+
+============================================================
+鲁棒性实验开始
+测试Agent类型: ['uav', 'robot']
+============================================================
+
+参数: uav.battery_drain_rate
+基准值: 0.5, 扰动: -50%, 扰动后: 0.2500
+
+============================================================
+实验: robustness_uav.battery_drain_rate_-50%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 4.52s
+RAG查询生成耗时: 17.96s
+LLM指令生成耗时: 20.81s
+LLM总思考耗时: 38.77s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.16s (成功: True)
+Truck仿真时间: 2448.00s (成功: True)
+UAV仿真时间: 17.59s (成功: True, 到达率: 1.0, 步数: 7)
+
+总耗时: 65.48s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.battery_drain_rate_-50_20260418_142228.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: uav.battery_drain_rate
+基准值: 0.5, 扰动: -30%, 扰动后: 0.3500
+
+============================================================
+实验: robustness_uav.battery_drain_rate_-30%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.15s
+RAG查询生成耗时: 10.12s
+LLM指令生成耗时: 17.87s
+LLM总思考耗时: 27.98s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.18s (成功: True)
+Truck仿真时间: 2664.00s (成功: True)
+UAV仿真时间: 2352.79s (成功: True, 到达率: 1.0, 步数: 951)
+
+总耗时: 54.34s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.battery_drain_rate_-30_20260418_142325.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: uav.battery_drain_rate
+基准值: 0.5, 扰动: -10%, 扰动后: 0.4500
+
+============================================================
+实验: robustness_uav.battery_drain_rate_-10%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.16s
+RAG查询生成耗时: 30.85s
+LLM指令生成耗时: 21.51s
+LLM总思考耗时: 52.36s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.15s (成功: True)
+Truck仿真时间: 2448.00s (成功: True)
+UAV仿真时间: 0.00s (成功: True, 到达率: 1.0, 步数: 1)
+
+总耗时: 77.70s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.battery_drain_rate_-10_20260418_142445.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: uav.battery_drain_rate
+基准值: 0.5, 扰动: +0%, 扰动后: 0.5000
+
+============================================================
+实验: robustness_uav.battery_drain_rate_+0%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.17s
+RAG查询生成耗时: 23.57s
+LLM指令生成耗时: 29.21s
+LLM总思考耗时: 52.78s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.18s (成功: True)
+Truck仿真时间: 2448.00s (成功: True)
+UAV仿真时间: 16.10s (成功: True, 到达率: 1.0, 步数: 7)
+
+总耗时: 82.17s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.battery_drain_rate__0_20260418_142609.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: uav.battery_drain_rate
+基准值: 0.5, 扰动: +10%, 扰动后: 0.5500
+
+============================================================
+实验: robustness_uav.battery_drain_rate_+10%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.15s
+RAG查询生成耗时: 9.97s
+LLM指令生成耗时: 25.80s
+LLM总思考耗时: 35.76s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.16s (成功: True)
+Truck仿真时间: 2664.00s (成功: True)
+UAV仿真时间: 2357.73s (成功: True, 到达率: 1.0, 步数: 942)
+
+总耗时: 62.11s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.battery_drain_rate__10_20260418_142713.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: uav.battery_drain_rate
+基准值: 0.5, 扰动: +30%, 扰动后: 0.6500
+
+============================================================
+实验: robustness_uav.battery_drain_rate_+30%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.17s
+RAG查询生成耗时: 16.94s
+LLM指令生成耗时: 15.80s
+LLM总思考耗时: 32.74s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.18s (成功: True)
+Truck仿真时间: 2664.00s (成功: True)
+UAV仿真时间: 2349.47s (成功: True, 到达率: 1.0, 步数: 931)
+
+总耗时: 61.14s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.battery_drain_rate__30_20260418_142816.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: uav.battery_drain_rate
+基准值: 0.5, 扰动: +50%, 扰动后: 0.7500
+
+============================================================
+实验: robustness_uav.battery_drain_rate_+50%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院 与各无人机起降点的距离，找出最近的起降点坐标 计算 深圳光...
+RAG检索耗时: 4.27s
+RAG查询生成耗时: 19.92s
+LLM指令生成耗时: 44.10s
+LLM总思考耗时: 64.02s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.12s (成功: True)
+Truck仿真时间: 2448.00s (成功: True)
+UAV仿真时间: 18.01s (成功: True, 到达率: 1.0, 步数: 7)
+
+总耗时: 92.49s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.battery_drain_rate__50_20260418_142950.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: uav.max_speed
+基准值: 0.3, 扰动: -50%, 扰动后: 0.1500
+
+============================================================
+实验: robustness_uav.max_speed_-50%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深理工大学医院 与各无人机起降点的距离，找出最近的起降点坐标 计算 深理工大学医院 ...
+RAG检索耗时: 4.82s
+RAG查询生成耗时: 35.57s
+LLM指令生成耗时: 25.24s
+LLM总思考耗时: 60.81s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.24s (成功: True)
+Truck仿真时间: 2448.00s (成功: True)
+UAV仿真时间: 0.00s (成功: True, 到达率: 1.0, 步数: 1)
+
+总耗时: 86.83s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.max_speed_-50_20260418_143119.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: uav.max_speed
+基准值: 0.3, 扰动: -20%, 扰动后: 0.2400
+
+============================================================
+实验: robustness_uav.max_speed_-20%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院 与各无人机起降点的距离，找出最近的起降点坐标 计算 深圳光...
+RAG检索耗时: 3.56s
+RAG查询生成耗时: 33.75s
+LLM指令生成耗时: 24.40s
+LLM总思考耗时: 58.15s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.16s (成功: True)
+Truck仿真时间: 3060.00s (成功: True)
+UAV仿真时间: 1871.09s (成功: True, 到达率: 1.0, 步数: 627)
+
+总耗时: 84.93s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.max_speed_-20_20260418_143246.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: uav.max_speed
+基准值: 0.3, 扰动: +0%, 扰动后: 0.3000
+
+============================================================
+实验: robustness_uav.max_speed_+0%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院 与各无人机起降点的距离，找出最近的起降点坐标 计算 深圳光...
+RAG检索耗时: 4.88s
+RAG查询生成耗时: 10.92s
+LLM指令生成耗时: 18.02s
+LLM总思考耗时: 28.94s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.27s (成功: True)
+Truck仿真时间: 2304.00s (成功: True)
+UAV仿真时间: 2473.58s (成功: True, 到达率: 1.0, 步数: 915)
+
+总耗时: 58.05s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.max_speed__0_20260418_143346.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: uav.max_speed
+基准值: 0.3, 扰动: +20%, 扰动后: 0.3600
+
+============================================================
+实验: robustness_uav.max_speed_+20%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 4.55s
+RAG查询生成耗时: 22.04s
+LLM指令生成耗时: 33.43s
+LLM总思考耗时: 55.48s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.17s (成功: True)
+Truck仿真时间: 2700.00s (成功: True)
+UAV仿真时间: 744.29s (成功: True, 到达率: 1.0, 步数: 250)
+
+总耗时: 83.23s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.max_speed__20_20260418_143511.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: uav.max_speed
+基准值: 0.3, 扰动: +50%, 扰动后: 0.4500
+
+============================================================
+实验: robustness_uav.max_speed_+50%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.01s
+RAG查询生成耗时: 7.75s
+LLM指令生成耗时: 19.45s
+LLM总思考耗时: 27.19s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.20s (成功: True)
+Truck仿真时间: 2448.00s (成功: True)
+UAV仿真时间: 0.00s (成功: True, 到达率: 1.0, 步数: 1)
+
+总耗时: 53.39s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav.max_speed__50_20260418_143607.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: robot.battery_drain_per_sec
+基准值: 0.02, 扰动: -50%, 扰动后: 0.0100
+
+============================================================
+实验: robustness_robot.battery_drain_per_sec_-50%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 4.51s
+RAG查询生成耗时: 16.28s
+LLM指令生成耗时: 15.23s
+LLM总思考耗时: 31.52s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.19s (成功: True)
+Truck仿真时间: 2664.00s (成功: True)
+UAV仿真失败: 未获取到有效结果 (成功: False)
+
+总耗时: 6524.43s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot.battery_drain_per_sec_-50_20260418_162453.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: robot.battery_drain_per_sec
+基准值: 0.02, 扰动: -30%, 扰动后: 0.0140
+
+============================================================
+实验: robustness_robot.battery_drain_per_sec_-30%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.15s
+RAG查询生成耗时: 27.01s
+LLM指令生成耗时: 20.08s
+LLM总思考耗时: 47.09s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+
+总耗时: 233.41s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot.battery_drain_per_sec_-30_20260418_162849.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: robot.battery_drain_per_sec
+基准值: 0.02, 扰动: +0%, 扰动后: 0.0200
+
+============================================================
+实验: robustness_robot.battery_drain_per_sec_+0%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.15s
+RAG查询生成耗时: 16.48s
+LLM指令生成耗时: 35.07s
+LLM总思考耗时: 51.55s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+
+总耗时: 236.81s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot.battery_drain_per_sec__0_20260418_163248.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: robot.battery_drain_per_sec
+基准值: 0.02, 扰动: +30%, 扰动后: 0.0260
+
+============================================================
+实验: robustness_robot.battery_drain_per_sec_+30%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.16s
+RAG查询生成耗时: 33.44s
+LLM指令生成耗时: 43.55s
+LLM总思考耗时: 77.00s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+
+总耗时: 262.29s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot.battery_drain_per_sec__30_20260418_163712.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: robot.battery_drain_per_sec
+基准值: 0.02, 扰动: +50%, 扰动后: 0.0300
+
+============================================================
+实验: robustness_robot.battery_drain_per_sec_+50%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深理工大学医院(113.928589,22.769395) 与各无人机起降点的距离，...
+RAG检索耗时: 4.45s
+RAG查询生成耗时: 21.40s
+LLM指令生成耗时: 42.22s
+LLM总思考耗时: 63.62s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+
+总耗时: 248.22s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot.battery_drain_per_sec__50_20260418_164122.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: robot.battery_drain_per_sec
+基准值: 0.02, 扰动: +100%, 扰动后: 0.0400
+
+============================================================
+实验: robustness_robot.battery_drain_per_sec_+100%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.22s
+RAG查询生成耗时: 7.72s
+LLM指令生成耗时: 15.07s
+LLM总思考耗时: 22.78s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+
+总耗时: 208.17s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot.battery_drain_per_sec__100_20260418_164452.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: robot.speed_m_per_sec
+基准值: 1.0, 扰动: -50%, 扰动后: 0.5000
+
+============================================================
+实验: robustness_robot.speed_m_per_sec_-50%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.16s
+RAG查询生成耗时: 11.85s
+LLM指令生成耗时: 52.77s
+LLM总思考耗时: 64.62s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+
+总耗时: 250.00s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot.speed_m_per_sec_-50_20260418_164904.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: robot.speed_m_per_sec
+基准值: 1.0, 扰动: -20%, 扰动后: 0.8000
+
+============================================================
+实验: robustness_robot.speed_m_per_sec_-20%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) （深圳福田区购物公园 (114.054706,22.534678)） 计算 深理工大学医院...
+RAG检索耗时: 7.29s
+RAG查询生成耗时: 59.41s
+LLM指令生成耗时: 24.50s
+LLM总思考耗时: 83.91s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+
+总耗时: 271.36s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot.speed_m_per_sec_-20_20260418_165338.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: robot.speed_m_per_sec
+基准值: 1.0, 扰动: +0%, 扰动后: 1.0000
+
+============================================================
+实验: robustness_robot.speed_m_per_sec_+0%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.15s
+RAG查询生成耗时: 19.95s
+LLM指令生成耗时: 27.38s
+LLM总思考耗时: 47.32s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+
+总耗时: 232.65s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot.speed_m_per_sec__0_20260418_165732.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: robot.speed_m_per_sec
+基准值: 1.0, 扰动: +20%, 扰动后: 1.2000
+
+============================================================
+实验: robustness_robot.speed_m_per_sec_+20%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.15s
+RAG查询生成耗时: 19.86s
+LLM指令生成耗时: 16.67s
+LLM总思考耗时: 36.52s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+
+总耗时: 221.82s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot.speed_m_per_sec__20_20260418_170116.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+参数: robot.speed_m_per_sec
+基准值: 1.0, 扰动: +50%, 扰动后: 1.5000
+
+============================================================
+实验: robustness_robot.speed_m_per_sec_+50%
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.15s
+RAG查询生成耗时: 10.43s
+LLM指令生成耗时: 21.21s
+LLM总思考耗时: 31.64s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+
+总耗时: 216.95s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot.speed_m_per_sec__50_20260418_170455.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav_battery_drain_rate_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_uav_max_speed_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot_battery_drain_per_sec_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/robustness_robot_speed_m_per_sec_metrics.csv
+
+======================================================================
+敏感度分析结果
+======================================================================
+
+参数: uav.battery_drain_rate
+扰动比例            仿真总时间(s)           变化率            
+--------------------------------------------------
+graphrag_perturbed_-50% 2475.75            0.06%          
+graphrag_perturbed_-30% 5026.97            103.17%        
+graphrag_perturbed_-10% 2458.15            -0.65%         
+graphrag_perturbed_+0% 2474.28            0.00%          
+graphrag_perturbed_+10% 5031.89            103.37%        
+graphrag_perturbed_+30% 5023.65            103.03%        
+graphrag_perturbed_+50% 2476.13            0.07%          
+
+参数: uav.max_speed
+扰动比例            仿真总时间(s)           变化率            
+--------------------------------------------------
+graphrag_perturbed_-50% 2458.24            -48.66%        
+graphrag_perturbed_-20% 4941.25            3.20%          
+graphrag_perturbed_+0% 4787.85            0.00%          
+graphrag_perturbed_+20% 3454.46            -27.85%        
+graphrag_perturbed_+50% 2458.20            -48.66%        
+
+参数: robot.battery_drain_per_sec
+扰动比例            仿真总时间(s)           变化率            
+--------------------------------------------------
+graphrag_perturbed_-50% 9159.53            0.00%          
+graphrag_perturbed_-30% -3.00              0.00%          
+graphrag_perturbed_+0% -3.00              0.00%          
+graphrag_perturbed_+30% -3.00              0.00%          
+graphrag_perturbed_+50% -3.00              0.00%          
+graphrag_perturbed_+100% -3.00              0.00%          
+
+参数: robot.speed_m_per_sec
+扰动比例            仿真总时间(s)           变化率            
+--------------------------------------------------
+graphrag_perturbed_-50% -3.00              0.00%          
+graphrag_perturbed_-20% -3.00              0.00%          
+graphrag_perturbed_+0% -3.00              0.00%          
+graphrag_perturbed_+20% -3.00              0.00%          
+graphrag_perturbed_+50% -3.00              0.00%          
+
+
+======================================================================
+>>> 开始执行: 对比实验
+======================================================================
+
+============================================================
+对比实验开始
+测试Prompt数量: 1
+算法配置: ['baseline', 'ACO', 'GA']
+============================================================
+
+[Prompt 1/1] [基线方案 (GraphRAG + LLM)] [重复 1/1]
+
+============================================================
+实验: comparison_baseline_p1_r1
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.14s
+RAG查询生成耗时: 8.96s
+LLM指令生成耗时: 41.54s
+LLM总思考耗时: 50.49s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+LLM严格资源选择耗时: 2.66s
+LLM更新后总思考耗时: 53.15s
+    baseline选择结果: warehouse=京东快递深圳水贝揽收营业点, landing=VTOL26, truck=truck_001, uav=uav_0_0297, robot=robot_001
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_baseline_p1_r1_20260418_170856.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [蚁群算法 (Ant Colony Optimization)] [重复 1/1]
+
+>>> 运行 ACO 高层调度优化...
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 5.15s
+RAG查询生成耗时: 7.49s
+LLM指令生成耗时: 15.99s
+LLM总思考耗时: 23.48s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+    ACO选择结果: warehouse=京东快递深圳清水河营业部, landing=VTOL26, truck=GROUND-002, uav=uav_0_02bc, robot=WARE-003
+    ACO估计总代价: 31531.52s
+    ACO改进比例: 0.00%
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_ACO_p1_r1_20260418_171227.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [遗传算法 (Genetic Algorithm)] [重复 1/1]
+
+>>> 运行 GA 高层调度优化...
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 4.99s
+RAG查询生成耗时: 23.72s
+LLM指令生成耗时: 20.97s
+LLM总思考耗时: 44.69s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+    GA选择结果: warehouse=京东快递深圳清水河营业部, landing=VTOL26, truck=GROUND-002, uav=uav_0_02bc, robot=robot_001
+    GA估计总代价: 31326.06s
+    GA改进比例: 0.00%
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_GA_p1_r1_20260418_171618.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_baseline_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_ACO_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_GA_metrics.csv
+
+==========================================================================================
+算法对比实验结果
+==========================================================================================
+
+算法                        LLM耗时(s)     Robot(s)     Truck(s)     UAV(s)       总耗时(s)      
+------------------------------------------------------------------------------------------
+baseline                  53.15        0.00         0.00         0.00         238.75      
+ACO                       7.49         0.00         0.00         0.00         208.75      
+GA                        23.72        0.00         0.00         0.00         229.92      
+
+指标说明:
+  1. LLM耗时: baseline 显示 LLM 总思考时间；ACO/GA 当前仅保留任务解析与查询生成时间，不包含被传统算法替代的高层调度生成时间。
+  2. Robot/Truck/UAV: 这三列是各智能体仿真执行时间，口径偏向业务/仿真时间，不是纯程序墙钟时间。
+  3. 总耗时: 端到端真实耗时，包含 RAG、LLM、ACO/GA 优化、接口请求、轮询等待和仿真执行，因此不等于前面几列直接相加。
+  4. 若某个 Agent 成功标记为 False，该行时间通常包含失败前的等待或超时，不能直接当成有效完成时间解读。
+
+成功率摘要:
+  baseline: Robot 0%, Truck 0%, UAV 0%
+  ACO: Robot 0%, Truck 0%, UAV 0%
+  GA: Robot 0%, Truck 0%, UAV 0%
+
+汇总报告已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_summary.txt
+
+
+######################################################################
+# 所有实验完成!
+# 结束时间: 2026-04-18T17:16:20.962240
+######################################################################
+
+======================================================================
+程序执行完毕
+结束时间: 2026-04-18 17:16:20
+程序总耗时: 10892.26 秒 (181.54 分钟)
+======================================================================

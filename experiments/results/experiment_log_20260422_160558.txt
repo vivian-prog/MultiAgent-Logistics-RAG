@@ -1,0 +1,69 @@
+======================================================================
+实验日志 - 2026-04-22T16:05:58.758698
+======================================================================
+
+
+======================================================================
+多智能体物流调度系统 - 实验程序启动
+开始时间: 2026-04-22 16:05:58
+======================================================================
+
+============================================================
+对比实验开始
+测试Prompt数量: 1
+算法配置: ['baseline', 'ACO', 'GA']
+============================================================
+
+[Prompt 1/1] [基线方案 (GraphRAG + LLM)] [重复 1/1]
+
+============================================================
+实验: comparison_baseline_p1_r1
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 4.98s
+RAG查询生成耗时: 9.03s
+LLM指令生成耗时: 62.83s
+LLM总思考耗时: 71.86s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+LLM严格资源选择耗时: 2.08s
+LLM更新后总思考耗时: 73.94s
+    baseline选择结果: warehouse=京东快递深圳水贝揽收营业点, landing=VTOL26, truck=truck_001, uav=uav_0_0297, robot=robot_001
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_baseline_p1_r1_20260422_161018.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [蚁群算法 (Ant Colony Optimization)] [重复 1/1]
+
+>>> 运行 ACO 高层调度优化...
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院 与各无人机起降点的距离，找出最近的起降点坐标 计算 深圳光...
+RAG检索耗时: 4.88s
+RAG查询生成耗时: 14.96s
+LLM指令生成耗时: 26.27s
+LLM总思考耗时: 41.23s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+    ACO选择结果: warehouse=京东快递深圳清水河营业部, landing=VTOL26, truck=GROUND-002, uav=uav_0_0297, robot=WARE-003
+    ACO估计总代价: 31531.52s
+    ACO改进比例: 0.00%
+Robot任务异常: 
+Truck任务异常: 
+UAV任务异常: 
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/comparison_ACO_p1_r1_20260422_161406.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [遗传算法 (Genetic Algorithm)] [重复 1/1]
+
+>>> 运行 GA 高层调度优化...
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 4.97s
+RAG查询生成耗时: 15.99s
+LLM指令生成耗时: 13.72s
+LLM总思考耗时: 29.71s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+    GA选择结果: warehouse=京东快递深圳清水河营业部, landing=VTOL26, truck=GROUND-002, uav=uav_0_0297, robot=robot_001
+    GA估计总代价: 31326.06s
+    GA改进比例: 0.00%
+Robot任务异常: 

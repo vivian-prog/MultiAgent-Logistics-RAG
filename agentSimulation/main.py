@@ -1,7 +1,8 @@
 # main.py（FastAPI主文件）
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from common.db import get_db
+import time
 # 关键：从celery_worker.tasks导入定义好的任务函数
 from celery_worker.tasks import run_simulation_task, run_simulation_task_agent_uav, run_simulation_task_agent_truck, run_simulation_task_agent_robot
 from celery.result import AsyncResult 
@@ -93,3 +94,4 @@ async def get_agent1_task_result(task_id: str):
             "progress": progress,
             "result": None
         }
+        

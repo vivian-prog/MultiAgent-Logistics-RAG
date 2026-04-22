@@ -17,6 +17,7 @@ import csv
 import time
 import re
 import logging
+import traceback
 from datetime import datetime
 from typing import Dict, Any, List, Optional, Tuple
 from dataclasses import dataclass, field, asdict
@@ -97,6 +98,54 @@ def log_print(message: str):
     get_logger().log(message)
 
 
+def format_exception(exc: Exception) -> str:
+    """Return a readable exception string even when str(exc) is empty."""
+    exc_name = type(exc).__name__
+    exc_message = str(exc).strip()
+    return f"{exc_name}: {exc_message}" if exc_message else exc_name
+
+
+def log_exception(context: str, exc: Exception) -> str:
+    """Log exception type plus traceback to make failures diagnosable."""
+    detail = format_exception(exc)
+    log_print(f"{context}: {detail}")
+    log_print(traceback.format_exc().rstrip())
+    return detail
+
+
+def append_metric_error(metrics: "ExperimentMetrics", source: str, detail: str) -> None:
+    """Accumulate agent-level errors in the experiment detail output."""
+    if not detail:
+        return
+    entry = f"{source}: {detail}"
+    metrics.error_message = f"{metrics.error_message} | {entry}" if metrics.error_message else entry
+
+
+def extract_task_error(data: Optional[Dict[str, Any]], fallback_status: str = "") -> str:
+    """Best-effort extraction of failure detail from task/result payloads."""
+    if not isinstance(data, dict):
+        return fallback_status
+
+    result = data.get("result")
+    simulation_data = data.get("simulation_data")
+    nested_simulation_data = result.get("simulation_data") if isinstance(result, dict) else None
+
+    candidate_paths = [
+        data.get("error"),
+        data.get("message"),
+        result.get("error") if isinstance(result, dict) else None,
+        result.get("message") if isinstance(result, dict) else None,
+        simulation_data.get("error") if isinstance(simulation_data, dict) else None,
+        nested_simulation_data.get("error") if isinstance(nested_simulation_data, dict) else None,
+    ]
+
+    for candidate in candidate_paths:
+        if candidate:
+            return str(candidate)
+
+    return fallback_status
+
+
 def render_progress_bar(progress: int, width: int = 30) -> str:
     """渲染单行文本进度条。"""
     clamped = max(0, min(100, int(progress)))
@@ -161,6 +210,10 @@ AGENT_API_MAP = {
     "agentuav_result": f"{API_BASE_URL}/api/agent1/result/{{}}",
     "common_result": f"{API_BASE_URL}/api/v1/task/{{}}"
 }
+AGENT_SUBMIT_TIMEOUT = httpx.Timeout(connect=5.0, read=20.0, write=20.0, pool=5.0)
+AGENT_POLL_TIMEOUT = httpx.Timeout(connect=5.0, read=5.0, write=5.0, pool=5.0)
+AGENT_POLL_MAX_WAIT_SECONDS = 120
+AGENT_POLL_INTERVAL_SECONDS = 1.0
 
 # Prompts配置
 prompt_config = MultiAgentLogisticRAGPrompt()
@@ -172,6 +225,12 @@ RAG_SYSTEM_PROMPT = prompt_config.RAG_session_init
 @dataclass
 class ExperimentMetrics:
     """实验指标数据结构（时间单位统一为秒）"""
+    # 实验元信息
+    experiment_name: str = ""
+    experiment_type: str = ""
+    record_status: str = "completed"
+    error_message: str = ""
+
     # RAG相关指标
     rag_enabled: bool = False
     rag_type: str = ""
@@ -323,6 +382,92 @@ def preview_text_for_log(text: str, limit: int = 240) -> str:
     if len(normalized) <= limit:
         return normalized
     return normalized[:limit] + "..."
+
+
+def compact_rag_context(rag_context: str, rag_type: str, max_total_chars: Optional[int] = None) -> str:
+    """
+    压缩RAG返回内容，避免长表结构/长片段把主LLM上下文撑爆。
+    对 text_rag/raw_text_rag 只保留前若干片段的紧凑摘要。
+    """
+    if not rag_context:
+        return ""
+
+    cleaned = rag_context.replace("\r", "\n").strip()
+    if not cleaned:
+        return ""
+
+    if max_total_chars is None:
+        max_total_chars = 2200 if rag_type in {"rag", "raw_rag"} else 3600
+
+    if rag_type in {"rag", "raw_rag"}:
+        segment_pattern = r"##\s*相关片段\s*\d+[^\n]*:\n([\s\S]*?)(?=\n##\s*相关片段\s*\d+[^\n]*:\n|\Z)"
+        segments = re.findall(segment_pattern, cleaned)
+        if segments:
+            compact_segments = []
+            segment_char_limit = 520 if rag_type == "rag" else 420
+            for idx, segment in enumerate(segments[:3], 1):
+                compact_segment = re.sub(r"\s+", " ", segment).strip()
+                if len(compact_segment) > segment_char_limit:
+                    compact_segment = compact_segment[:segment_char_limit] + "..."
+                compact_segments.append(f"片段{idx}: {compact_segment}")
+            compact_text = "\n".join(compact_segments)
+            if len(compact_text) <= max_total_chars:
+                return compact_text
+            return compact_text[:max_total_chars] + "..."
+
+    compact_text = re.sub(r"\s+", " ", cleaned)
+    if len(compact_text) <= max_total_chars:
+        return compact_text
+    return compact_text[:max_total_chars] + "..."
+
+
+def parse_json_with_retry(
+    final_answer: str,
+    original_prompt: str,
+    rag_context: str = "",
+) -> Tuple[Dict[str, Any], float]:
+    """
+    首轮解析失败时，发起一次“仅重新格式化为JSON”的重试。
+    返回: (answer_dict, retry_time)
+    """
+    try:
+        return extract_and_parse_last_json(final_answer), 0.0
+    except ValueError:
+        first_preview = preview_text_for_log(final_answer)
+        log_print(f"首轮计划输出不可解析，准备重试。预览: {first_preview}")
+        compact_original_prompt = original_prompt if len(original_prompt) <= 1800 else original_prompt[:1800] + "..."
+        compact_retry_context = compact_rag_context(rag_context, "retry", max_total_chars=1200)
+
+        reformat_prompt = f"""
+你上一次回答没有返回可解析的JSON。
+请基于原始任务要求与精简参考信息，重新输出一个且仅一个合法JSON对象。
+
+原始任务要求：
+{compact_original_prompt}
+
+精简参考信息：
+{compact_retry_context if compact_retry_context else "(none)"}
+
+你上一次回答的预览：
+{first_preview}
+
+严格要求：
+1. 只输出一个JSON对象
+2. 不要解释，不要markdown，不要代码块，不要<think>
+3. JSON顶层必须包含: agenttruck, agentuav, agentrobot, instruction_summary
+4. 第一个字符必须是{{，最后一个字符必须是}}
+""".strip()
+
+        retry_answer, retry_time = call_llm_model_json(reformat_prompt, 0.0)
+        try:
+            return extract_and_parse_last_json(retry_answer), retry_time
+        except ValueError as retry_error:
+            retry_preview = preview_text_for_log(retry_answer)
+            raise ValueError(
+                "计划输出未返回可解析JSON，"
+                f"首轮输出预览: {first_preview}，"
+                f"重试输出预览: {retry_preview}"
+            ) from retry_error
 
 
 def extract_destination_from_prompt(prompt: str) -> Optional[Tuple[float, float]]:
@@ -789,19 +934,20 @@ def build_ga_agent_plan(
 
 async def poll_task(client, task_id, agent_name, progress_label: Optional[str] = None) -> Optional[Dict]:
     """轮询任务结果"""
-    max_retries = 120
-    retry_interval = 1
+    max_retries = int(AGENT_POLL_MAX_WAIT_SECONDS / AGENT_POLL_INTERVAL_SECONDS)
+    retry_interval = AGENT_POLL_INTERVAL_SECONDS
     last_progress = None
     progress_active = False
+    last_error = ""
 
     for _ in range(max_retries):
         try:
             url = AGENT_API_MAP["common_result"].format(task_id)
-            resp = await client.get(url)
+            resp = await client.get(url, timeout=AGENT_POLL_TIMEOUT)
 
             if resp.status_code == 404 and agent_name == "agentuav":
                 url = AGENT_API_MAP["agentuav_result"].format(task_id)
-                resp = await client.get(url)
+                resp = await client.get(url, timeout=AGENT_POLL_TIMEOUT)
 
             resp.raise_for_status()
             data = resp.json()
@@ -831,13 +977,84 @@ async def poll_task(client, task_id, agent_name, progress_label: Optional[str] =
                         progress_active = True
                 await asyncio.sleep(retry_interval)
 
-        except Exception:
+        except Exception as exc:
+            last_error = format_exception(exc)
             await asyncio.sleep(retry_interval)
 
     if progress_label and progress_active:
         print_console_progress(progress_label, last_progress or 0, "TIMEOUT")
         finish_console_progress()
+    if last_error:
+        log_print(f"{agent_name} poll timeout after {max_retries * retry_interval:.0f}s; last poll error: {last_error}")
     return None
+
+
+async def poll_task_with_details(
+    client,
+    task_id,
+    agent_name,
+    progress_label: Optional[str] = None,
+    max_wait_seconds: int = AGENT_POLL_MAX_WAIT_SECONDS,
+    retry_interval: float = AGENT_POLL_INTERVAL_SECONDS,
+) -> Tuple[Optional[Dict], Optional[str]]:
+    """Enhanced polling that preserves timeout and transport failure details."""
+    last_progress = None
+    progress_active = False
+    last_error = ""
+    deadline = time.monotonic() + max_wait_seconds
+
+    while time.monotonic() < deadline:
+        try:
+            url = AGENT_API_MAP["common_result"].format(task_id)
+            resp = await client.get(url, timeout=AGENT_POLL_TIMEOUT)
+
+            if resp.status_code == 404 and agent_name == "agentuav":
+                url = AGENT_API_MAP["agentuav_result"].format(task_id)
+                resp = await client.get(url, timeout=AGENT_POLL_TIMEOUT)
+
+            resp.raise_for_status()
+            data = resp.json()
+            status = str(data.get("status", "")).upper()
+            progress = data.get("progress", 0)
+
+            if status == "SUCCESS":
+                if progress_label and progress_active:
+                    print_console_progress(progress_label, 100, "SUCCESS")
+                    finish_console_progress()
+                return data.get("result") or data.get("simulation_data"), None
+
+            if status in ["FAILURE", "FAILED"]:
+                if progress_label and progress_active:
+                    fail_progress = progress if isinstance(progress, (int, float)) else (last_progress or 0)
+                    print_console_progress(progress_label, int(fail_progress), status)
+                    finish_console_progress()
+                failure_detail = extract_task_error(data, f"task reported {status}")
+                return None, failure_detail
+
+            if progress_label:
+                try:
+                    current_progress = int(progress)
+                except (TypeError, ValueError):
+                    current_progress = last_progress if last_progress is not None else 0
+                if last_progress != current_progress or not progress_active:
+                    print_console_progress(progress_label, current_progress, status or "RUNNING")
+                    last_progress = current_progress
+                    progress_active = True
+
+            await asyncio.sleep(retry_interval)
+
+        except Exception as exc:
+            last_error = format_exception(exc)
+            await asyncio.sleep(retry_interval)
+
+    if progress_label and progress_active:
+        print_console_progress(progress_label, last_progress or 0, "TIMEOUT")
+        finish_console_progress()
+
+    timeout_detail = f"polling timed out after {max_wait_seconds}s"
+    if last_error:
+        timeout_detail = f"{timeout_detail}; last poll error: {last_error}"
+    return None, timeout_detail
 
 
 # ===================== 实验执行类 =====================
@@ -849,6 +1066,104 @@ class ExperimentRunner:
         self.overwrite = overwrite
         os.makedirs(self.output_dir, exist_ok=True)
         self.recorder = ExperimentRecorder(self.output_dir)
+
+    @staticmethod
+    def _safe_filename(name: str) -> str:
+        """把实验名转换为安全文件名。"""
+        cleaned = re.sub(r"[^A-Za-z0-9_.-]+", "_", (name or "").strip())
+        return cleaned.strip("._") or "experiment"
+
+    def save_experiment_detail(
+        self,
+        experiment_name: str,
+        experiment_type: str,
+        prompt: str,
+        metrics: ExperimentMetrics,
+        extra: Optional[Dict[str, Any]] = None,
+    ) -> Tuple[str, str]:
+        """
+        保存单次实验明细：
+        1. 单独 JSON 文件
+        2. 追加到 experiment_details.csv
+        """
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        safe_name = self._safe_filename(experiment_name)
+        json_filename = f"{safe_name}_{timestamp}.json"
+        json_path = os.path.join(self.output_dir, json_filename)
+        csv_path = os.path.join(self.output_dir, "experiment_details.csv")
+
+        record = {
+            "saved_at": datetime.now().isoformat(),
+            "experiment_name": experiment_name,
+            "experiment_type": experiment_type,
+            "prompt": prompt,
+            "prompt_preview": (prompt[:200] + "...") if len(prompt) > 200 else prompt,
+            "metrics": metrics.to_dict(),
+            "extra": extra or {},
+        }
+
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(record, f, ensure_ascii=False, indent=2)
+
+        fieldnames = [
+            "saved_at",
+            "experiment_name",
+            "experiment_type",
+            "record_status",
+            "error_message",
+            "prompt",
+            "rag_enabled",
+            "rag_type",
+            "rag_search_time_s",
+            "rag_query_generation_time_s",
+            "llm_total_time_s",
+            "llm_query_gen_time_s",
+            "llm_command_gen_time_s",
+            "robot_simulation_time_s",
+            "truck_simulation_time_s",
+            "uav_simulation_time_s",
+            "robot_success",
+            "truck_success",
+            "uav_success",
+            "total_time_s",
+            "detail_json_file",
+            "extra_json",
+        ]
+        row = {
+            "saved_at": record["saved_at"],
+            "experiment_name": experiment_name,
+            "experiment_type": experiment_type,
+            "record_status": metrics.record_status,
+            "error_message": metrics.error_message,
+            "prompt": prompt,
+            "rag_enabled": metrics.rag_enabled,
+            "rag_type": metrics.rag_type,
+            "rag_search_time_s": metrics.rag_search_time,
+            "rag_query_generation_time_s": metrics.rag_query_generation_time,
+            "llm_total_time_s": metrics.llm_total_time,
+            "llm_query_gen_time_s": metrics.llm_query_gen_time,
+            "llm_command_gen_time_s": metrics.llm_command_gen_time,
+            "robot_simulation_time_s": metrics.robot_simulation_time,
+            "truck_simulation_time_s": metrics.truck_simulation_time,
+            "uav_simulation_time_s": metrics.uav_simulation_time,
+            "robot_success": metrics.robot_success,
+            "truck_success": metrics.truck_success,
+            "uav_success": metrics.uav_success,
+            "total_time_s": metrics.total_time,
+            "detail_json_file": json_filename,
+            "extra_json": json.dumps(extra or {}, ensure_ascii=False),
+        }
+
+        write_header = not os.path.exists(csv_path)
+        with open(csv_path, "a", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            if write_header:
+                writer.writeheader()
+            writer.writerow(row)
+
+        log_print(f"实验明细已保存至: {json_path}")
+        log_print(f"实验总明细CSV已更新: {csv_path}")
+        return json_path, csv_path
 
     def generate_instruction_plan(
         self,
@@ -880,16 +1195,25 @@ class ExperimentRunner:
 
             log_print(f"RAG检索耗时: {rag_search_time:.2f}s")
             log_print(f"RAG查询生成耗时: {query_gen_time:.2f}s")
+            compact_context = compact_rag_context(rag_context, rag_type)
+            if compact_context != rag_context:
+                log_print(f"RAG上下文已压缩: {len(rag_context)} -> {len(compact_context)} chars")
+            rag_context = compact_context
 
         cloudllm_prompt = CLOUDLLM_SYSTEM_PROMPT.format(user_prompt=prompt)
         final_answer, command_gen_time = call_llm_model(cloudllm_prompt, rag_context, 0.7)
-        metrics.llm_command_gen_time = command_gen_time
-        metrics.llm_total_time = metrics.llm_query_gen_time + command_gen_time
+        answer_dict, retry_time = parse_json_with_retry(
+            final_answer=final_answer,
+            original_prompt=cloudllm_prompt,
+            rag_context=rag_context,
+        )
+        metrics.llm_command_gen_time = command_gen_time + retry_time
+        metrics.llm_total_time = metrics.llm_query_gen_time + metrics.llm_command_gen_time
 
         log_print(f"LLM指令生成耗时: {command_gen_time:.2f}s")
+        if retry_time > 0:
+            log_print(f"LLM JSON重试耗时: {retry_time:.2f}s")
         log_print(f"LLM总思考耗时: {metrics.llm_total_time:.2f}s")
-
-        answer_dict = extract_and_parse_last_json(final_answer)
         log_print(f"解析指令成功: {list(answer_dict.keys())}")
         return metrics, answer_dict
 
@@ -903,12 +1227,12 @@ class ExperimentRunner:
         agenttruck_params = copy.deepcopy(answer_dict.get("agenttruck", {}) or {})
         agentrobot_params = copy.deepcopy(answer_dict.get("agentrobot", {}) or {})
 
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        async with httpx.AsyncClient(timeout=AGENT_SUBMIT_TIMEOUT) as client:
             # ================= Robot 仿真 =================
             if agentrobot_params:
                 t_start = time.time()
                 try:
-                    resp = await client.post(AGENT_API_MAP["agentrobot"], json=agentrobot_params)
+                    resp = await client.post(AGENT_API_MAP["agentrobot"], json=agentrobot_params, timeout=AGENT_SUBMIT_TIMEOUT)
                     resp.raise_for_status()
                     task_id = resp.json()["task_id"]
                     result = await poll_task(client, task_id, "agentrobot", progress_label="Robot仿真进度")
@@ -917,9 +1241,13 @@ class ExperimentRunner:
                     sim_time = (time.time() - t_start) * 10.0 
                     metrics.robot_simulation_time = sim_time
                     metrics.robot_success = result is not None
+                    if result is None:
+                        append_metric_error(metrics, "robot", "task failed or polling timed out")
                     log_print(f"Robot仿真时间: {sim_time:.2f}s (成功: {metrics.robot_success})")
                 except Exception as e:
                     log_print(f"Robot任务异常: {e}")
+                    detail = log_exception("Robot agent exception", e)
+                    append_metric_error(metrics, "robot", detail)
                     metrics.robot_simulation_time = -1
                     metrics.robot_success = False
 
@@ -932,7 +1260,7 @@ class ExperimentRunner:
                         agenttruck_params["end_lat"] = agentuav_params["start_lat"]
                         agenttruck_params["end_lng"] = agentuav_params["start_lng"]
 
-                    resp = await client.post(AGENT_API_MAP["agenttruck"], json=agenttruck_params)
+                    resp = await client.post(AGENT_API_MAP["agenttruck"], json=agenttruck_params, timeout=AGENT_SUBMIT_TIMEOUT)
                     resp.raise_for_status()
                     task_id = resp.json()["task_id"]
                     result = await poll_task(client, task_id, "agenttruck", progress_label="Truck仿真进度")
@@ -947,9 +1275,13 @@ class ExperimentRunner:
 
                     metrics.truck_simulation_time = sim_time
                     metrics.truck_success = result is not None
+                    if result is None:
+                        append_metric_error(metrics, "truck", "task failed or polling timed out")
                     log_print(f"Truck仿真时间: {sim_time:.2f}s (成功: {metrics.truck_success})")
                 except Exception as e:
                     log_print(f"Truck任务异常: {e}")
+                    detail = log_exception("Truck agent exception", e)
+                    append_metric_error(metrics, "truck", detail)
                     metrics.truck_simulation_time = -1
                     metrics.truck_success = False
 
@@ -957,7 +1289,7 @@ class ExperimentRunner:
             if agentuav_params:
                 t_start = time.time()
                 try:
-                    resp = await client.post(AGENT_API_MAP["agentuav_submit"], json=agentuav_params)
+                    resp = await client.post(AGENT_API_MAP["agentuav_submit"], json=agentuav_params, timeout=AGENT_SUBMIT_TIMEOUT)
                     resp.raise_for_status()
                     task_id = resp.json()["task_id"]
                     result = await poll_task(client, task_id, "agentuav", progress_label="UAV仿真进度")
@@ -1012,11 +1344,14 @@ class ExperimentRunner:
                     else:
                         # 结果为 None，说明轮询失败或任务失败
                         metrics.uav_simulation_time = time.time() - t_start
+                        append_metric_error(metrics, "uav", "task failed or polling timed out")
                         metrics.uav_success = False
                         log_print(f"UAV仿真失败: 未获取到有效结果 (成功: False)")
 
                 except Exception as e:
                     log_print(f"UAV任务异常: {e}")
+                    detail = log_exception("UAV agent exception", e)
+                    append_metric_error(metrics, "uav", detail)
                     metrics.uav_simulation_time = -1
                     metrics.uav_success = False
   
@@ -1031,6 +1366,8 @@ class ExperimentRunner:
         执行单次实验，收集完整指标
         """
         metrics = ExperimentMetrics()
+        metrics.experiment_name = experiment_name
+        metrics.experiment_type = experiment_name.split("_", 1)[0] if "_" in experiment_name else experiment_name
         metrics.rag_enabled = enable_rag
         metrics.rag_type = rag_type if enable_rag else "none"
 
@@ -1049,8 +1386,12 @@ class ExperimentRunner:
                 rag_type=rag_type,
             )
             metrics = plan_metrics
+            metrics.experiment_name = experiment_name
+            metrics.experiment_type = experiment_name.split("_", 1)[0] if "_" in experiment_name else experiment_name
         except ValueError as e:
             log_print(f"JSON解析失败: {e}")
+            metrics.record_status = "failed"
+            metrics.error_message = str(e)
             metrics.total_time = time.time() - total_start
             return metrics
 
@@ -1115,6 +1456,54 @@ class ExperimentRunner:
                 writer.writerow(row)
 
         log_print(f"指标已保存至: {filepath}")
+        return filepath
+
+    def save_timestamped_results_csv(self, rows: List[Dict[str, Any]], experiment_type: str) -> str:
+        """
+        保存某一类实验的整组结果到带时间戳的 CSV。
+        文件名格式：<experiment_type>_<timestamp>.csv
+        """
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{self._safe_filename(experiment_type)}_{timestamp}.csv"
+        filepath = os.path.join(self.output_dir, filename)
+
+        fieldnames = [
+            "experiment_type",
+            "experiment_name",
+            "config_name",
+            "display_name",
+            "prompt_index",
+            "repeat_index",
+            "agent_type",
+            "param_name",
+            "param_key",
+            "variation",
+            "perturbed_value",
+            "record_status",
+            "error_message",
+            "rag_enabled",
+            "rag_type",
+            "rag_search_time_s",
+            "rag_query_generation_time_s",
+            "llm_total_time_s",
+            "llm_query_gen_time_s",
+            "llm_command_gen_time_s",
+            "robot_simulation_time_s",
+            "truck_simulation_time_s",
+            "uav_simulation_time_s",
+            "robot_success",
+            "truck_success",
+            "uav_success",
+            "total_time_s",
+        ]
+
+        with open(filepath, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            for row in rows:
+                writer.writerow({key: row.get(key, "") for key in fieldnames})
+
+        log_print(f"{experiment_type} 时间戳结果已保存至: {filepath}")
         return filepath
 
 
@@ -1254,6 +1643,7 @@ async def run_baseline_experiments(
 
     runner = ExperimentRunner(output_dir)
     all_metrics = []
+    baseline_rows = []
 
     log_print("\n" + "="*60)
     log_print("基础实验组开始")
@@ -1273,12 +1663,33 @@ async def run_baseline_experiments(
                 experiment_name=f"baseline_p{prompt_idx+1}_r{rep+1}"
             )
             all_metrics.append(metrics)
+            baseline_rows.append(
+                build_timestamped_result_row(
+                    metrics,
+                    "baseline",
+                    prompt_index=prompt_idx + 1,
+                    repeat_index=rep + 1,
+                )
+            )
+            runner.save_experiment_detail(
+                experiment_name=metrics.experiment_name,
+                experiment_type="baseline",
+                prompt=prompt,
+                metrics=metrics,
+                extra={
+                    "prompt_index": prompt_idx + 1,
+                    "repeat_index": rep + 1,
+                    "enable_rag": True,
+                    "rag_type": "graphrag",
+                },
+            )
 
             # 间隔
             await asyncio.sleep(2)
 
     # 保存结果
     runner.save_metrics_to_csv(all_metrics, "baseline_metrics.csv")
+    runner.save_timestamped_results_csv(baseline_rows, "baseline")
 
     # 打印汇总统计
     print_summary_statistics(all_metrics, "基础实验组")
@@ -1299,6 +1710,7 @@ async def run_ablation_experiments(
 
     runner = ExperimentRunner(output_dir)
     results = {config["name"]: [] for config in ABLATION_CONFIGS}
+    ablation_rows = []
 
     log_print("\n" + "="*60)
     log_print("消融实验开始")
@@ -1318,12 +1730,37 @@ async def run_ablation_experiments(
                     experiment_name=f"ablation_{config['name']}_p{prompt_idx+1}_r{rep+1}"
                 )
                 results[config["name"]].append(metrics)
+                ablation_rows.append(
+                    build_timestamped_result_row(
+                        metrics,
+                        "ablation",
+                        config_name=config["name"],
+                        display_name=config["display_name"],
+                        prompt_index=prompt_idx + 1,
+                        repeat_index=rep + 1,
+                    )
+                )
+                runner.save_experiment_detail(
+                    experiment_name=metrics.experiment_name,
+                    experiment_type="ablation",
+                    prompt=prompt,
+                    metrics=metrics,
+                    extra={
+                        "prompt_index": prompt_idx + 1,
+                        "repeat_index": rep + 1,
+                        "config_name": config["name"],
+                        "display_name": config["display_name"],
+                        "enable_rag": config["enable_rag"],
+                        "rag_type": config["rag_type"] or "none",
+                    },
+                )
 
                 await asyncio.sleep(3)
 
     # 保存各配置结果
     for config_name, metrics_list in results.items():
         runner.save_metrics_to_csv(metrics_list, f"ablation_{config_name}_metrics.csv")
+    runner.save_timestamped_results_csv(ablation_rows, "ablation")
 
     # 打印对比统计
     print_ablation_comparison(results)
@@ -1347,6 +1784,7 @@ async def run_robustness_experiments(
 
     runner = ExperimentRunner(output_dir)
     results = {}
+    robustness_rows = []
 
     log_print("\n" + "="*60)
     log_print("鲁棒性实验开始")
@@ -1384,12 +1822,38 @@ async def run_robustness_experiments(
                 perturbation_str = f"graphrag_perturbed_{variation:+.0%}"
                 metrics.rag_type = perturbation_str
                 results[param_key].append(metrics)
+                robustness_rows.append(
+                    build_timestamped_result_row(
+                        metrics,
+                        "robustness",
+                        agent_type=agent_type,
+                        param_name=param_name,
+                        param_key=param_key,
+                        variation=variation,
+                        perturbed_value=perturbed_value,
+                    )
+                )
+                runner.save_experiment_detail(
+                    experiment_name=metrics.experiment_name,
+                    experiment_type="robustness",
+                    prompt=prompt,
+                    metrics=metrics,
+                    extra={
+                        "agent_type": agent_type,
+                        "param_name": param_name,
+                        "param_key": param_key,
+                        "base_value": base_value,
+                        "variation": variation,
+                        "perturbed_value": perturbed_value,
+                    },
+                )
 
                 await asyncio.sleep(2)
 
     # 保存结果
     for param_key, metrics_list in results.items():
         runner.save_metrics_to_csv(metrics_list, f"robustness_{param_key.replace('.', '_')}_metrics.csv")
+    runner.save_timestamped_results_csv(robustness_rows, "robustness")
 
     # 敏感度分析
     print_sensitivity_analysis(results)
@@ -1411,6 +1875,7 @@ async def run_comparison_experiments(
 
     runner = ExperimentRunner(output_dir)
     results = {config["name"]: [] for config in COMPARISON_CONFIGS}
+    comparison_rows = []
 
     log_print("\n" + "="*60)
     log_print("对比实验开始")
@@ -1431,6 +1896,8 @@ async def run_comparison_experiments(
                     algo_params = config.get("algorithm_params", {})
                     candidate_top_k = int(algo_params.get("candidate_top_k", 3))
                     metrics = ExperimentMetrics(
+                        experiment_name=experiment_name,
+                        experiment_type="comparison",
                         rag_enabled=config["enable_rag"],
                         rag_type=config["rag_type"] if config["enable_rag"] else "none",
                     )
@@ -1475,6 +1942,10 @@ async def run_comparison_experiments(
                         metrics.total_time = time.time() - total_start
                     except Exception as e:
                         log_print(f"基线实验执行失败: {e}")
+                        metrics.experiment_name = experiment_name
+                        metrics.experiment_type = "comparison"
+                        metrics.record_status = "failed"
+                        metrics.error_message = str(e)
                         metrics.rag_enabled = config["enable_rag"]
                         metrics.rag_type = f"{config['rag_type']}_baseline_failed"
                         metrics.total_time = time.time() - total_start
@@ -1547,18 +2018,47 @@ async def run_comparison_experiments(
                     except Exception as e:
                         log_print(f"{algorithm}对比实验执行失败: {e}")
                         metrics = ExperimentMetrics(
+                            experiment_name=experiment_name,
+                            experiment_type="comparison",
+                            record_status="failed",
+                            error_message=str(e),
                             rag_enabled=config["enable_rag"],
                             rag_type=f"{config['rag_type']}_{algorithm.lower()}_dispatch_failed",
                             total_time=time.time() - total_start,
                         )
 
                 results[config["name"]].append(metrics)
+                comparison_rows.append(
+                    build_timestamped_result_row(
+                        metrics,
+                        "comparison",
+                        config_name=config["name"],
+                        display_name=config["display_name"],
+                        prompt_index=prompt_idx + 1,
+                        repeat_index=rep + 1,
+                    )
+                )
+                runner.save_experiment_detail(
+                    experiment_name=metrics.experiment_name or experiment_name,
+                    experiment_type="comparison",
+                    prompt=prompt,
+                    metrics=metrics,
+                    extra={
+                        "prompt_index": prompt_idx + 1,
+                        "repeat_index": rep + 1,
+                        "config_name": config["name"],
+                        "display_name": config["display_name"],
+                        "algorithm": algorithm,
+                        "config": config,
+                    },
+                )
 
                 await asyncio.sleep(2)
 
     # 保存结果
     for config_name, metrics_list in results.items():
         runner.save_metrics_to_csv(metrics_list, f"comparison_{config_name}_metrics.csv")
+    runner.save_timestamped_results_csv(comparison_rows, "comparison")
 
     # 打印对比结果
     print_comparison_results(results)
@@ -1599,6 +2099,43 @@ def print_summary_statistics(metrics_list: List[ExperimentMetrics], title: str):
     log_print(f"  平均UAV仿真时间: {avg_uav:.2f}s (成功率: {uav_success_rate:.1f}%)")
     log_print(f"\n【总体指标】")
     log_print(f"  平均总耗时: {avg_total:.2f}s")
+
+
+def build_timestamped_result_row(
+    metrics: ExperimentMetrics,
+    experiment_type: str,
+    **extra: Any,
+) -> Dict[str, Any]:
+    """把单次实验结果扁平化为带上下文的 CSV 行。"""
+    return {
+        "experiment_type": experiment_type,
+        "experiment_name": metrics.experiment_name,
+        "config_name": extra.get("config_name", ""),
+        "display_name": extra.get("display_name", ""),
+        "prompt_index": extra.get("prompt_index", ""),
+        "repeat_index": extra.get("repeat_index", ""),
+        "agent_type": extra.get("agent_type", ""),
+        "param_name": extra.get("param_name", ""),
+        "param_key": extra.get("param_key", ""),
+        "variation": extra.get("variation", ""),
+        "perturbed_value": extra.get("perturbed_value", ""),
+        "record_status": metrics.record_status,
+        "error_message": metrics.error_message,
+        "rag_enabled": metrics.rag_enabled,
+        "rag_type": metrics.rag_type,
+        "rag_search_time_s": metrics.rag_search_time,
+        "rag_query_generation_time_s": metrics.rag_query_generation_time,
+        "llm_total_time_s": metrics.llm_total_time,
+        "llm_query_gen_time_s": metrics.llm_query_gen_time,
+        "llm_command_gen_time_s": metrics.llm_command_gen_time,
+        "robot_simulation_time_s": metrics.robot_simulation_time,
+        "truck_simulation_time_s": metrics.truck_simulation_time,
+        "uav_simulation_time_s": metrics.uav_simulation_time,
+        "robot_success": metrics.robot_success,
+        "truck_success": metrics.truck_success,
+        "uav_success": metrics.uav_success,
+        "total_time_s": metrics.total_time,
+    }
 
 
 def print_ablation_comparison(results: Dict[str, List[ExperimentMetrics]]):

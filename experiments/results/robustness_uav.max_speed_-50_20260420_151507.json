@@ -1,0 +1,35 @@
+{
+  "saved_at": "2026-04-20T15:15:07.510532",
+  "experiment_name": "robustness_uav.max_speed_-50%",
+  "experiment_type": "robustness",
+  "prompt": "请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.054706,22.534678）配送到深圳光明区深理工大学医院(113.928589,22.769395)",
+  "prompt_preview": "请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.054706,22.534678）配送到深圳光明区深理工大学医院(113.928589,22.769395)",
+  "metrics": {
+    "experiment_name": "robustness_uav.max_speed_-50%",
+    "experiment_type": "robustness",
+    "record_status": "completed",
+    "error_message": "",
+    "rag_enabled": true,
+    "rag_type": "graphrag_perturbed_-50%",
+    "rag_search_time": 5.15693998336792,
+    "rag_query_generation_time": 36.36776328086853,
+    "llm_total_time": 49.993321895599365,
+    "llm_query_gen_time": 36.36776328086853,
+    "llm_command_gen_time": 13.625558614730835,
+    "robot_simulation_time": 10.14739990234375,
+    "truck_simulation_time": 2304.0,
+    "uav_simulation_time": 2480.06,
+    "robot_success": true,
+    "truck_success": true,
+    "uav_success": true,
+    "total_time": 77.33932685852051
+  },
+  "extra": {
+    "agent_type": "uav",
+    "param_name": "max_speed",
+    "param_key": "uav.max_speed",
+    "base_value": 0.3,
+    "variation": -0.5,
+    "perturbed_value": 0.15
+  }
+}

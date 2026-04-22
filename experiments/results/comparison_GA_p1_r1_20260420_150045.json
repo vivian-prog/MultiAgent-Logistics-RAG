@@ -1,0 +1,49 @@
+{
+  "saved_at": "2026-04-20T15:00:45.034116",
+  "experiment_name": "comparison_GA_p1_r1",
+  "experiment_type": "comparison",
+  "prompt": "请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.054706,22.534678）配送到深圳光明区深理工大学医院(113.928589,22.769395)",
+  "prompt_preview": "请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.054706,22.534678）配送到深圳光明区深理工大学医院(113.928589,22.769395)",
+  "metrics": {
+    "experiment_name": "",
+    "experiment_type": "",
+    "record_status": "completed",
+    "error_message": "",
+    "rag_enabled": true,
+    "rag_type": "graphrag_ga_dispatch",
+    "rag_search_time": 4.6494245529174805,
+    "rag_query_generation_time": 23.036401510238647,
+    "llm_total_time": 23.036401510238647,
+    "llm_query_gen_time": 23.036401510238647,
+    "llm_command_gen_time": 0.0,
+    "robot_simulation_time": 10.17636775970459,
+    "truck_simulation_time": 2124.0,
+    "uav_simulation_time": 1005.11,
+    "robot_success": true,
+    "truck_success": true,
+    "uav_success": true,
+    "total_time": 78.04102373123169
+  },
+  "extra": {
+    "prompt_index": 1,
+    "repeat_index": 1,
+    "config_name": "GA",
+    "display_name": "遗传算法 (Genetic Algorithm)",
+    "algorithm": "GA",
+    "config": {
+      "name": "GA",
+      "display_name": "遗传算法 (Genetic Algorithm)",
+      "enable_rag": true,
+      "rag_type": "graphrag",
+      "algorithm": "GA",
+      "algorithm_params": {
+        "candidate_top_k": 3,
+        "population_size": 50,
+        "crossover_rate": 0.8,
+        "mutation_rate": 0.1,
+        "elite_size": 5,
+        "max_iterations": 50
+      }
+    }
+  }
+}

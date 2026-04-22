@@ -1,0 +1,121 @@
+======================================================================
+实验日志 - 2026-04-22T14:46:57.933231
+======================================================================
+
+
+======================================================================
+多智能体物流调度系统 - 实验程序启动
+开始时间: 2026-04-22 14:46:57
+======================================================================
+
+============================================================
+消融实验开始
+测试Prompt数量: 1
+实验配置: ['no_rag', 'text_rag', 'raw_text_rag', 'graphrag']
+============================================================
+
+[Prompt 1/1] [无RAG (仅LLM)] [重复 1/1]
+
+============================================================
+实验: ablation_no_rag_p1_r1
+RAG模式: 禁用
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+LLM指令生成耗时: 17.04s
+LLM总思考耗时: 17.04s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.23s (成功: True)
+Truck仿真时间: 3060.00s (成功: True)
+UAV仿真时间: 1870.33s (成功: True, 到达率: 1.0, 步数: 624)
+
+总耗时: 42.25s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_no_rag_p1_r1_20260422_144740.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [Text RAG (GraphRAG预处理文本单元)] [重复 1/1]
+
+============================================================
+实验: ablation_text_rag_p1_r1
+RAG模式: 启用 (rag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 0.07s
+RAG查询生成耗时: 13.44s
+LLM指令生成耗时: 15.21s
+LLM总思考耗时: 28.64s
+JSON解析失败: 未找到顶层JSON结构
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_text_rag_p1_r1_20260422_144811.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [Raw Text RAG (原始文本)] [重复 1/1]
+
+============================================================
+实验: ablation_raw_text_rag_p1_r1
+RAG模式: 启用 (raw_rag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院 与各无人机起降点的距离，找出最近的起降点坐标 计算 深圳光...
+RAG检索耗时: 0.06s
+RAG查询生成耗时: 10.26s
+LLM指令生成耗时: 44.24s
+LLM总思考耗时: 54.50s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.24s (成功: True)
+Truck仿真时间: 88560.00s (成功: True)
+UAV仿真时间: 0.00s (成功: True, 到达率: 1.0, 步数: 1)
+
+总耗时: 75.78s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_raw_text_rag_p1_r1_20260422_144930.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+
+[Prompt 1/1] [GraphRAG (知识图谱)] [重复 1/1]
+
+============================================================
+实验: ablation_graphrag_p1_r1
+RAG模式: 启用 (graphrag)
+Prompt: 请协调仓储机器人、卡车和无人机完成干粉灭火器的多阶段配送任务：从深圳福田区购物公园（114.0547...
+============================================================
+RAG查询关键词: 查找 干粉灭火器 所属的仓库ID，并根据该ID查询仓库的坐标(location_x, location_y) 计算 深圳光明区深理工大学医院(113.928589,22.769395) 与各无人机起降...
+RAG检索耗时: 3.73s
+RAG查询生成耗时: 30.69s
+LLM指令生成耗时: 44.67s
+LLM总思考耗时: 75.36s
+解析指令成功: ['agenttruck', 'agentuav', 'agentrobot', 'instruction_summary']
+Robot仿真时间: 10.20s (成功: True)
+Truck仿真时间: 2340.00s (成功: True)
+UAV仿真时间: 372.72s (成功: True, 到达率: 1.0, 步数: 125)
+
+总耗时: 101.29s
+实验明细已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_graphrag_p1_r1_20260422_145114.json
+实验总明细CSV已更新: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/experiment_details.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_no_rag_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_text_rag_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_raw_text_rag_metrics.csv
+指标已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_graphrag_metrics.csv
+ablation 时间戳结果已保存至: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/results/ablation_20260422_145117.csv
+
+================================================================================
+消融实验对比结果
+================================================================================
+
+配置                   RAG耗时(s)        LLM耗时(s)        总耗时(s)         
+----------------------------------------------------------------------
+no_rag               0.00            17.04           42.25          
+text_rag             0.00            0.00            28.72          
+raw_text_rag         0.06            54.50           75.78          
+graphrag             3.73            75.36           101.29         
+
+详细仿真指标对比:
+  配置                   Robot(s)     Truck(s)     UAV(s)      
+  ----------------------------------------------------------
+  no_rag               10.23        3060.00      1870.33     
+  text_rag             0.00         0.00         0.00        
+  raw_text_rag         10.24        88560.00     0.00        
+  graphrag             10.20        2340.00      372.72      
+
+======================================================================
+程序执行完毕
+结束时间: 2026-04-22 14:51:17
+程序总耗时: 260.06 秒 (4.33 分钟)
+======================================================================

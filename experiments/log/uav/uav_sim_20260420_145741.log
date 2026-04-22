@@ -1,0 +1,15 @@
+2026-04-20 14:57:41,832 - INFO - Simulation started. Log file: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/log/uav/uav_sim_20260420_145741.log
+2026-04-20 14:57:41,832 - INFO - Parameters: {'type': 'UAV', 'tasks': ['从VTOL7接驳配送到最终目的地'], 'Map_name': 'Map2', 'max_steps': 1000, 'start_lat': 22.771576, 'start_lng': 113.906952, 'end_lat': 22.769395, 'end_lng': 113.928589, 'agent_id': 'uav_0_0218'}
+2026-04-20 14:57:41,833 - INFO - Loading SHP map from: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/agentSimulation/uav_simulation/shpsimulation/gis/gis数据/Export_Output.shp
+2026-04-20 14:58:00,518 - INFO - Map loaded: Size 2000x1109, Origin (12663594.485688895, 2550151.728773174), Resolution 43.8503
+2026-04-20 14:58:00,526 - INFO - Map CRS detected: EPSG:3395
+2026-04-20 14:58:00,551 - INFO - Projected Start: (12680063.89, 2587885.88)
+2026-04-20 14:58:00,551 - INFO - Projected End: (12682472.51, 2587624.07)
+2026-04-20 14:58:00,551 - INFO - Single Task: Grid Start(375.58, 860.52) -> Grid End(430.51, 854.55)
+2026-04-20 14:58:00,573 - INFO - === Simulation Finished ===
+2026-04-20 14:58:00,573 - INFO - Total UAVs: 1
+2026-04-20 14:58:00,573 - INFO - Total Steps: 261 / 1000
+2026-04-20 14:58:00,573 - INFO - Arrived Count: 1
+2026-04-20 14:58:00,573 - INFO - Arrival Ratio: 1.0
+2026-04-20 14:58:00,574 - INFO - UAV 0: Status=arrived, Reason=Success
+2026-04-20 14:58:00,574 - INFO - Log saved to: /home/sysuvis/program/huangw293/MultiAgent-Logistics-RAG/experiments/log/uav/uav_sim_20260420_145741.log
